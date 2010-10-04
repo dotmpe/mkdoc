@@ -70,6 +70,10 @@ lists:
 	@$(ll) OK $@ 
 
 stat: $(SRC) dep
+	@OFFLINE=$(strip $(abspath $(OFFLINE)));\
+	 if test -n "$$OFFLINE"; then \
+ 	   $(ll) Warning "Offline" "directories unavailable:" "$$OFFLINE";\
+	 fi;
 	@if test -n "$(strip $(MISSING))"; then \
  	   $(ll) Error "Missing" "paths not found:" '$(strip $(MISSING))';\
 	 else\

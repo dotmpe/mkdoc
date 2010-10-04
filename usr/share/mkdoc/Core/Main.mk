@@ -9,15 +9,14 @@
 # Finally, include some standard rules or set these yourself. See:
 # $(MK_SHARE)Core/Rules.default.mk
 
-VPATH              += /
+VPATH              += . / 
 SHELL              := /bin/bash
 
-#.SUFFIXES:         .rst .js .xhtml .mk .tex .pdf .list
-#.SUFFIXES:         .rst .js .xhtml .mk .tex .pdf .list
-
+.SUFFIXES:         .rst .js .xhtml .mk .tex .pdf .list
 
 MK_ROOT            := ~/project/mkdoc/
 MK_SHARE           := $(MK_ROOT)usr/share/mkdoc/
+MK_HOST            := $(shell hostname)
 ifndef ROOT
 ROOT               := $(shell pwd)
 endif
@@ -33,11 +32,13 @@ CLN                :=
 TEST               :=
 INSTALL            :=
 MISSING            :=  
+OFFLINE            :=
 
 
 ll                  = $(MK_SHARE)Core/log.sh
 ee                  = /bin/echo -e
-mk-subdir-rules     =
+rules               = $(shell ls $1/Rules*mk)
+sub-rules           = $(shell ls $1/*/Rules*mk)
 mk-target-dir       = if test ! -d $(@D); then mkdir -p $(@D); fi
 complement          =
 
@@ -54,7 +55,7 @@ endef
 
 define mk-include
 	$(reset-target)
-	for f in MK_FILES; do \
+	for f in $(MK_FILES); do \
 		echo DIR=`dirname $$f` >> $@; \
 		echo include $$f >> $@; \
 	done
@@ -63,6 +64,9 @@ endef
 log                 = $(ll) "$1" "$2" "$3" "$4"
 count               = $(shell if test -n "$1"; then\
 					    echo $1|wc -w; else echo 0; fi;)
+
+pre: $d
+	echo $(call rules,$<)
 
 default:               
 
