@@ -76,10 +76,9 @@ stat: $(SRC) dep
 	 fi;
 	@if test -n "$(strip $(MISSING))"; then \
  	   $(ll) Error "Missing" "paths not found:" '$(strip $(MISSING))';\
-	 else\
-	   $(ll) OK $@ \
-		 "counted $(call count,$(SRC)) sources, $(call count,$(TRGT)) targets";\
 	 fi;
+	@$(ll) OK $@ \
+	 "counted $(call count,$(SRC)) sources, $(call count,$(TRGT)) targets";\
 
 build: $(TRGT) dep
 	@$(call log,Done,$@,$(call count,$(TRGT)) targets ready)
