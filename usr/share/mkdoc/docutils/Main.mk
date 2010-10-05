@@ -15,3 +15,60 @@ define mk-rst-include-deps
 		echo $<: $$f >> $@; done;
 endef
 
+define rst-to-xhtml
+	$(ll) file_target "$@" "Building XHTML from rSt" "$<"
+	$(reset-target)
+	# pre-proc
+	#(proc-src)
+	#./opt/rst-preproc.py --alt-headers < $< > $<.tmp
+	# Add path list
+	#path2rstlist.py /$< >> $<.tmp
+	# Add leaf navigation list
+	#tools/path2rstnav.py $< >> $<.tmp
+	# Make XHTML tree
+	$(rst-xhtml) $< $<.tmp2
+	# Additional styles 'n scripts
+	JS=`echo "$(XHT_JS)"| tr ' ' ' '`; \
+	   for js_ref in $${JS}; do \
+	   	sed -e "s/<\/head>/<script type=\"text\/javascript\" src=\"$$js_ref\"><\/script><\/head>/" $<.tmp2 > $<.tmp3; \
+	   	mv $<.tmp3 $<.tmp2; \
+	   done;
+	CSS=`echo "$(XHT_CSS)"|tr ' ' ' '`; \
+	   for css_ref in $${CSS}; do \
+	   	sed -e "s/<\/head>/<link rel=\"stylesheet\" type=\"text\/css\" href=\"$$css_ref\"\/><\/head>/" $<.tmp2 > $<.tmp3; \
+	   	mv $<.tmp3 $<.tmp2; \
+	   done;
+	# Process references, must be relative or absolute to base URI
+	#$(build-xhtml-refs) $<.tmp2 > $@
+	#rm $<.tmp2
+	mv $<.tmp2 $@
+	# Tidy up html output
+	#-$(tidy-xhtml) $@
+endef
+
+define build-xhtml-refs
+	# allow docs to make absolute references to withing the project
+	# XXX: it appears that setting HTML base href is not enough for the browser
+	# to resolve link/script references?
+	BASE_URI=`echo "$(BASE_HREF)" | awk '{gsub("[~/:]", "\\\\\\\&");print}'`;\
+	sed \
+		-e "s/<table/<table summary=\"Docutils rSt table\"/g" \
+			$<.tmp2 > $@ 
+@#		-e "s/<\/head>/<base href=\"$$BASE_URI\" \/><\/head>/"\
+@#		-e "s/href=\"\//href=\"$$BASE_URI/g"\
+@#		-e "s/src=\"\//src=\"$$BASE_URI/g" 
+endef
+
+
+define build-dir-index-rst
+	# FIXME: would be nice if this could exclude current target.
+	# XXX: this is dep'ed on everything in the dir and gets regenerated every time..
+	$(reset-target)
+	$(ee) ".. container:: directory\n" > $<.tmp-index
+	$(ee) "   .. class:: flat-index\n" >> $<.tmp-index
+	ls "$<" | sed -e 's/\(\.xhtml\|\.rst\|\.png\|\.dot\|\.tab\|\.list\|\.csv\|\.txt\|\.html\|\.xml\|\.js\|\.jpg\)$$//g' - | sort -u |\
+  	 while read f; \
+	   do echo "      - \`$$f </$<$$f>\`_" >> $<.tmp-index; done;
+	mv $<.tmp-index $@
+endef
+
