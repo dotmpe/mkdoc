@@ -1,3 +1,5 @@
+MK               += $(DIR)/haxe/Main.mk
+
 ### Flags
 
 #HX 	 			= -cp src/hx -cp text/hx

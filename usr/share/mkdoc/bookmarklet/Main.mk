@@ -1,3 +1,5 @@
+MK               += $(MK_SHARE)/bookmarklet/Main.mk
+
 
 js2bm               = $(MK_SHARE)bookmarklet/js2bm.pl
 js2bm-debug         = $(MK_SHARE)bookmarklet/js2bm.pl -d

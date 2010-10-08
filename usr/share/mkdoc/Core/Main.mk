@@ -17,8 +17,6 @@ SHELL              := /bin/bash
 MK_ROOT            := ~/project/mkdoc/
 MK_SHARE           := $(MK_ROOT)usr/share/mkdoc/
 
-BUILD              := .build/
-
 HOST               := $(shell hostname)
 ifndef ROOT
 ROOT               := $(shell pwd)

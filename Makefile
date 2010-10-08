@@ -1,16 +1,16 @@
 # Non-recursive makefile
 # Example of mkdoc usage, see git://github.org/dotmpe/mkdoc
 
+DIR                 := .
+BUILD               := .build/
+
+
 MK_ROOT             := ~/project/mkdoc/
 MK_SHARE            := $(MK_ROOT)usr/share/mkdoc/
 
 include                $(MK_SHARE)Core/Main.mk \
                        $(MK_SHARE)docutils/Main.mk \
                        $(MK_SHARE)bookmarklet/Main.mk 
-
-DIR                 := .
-ROOT                := $(realpath .)
-BUILD               := $(DIR)/.build/
 
 MK                  += $(DIR)/Makefile
 

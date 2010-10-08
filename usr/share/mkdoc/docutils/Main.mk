@@ -1,3 +1,5 @@
+MK               += $(DIR)/docutils/Main.mk
+
 
 ifeq ($(shell which rst2xml),)
 rst-xhtml   = rst2html.py $(DU_GEN) $(DU_READ) $(DU_HTML)

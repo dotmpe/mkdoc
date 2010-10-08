@@ -1,3 +1,5 @@
+MK               += $(MK_SHARE)/docutils/Rules.default.mk
+
 
 %.xhtml:				        %.rst
 	@$(ll) file_target "$@" because "$?"
