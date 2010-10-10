@@ -1,6 +1,10 @@
 MK               += $(DIR)/docutils/Main.mk
 
 
+DU_GEN           := --language=en
+DU_HTML          := --field-name-limit=22 --link-stylesheet
+DU_XML           := 
+
 ifeq ($(shell which rst2xml),)
 rst-xhtml   = rst2html.py $(DU_GEN) $(DU_READ) $(DU_HTML)
 rst-xml     = rst2xml.py $(DU_GEN) $(DU_READ) $(DU_XML)
@@ -13,22 +17,37 @@ tidy-xhtml  = tidy -q -wrap 0 -asxhtml -utf8 -i
 
 
 define mk-rst-include-deps
-	$(call rst-dep,$<,-) | while read f; do \
-		echo $<: $$f >> $@; done;
+	# pre-proc
+	echo $(shell $(kwds-file))
+	$(if $(call is-file,$(shell $(kwds-file))),
+		$(ante-proc-tags),
+		$(shell cp $< $<.src))
+	$(call rst-dep,$<.src,-) | while read f; do \
+		DIR=$(<D);\
+		DIR=$${DIR##./}/;\
+		F=$${f##$$DIR}; \
+		T=$${f/%.rst/.xhtml}; \
+		T=$${f};\
+		echo $$T: DIR := $$DIR >> $@; \
+		echo $$T: $$F >> $@; done;
+	#rm $<.src;
 endef
 
 define rst-to-xhtml
 	$(ll) file_target "$@" "Building XHTML from rSt" "$<"
 	$(reset-target)
 	# pre-proc
-	#(proc-src)
+	$(if $(call is-file,$(shell $(kwds-file))),
+		$(ante-proc-tags),
+		$(shell cp $< $<.src))
 	#./opt/rst-preproc.py --alt-headers < $< > $<.tmp
 	# Add path list
 	#path2rstlist.py /$< >> $<.tmp
 	# Add leaf navigation list
 	#tools/path2rstnav.py $< >> $<.tmp
 	# Make XHTML tree
-	$(rst-xhtml) $< $<.tmp2
+	$(rst-xhtml) $<.src $<.tmp2
+	#rm $<.src;
 	# Additional styles 'n scripts
 	JS=`echo "$(XHT_JS)"| tr ' ' ' '`; \
 	   for js_ref in $${JS}; do \
@@ -45,7 +64,8 @@ define rst-to-xhtml
 	#rm $<.tmp2
 	mv $<.tmp2 $@
 	# Tidy up html output
-	#-$(tidy-xhtml) $@
+#	@-$(tidy-xhtml) $@.tmp > $@; \
+#	 if test $$? -gt 0; then $(ee) ""; fi; # put xtra line if err-msgs
 endef
 
 define build-xhtml-refs
@@ -70,7 +90,7 @@ define build-dir-index-rst
 	$(ee) "   .. class:: flat-index\n" >> $<.tmp-index
 	ls "$<" | sed -e 's/\(\.xhtml\|\.rst\|\.png\|\.dot\|\.tab\|\.list\|\.csv\|\.txt\|\.html\|\.xml\|\.js\|\.jpg\)$$//g' - | sort -u |\
   	 while read f; \
-	   do echo "      - \`$$f </$<$$f>\`_" >> $<.tmp-index; done;
+	   do echo "      - \`$$f <./$$f>\`_" >> $<.tmp-index; done;
 	mv $<.tmp-index $@
 endef
 

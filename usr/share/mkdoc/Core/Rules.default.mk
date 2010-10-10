@@ -1,7 +1,5 @@
 MK                 += $(MK_SHARE)Core/Rules.default.mk
 
-VPATH               = / $(ROOT)
-
 default:              stat
 
 ## Include required and dynamic Makefiles
@@ -63,13 +61,13 @@ lists:
 	@$(ll) header2 "Generated Makefiles" ""  '$(strip $(DMK))'
 	@$(ll) header2 "Other Dependencies"  ""  '$(strip $(DEP))'
 	@if test -n "$(strip $(MISSING))"; then \
-	 $(ll) Error "Missing" "paths not found " '$(strip $(MISSING))';\
+	 $(ll) Error "Missing" "Paths not found " '$(strip $(MISSING))';\
 	 fi;
 
 	@#$(ll) header2 "All Generated Targets" '$(strip $(CLN))'
 	@$(ll) OK $@ 
 
-stat: $(SRC) dep
+stat: $(SRC) dep dmk
 	@OFFLINE=$(strip $(abspath $(OFFLINE)));\
 	 if test -n "$$OFFLINE"; then \
  	   $(ll) Warning "Offline" "directories unavailable:" "$$OFFLINE";\
@@ -77,16 +75,19 @@ stat: $(SRC) dep
 	@if test -n "$(strip $(MISSING))"; then \
  	   $(ll) Error "Missing" "paths not found:" '$(strip $(MISSING))';\
 	 fi;
-	@$(ll) OK $@ \
-	 "counted $(call count,$(SRC)) sources, $(call count,$(TRGT)) targets";\
+	@if test -n "$(strip $(PENDING))"; then \
+ 	   $(ll) Warning "Pending" "Please rebuild [$@] because:" '$(strip $(PENDING))';\
+	 else \
+	   $(ll) OK $@ \
+	 "counted $(call count,$(SRC)) sources, $(call count,$(TRGT)) targets"; fi
 
-build: $(TRGT) dep
+build: stat $(TRGT)
 	@$(call log,Done,$@,$(call count,$(TRGT)) targets ready)
 
-dep: $(DEP) dmk
+dep: $(DEP)
 	@$(call log,Done,$@,$(call count,$(DEP)) generated dependencies ready) 
 
-dmk: $(DMK)
+dmk: dep $(DMK)
 	@$(call log,Done,$@,$(call count,$(DMK)) generated makefiles ready) 
 
 #test: dep $(TEST)

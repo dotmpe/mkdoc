@@ -6,13 +6,18 @@ js2bm-debug         = $(MK_SHARE)bookmarklet/js2bm.pl -d
 
 
 define build-bm
-	$(ee) "javascript:void((function(){"`cat $^`"})())" > $@.tmp
+	$(ll) file_target $@ "Building from" "$<";
+	$(reset-target)
+	$(ee) "javascript:void((function(){"`cat $<`"})())" > $@.tmp
 	$(js2bm) $@.tmp > $@
 	rm $@.tmp
 endef
 
 define build-bm-rst
-	$(ee) -n ".. _"$*".bm: " > $@
+	RES="$*";\
+	REFID=$${RES##$(@D)/};\
+	$(ll) file_target $@ "Building $$REFID from" "$<";\
+	$(ee) -n ".. _$$REFID.bm: " > $@
 	cat $< >> $@
 	$(ee) >> $@
 endef
