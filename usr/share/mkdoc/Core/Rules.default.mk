@@ -60,6 +60,7 @@ lists:
 	@$(ll) header2 "Makefiles"  	     ""  '$(strip $(MK))'
 	@$(ll) header2 "Generated Makefiles" ""  '$(strip $(DMK))'
 	@$(ll) header2 "Other Dependencies"  ""  '$(strip $(DEP))'
+	@$(ll) header2 "Resources "  ""  '$(strip $(RES))'
 	@if test -n "$(strip $(MISSING))"; then \
 	 $(ll) Error "Missing" "Paths not found " '$(strip $(MISSING))';\
 	 fi;

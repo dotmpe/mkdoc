@@ -47,7 +47,7 @@ define rst-to-xhtml
 	#tools/path2rstnav.py $< >> $<.tmp
 	# Make XHTML tree
 	$(rst-xhtml) $<.src $<.tmp2
-	#rm $<.src;
+	rm $<.src;
 	# Additional styles 'n scripts
 	JS=`echo "$(XHT_JS)"| tr ' ' ' '`; \
 	   for js_ref in $${JS}; do \

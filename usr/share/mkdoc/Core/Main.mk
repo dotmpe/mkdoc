@@ -38,6 +38,7 @@ PENDING            :=
 MISSING            :=  
 OFFLINE            :=
 
+RES := 
 
 ll                  = $(MK_SHARE)Core/log.sh
 ee                  = /bin/echo -e
@@ -53,6 +54,8 @@ kwds-file           = if test -f "$(KWDS_./$(<D))"; then \
 						  echo $(KWDS_$(@D)); fi; fi; fi; fi;
 kwds-file           = if test -f "$(KWDS_$(DIR))"; then \
 						  echo $(KWDS_$(DIR)); fi;
+init-file           = if test ! -f $1; then mkdir -p $$(dirname $1); touch $1; fi
+init-target         = $(call init-file,$@)
 
 define mk-target
 	$(mk-target-dir)
@@ -80,6 +83,8 @@ endef
 log                 = $(ll) "$1" "$2" "$3" "$4"
 count               = $(shell if test -n "$1"; then\
 					    echo $1|wc -w; else echo 0; fi;)
+count-list          = $(shell if test -f "$1"; then\
+					    cat $1|wc -l; else echo 0; fi;)
 contains            = for Z in "$1"; do if test "$$Z" = "$2"; then \
 					    echo "$$Z"; fi; done;
 expand-path         = $(shell echo $1)
@@ -90,7 +95,21 @@ filter-dir          = $(shell for D in $1; do if test -d "$$D"; then \
                         echo $$D; fi; done)
 filter-file         = $(shell for F in $1; do if test -f "$$F"; then \
                         echo $$F; fi; done)
+sed-escape          = echo "$1" | awk '{gsub("[~/:.]", "\\\\\\\&");print}'
+remove-line         = if test -e "$1"; then LINE=$$($(call sed-escape,$2));mv "$1" "$1.tmp";cat "$1.tmp"|sed "s/$$LINE//">"$1";rm $1.tmp; else echo "Error: unknown file $1"; fi
+assert-line         = if test -z "$$(cat $1|grep $2)";then echo "$2" >> $1; fi; 
+#parents             = $()
+filter-mount        = $(foreach M,$1,$(if $(shell mount|grep $M),$(shell echo $M)))                        
 rules               = $(shell for D in $1; do \
+                        if test -f "$$(echo $$D/Rules.mk)"; then \
+                          echo $$D/Rules.mk; else \
+                        if test -f "$$(echo $$D/.Rules.mk)"; then \
+						  echo $$D/.Rules.mk; else \
+                        if test -f "$$(echo $$D/Rules.$(HOST).mk)"; then \
+                          echo $$D/Rules.$(HOST).mk; else \
+                        if test -f "$$(echo $$D/.Rules.$(HOST).mk)"; then \
+						  echo $$D/.Rules.$(HOST).mk; fi; fi; fi; fi; done )
+def-rules           = $(shell for D in $1; do \
                         if test -f "$$(echo $$D/Rules.mk)"; then \
                           echo $$D/Rules.mk; else \
                         if test -f "$$(echo $$D/.Rules.mk)"; then \
