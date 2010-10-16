@@ -1,9 +1,13 @@
-MK               += $(DIR)/docutils/Main.mk
+MK               += $(MK_SHARE)/docutils/Main.mk
 
 
+DU_READ          := 
 DU_GEN           := --language=en
 DU_HTML          := --field-name-limit=22 --link-stylesheet
 DU_XML           := 
+
+XHT_CSS          :=
+XHT_JS           :=
 
 ifeq ($(shell which rst2xml),)
 rst-xhtml   = rst2html.py $(DU_GEN) $(DU_READ) $(DU_HTML)
@@ -14,11 +18,11 @@ rst-xml     = rst2xml $(DU_GEN) $(DU_READ) $(DU_XML)
 endif
 rst-dep     = $(rst-xml) --record-dependencies=$2 $1 /dev/null 2> /dev/null
 tidy-xhtml  = tidy -q -wrap 0 -asxhtml -utf8 -i
+path2rstlist = $(MK_SHARE)/docutils/path2rstlist.py
 
 
 define mk-rst-include-deps
 	# pre-proc
-	echo $(shell $(kwds-file))
 	$(if $(call is-file,$(shell $(kwds-file))),
 		$(ante-proc-tags),
 		$(shell cp $< $<.src))
@@ -40,42 +44,45 @@ define rst-to-xhtml
 	$(if $(call is-file,$(shell $(kwds-file))),
 		$(ante-proc-tags),
 		$(shell cp $< $<.src))
-	#./opt/rst-preproc.py --alt-headers < $< > $<.tmp
+	mv $<.src $@.src
+	#./opt/rst-preproc.py --alt-headers < $<.tmp > $<.src
 	# Add path list
-	#path2rstlist.py /$< >> $<.tmp
-	# Add leaf navigation list
-	#tools/path2rstnav.py $< >> $<.tmp
-	# Make XHTML tree
-	$(rst-xhtml) $<.src $<.tmp2
-	rm $<.src;
+	$(path2rstlist) /$< >> $@.src
+	# Make XHTML tree (in original directory)
+	cp $@.src $<.src
+	$(rst-xhtml) $<.src $@.tmp1
+	rm $<.src
 	# Additional styles 'n scripts
 	JS=`echo "$(XHT_JS)"| tr ' ' ' '`; \
 	   for js_ref in $${JS}; do \
-	   	sed -e "s/<\/head>/<script type=\"text\/javascript\" src=\"$$js_ref\"><\/script><\/head>/" $<.tmp2 > $<.tmp3; \
-	   	mv $<.tmp3 $<.tmp2; \
+	   	sed -e "s/<\/head>/<script type=\"text\/javascript\" src=\"$$js_ref\"><\/script><\/head>/" $@.tmp1 > $@.tmp2; \
+	   	mv $@.tmp2 $@.tmp1; \
 	   done;
 	CSS=`echo "$(XHT_CSS)"|tr ' ' ' '`; \
 	   for css_ref in $${CSS}; do \
-	   	sed -e "s/<\/head>/<link rel=\"stylesheet\" type=\"text\/css\" href=\"$$css_ref\"\/><\/head>/" $<.tmp2 > $<.tmp3; \
-	   	mv $<.tmp3 $<.tmp2; \
+	   	sed -e "s/<\/head>/<link rel=\"stylesheet\" type=\"text\/css\" href=\"$$css_ref\"\/><\/head>/" $@.tmp1 > $@.tmp2; \
+	   	mv $@.tmp2 $@.tmp1; \
 	   done;
-	# Process references, must be relative or absolute to base URI
-	#$(build-xhtml-refs) $<.tmp2 > $@
-	#rm $<.tmp2
-	mv $<.tmp2 $@
+	# Process references
+	$(build-xhtml-refs)
+	mv $@ $@.tmp1
 	# Tidy up html output
-#	@-$(tidy-xhtml) $@.tmp > $@; \
-#	 if test $$? -gt 0; then $(ee) ""; fi; # put xtra line if err-msgs
+	-$(tidy-xhtml) $@.tmp1 > $@; \
+	 if test $$? -gt 0; then $(ee) ""; fi; # put xtra line if err-msgs
 endef
 
 define build-xhtml-refs
+	# , must be relative or absolute to base URI
+	# replace .rst ext
 	# allow docs to make absolute references to withing the project
 	# XXX: it appears that setting HTML base href is not enough for the browser
 	# to resolve link/script references?
+	echo "Replacing refs in $< $@"
 	BASE_URI=`echo "$(BASE_HREF)" | awk '{gsub("[~/:]", "\\\\\\\&");print}'`;\
 	sed \
+		-e 's/href="\(.\+\)\.rst"/href="\1"/g' \
 		-e "s/<table/<table summary=\"Docutils rSt table\"/g" \
-			$<.tmp2 > $@ 
+			$@.tmp1 > $@ 
 @#		-e "s/<\/head>/<base href=\"$$BASE_URI\" \/><\/head>/"\
 @#		-e "s/href=\"\//href=\"$$BASE_URI/g"\
 @#		-e "s/src=\"\//src=\"$$BASE_URI/g" 
