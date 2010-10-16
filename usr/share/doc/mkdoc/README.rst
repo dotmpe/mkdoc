@@ -4,8 +4,8 @@ MkDoc
 :update: 2010-10-16
 :author: \B. van Berkum  <dev@dotmpe.com>
 :homepage: http://dotmpe.com/project/mkdoc
-:url: http://github.org/domtpe/mkdoc/blob/master/README.rst
-.. :url: http://github.org/domtpe/mkdoc/blob/master/usr/share/doc/mkdoc/main.rst
+.. :url: http://github.org/dotmpe/mkdoc/blob/master/README.rst
+:url: http://github.org/dotmpe/mkdoc/blob/master/usr/share/doc/mkdoc/README.rst
 
 
 A set of makefiles to enable:
