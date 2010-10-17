@@ -4,8 +4,8 @@ MkDoc
 :update: 2010-10-16
 :author: \B. van Berkum  <dev@dotmpe.com>
 :homepage: http://dotmpe.com/project/mkdoc
-.. :url: http://github.org/dotmpe/mkdoc/blob/master/README.rst
 :url: http://github.org/dotmpe/mkdoc/blob/master/usr/share/doc/mkdoc/README.rst
+.. :url: http://github.org/dotmpe/mkdoc/blob/master/README.rst
 
 
 A set of makefiles to enable:
@@ -42,14 +42,16 @@ for subdirectories. By convention, these sub-makefiles are named:
 
 The default rules generally keep this and generated content outside of the source-tree to
 keep the file-tree tidy.
+
 TODO: To make generated targets available at every directory level, these are kept
 in the directory ``.build`` for every level.
+Resource tree is an exception here, within this subtree no new files are build.
 
 .. admonition:: XXX
    
    The boostrap Makefile can be used from any (sub)directory. But care should be taken so
    that dependences generated at this sub-level are usable at all levels up to
-   the root.
+   the root. See on paths and dependencies.
 
 The bootstrap Makefile has built-in special- or pseudo-targets to get started with
 mkdocs. See ``make help``.
@@ -64,5 +66,23 @@ External tools may be required, see Makefile.
 - build HaXe projects.
 - build Bookmarklets (Javascript compiled into URIRefs).  
 
+On paths and dependencies
+-------------------------
+In non-recursive make where rules are defined per directory and included in one
+global Makefile, one may be tempted to aggregate one directory into several
+projects or packages through symlinking. The intended result being less
+redundant documents.
 
+Another goal is the relative ease in relocation directories within the tree.
+
+Paths in dependency files should be rooted in one of the paths in VPATH, which
+should be as little as possible. Obviously, at least the root of the project
+package should be there. 
+
+XXX: obviously only one ROOT variable can be set for a global make system.
+perhaps implement multiple roots using some hash table. It is therefore
+recommended to keep dep paths absolute? 
+
+XXX: By default the '/' root dir is also included. No sure if needed for
+absolute paths?
 

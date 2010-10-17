@@ -17,7 +17,6 @@ rst-xhtml   = rst2html $(DU_GEN) $(DU_READ) $(DU_HTML)
 rst-xml     = rst2xml $(DU_GEN) $(DU_READ) $(DU_XML)
 endif
 rst-dep     = $(rst-xml) --record-dependencies=$2 $1 /dev/null 2> /dev/null
-tidy-xhtml  = tidy -q -wrap 0 -asxhtml -utf8 -i
 path2rstlist = $(MK_SHARE)/docutils/path2rstlist.py
 
 
@@ -65,9 +64,11 @@ define rst-to-xhtml
 	   done;
 	# Process references
 	$(build-xhtml-refs)
-	mv $@ $@.tmp1
+	#mv $@ $@.tmp1
 	# Tidy up html output
-	-$(tidy-xhtml) $@.tmp1 > $@; \
+	#$(tidy-xhtml) $@.tmp1 > $@; \
+	# Check output		
+	$(tidy-check) $@; \
 	 if test $$? -gt 0; then $(ee) ""; fi; # put xtra line if err-msgs
 endef
 

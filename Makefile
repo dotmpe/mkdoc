@@ -9,7 +9,8 @@ MK_SHARE            := $(MK_ROOT)usr/share/mkdoc/
 
 include                $(MK_SHARE)Core/Main.mk \
                        $(MK_SHARE)docutils/Main.mk \
-                       $(MK_SHARE)bookmarklet/Main.mk 
+                       $(MK_SHARE)bookmarklet/Main.mk \
+                       $(MK_SHARE)tidy/Main.mk 
 
 MK                  += $(DIR)/Makefile
 
