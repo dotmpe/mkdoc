@@ -10,12 +10,14 @@ MK_SHARE            := $(MK_ROOT)usr/share/mkdoc/
 include                $(MK_SHARE)Core/Main.mk \
                        $(MK_SHARE)docutils/Main.mk \
                        $(MK_SHARE)bookmarklet/Main.mk \
-                       $(MK_SHARE)tidy/Main.mk 
+                       $(MK_SHARE)tidy/Main.mk \
+                       $(MK_SHARE)graphviz/Main.mk 
 
 MK                  += $(DIR)/Makefile
 
 include                $(MK_SHARE)docutils/Rules.default.mk \
-					   $(MK_SHARE)bookmarklet/Rules.default.mk 
+					   $(MK_SHARE)bookmarklet/Rules.default.mk \
+                       $(MK_SHARE)graphviz/Rules.mk 
 #					   $(MK_SHARE)Core/Rules.archive.mk
 
 # Include specific rules and set SRC, DEP, TRGT and CLN variables.
