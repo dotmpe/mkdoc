@@ -28,6 +28,11 @@ $(BUILD)$/%,graph.png:  $/%.gv
 	@$(ll) file_ok "$@" "<--($(GRAPHVIZ_ENGINE))-" "$<"
 
 
+$/%,graph.svg:  $/%.gv
+	@$(ll) file_target "$@" because "$?"
+	@$(gv-svg)
+	@$(ll) file_ok "$@" "<--($(GRAPHVIZ_ENGINE))-" "$<"
+
 $(BUILD)$/%,graph.svg:  $/%.gv
 	@$(ll) file_target "$@" because "$?"
 	@$(gv-svg)
