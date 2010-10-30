@@ -1,13 +1,7 @@
-## Dirstack
-SP                  := $(SP).x
-D_$(SP)             := $d
-d                   := $(DIR)
+include                $(MK_SHARE)Core/Main.dirstack.mk
 
 MK                  += $d/Rules.mk
 
 
-## Pop from dirstack
-d 				:= $(D_$(SP))
-SP				:= $(basename $(SP))
+include                $(MK_SHARE)Core/Main.dirstack-pop.mk
 # vim:noet:
-

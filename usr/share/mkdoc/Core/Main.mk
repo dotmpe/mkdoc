@@ -120,7 +120,7 @@ def-rules           = $(shell for D in $1; do \
                         if test -f "$$(echo $$D/.Rules.$(HOST).mk)"; then \
 						  echo $$D/.Rules.$(HOST).mk; else \
 						  echo $$D/Rules.mk; fi; fi; fi; fi; done )
-sub-rules           = $(foreach V,$1,$(call rules,"$V/*"))
+sub-rules           = $(foreach V,$1,$(call rules,$V/*))
 complement          = $(shell \
 					    for X in $1; do \
 					      if test -z "$$(for Z in $2; do if test "$$Z" = "$$X"; \
@@ -133,8 +133,12 @@ define ante-proc-tags
 	@$(ll) file_target "$<.src" "Replacing tags for" "$<"
 	@cp $< $<.src;
 	@chmod +rw $<.src
-	@KWDF="$(shell $(kwds-file))";\
-	 cat $$KWDF | grep -v '^$$' | grep -v '^#'| \
+	@FILEMDATETIME=$$(date -r "$<" +"%Y-%m-%d %H:%M:%S %:z");\
+	 KWDF="$(shell $(kwds-file))";\
+	 KWD=$$(cat $$KWDF);\
+	 XTR=$$($(ee) \
+	"dotmpe.project.mkdoc:filemdatetime\t$$FILEMDATETIME");\
+	 $(ee) "$$KWD\n$$XTR" | grep -v '^$$' | grep -v '^#'| \
 		while read l; do \
 			IFS="	";set -- $$l;\
 			tag=`echo "$$1" | awk '{gsub("[~/:.]", "\\\\\\\&");print}'`; \

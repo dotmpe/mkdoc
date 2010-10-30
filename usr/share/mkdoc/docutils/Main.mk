@@ -2,9 +2,20 @@ MK               += $(MK_SHARE)/docutils/Main.mk
 
 
 DU_READ          := 
-DU_GEN           := --language=en
-DU_HTML          := --field-name-limit=22 --link-stylesheet
+DU_GEN           := --language=en --traceback --no-generator \
+	--no-footnote-backlinks -i utf-8 -o utf-8 --date
+DU_HTML          := --field-name-limit=22 --link-stylesheet --no-compact-lists \
+	--footnote-references=superscript --cloak-email-addresses 
 DU_XML           := 
+DU_LATEX         := --use-latex-docinfo --documentclass=article --lang=nl \
+	--documentoptions="14pt,a4paper" 
+DU_ODT           := --create-sections --create-links --generate-oowriter-toc \
+	--add-syntax-highlighting 
+#--cloak-email-addresses 
+# --stylesheet=/usr/share/pyshared/docutils/writers/odf_odt/styles.odt
+# --odf-config-file=
+# --custom-odt-header=CUSTOM_HEADER --custom-odt-footer=CUSTOM_FOOTER
+
 
 XHT_CSS          :=
 XHT_JS           :=
@@ -46,6 +57,7 @@ define rst-to-xhtml
 		$(shell cp $< $<.src))
 	mv $<.src $@.src
 	#./opt/rst-preproc.py --alt-headers < $<.tmp > $<.src
+	#$(ee) "\n.. header::\n   \n   - null\n\n..\n" >> $@.src
 	# Add path list
 	$(path2rstlist) /$< >> $@.src
 	# Make XHTML tree (in original directory)
@@ -70,6 +82,8 @@ define rst-to-xhtml
 	-$(tidy-xhtml) $@.tmp1 > $@; \
 	 if test $$? -gt 0; then $(ee) ""; fi; # put xtra line if err-msgs
 endef
+#@sed -e 's/<p>\[\([0-9]*\)\.\]<\/p>/<a id="page-\1" class="pagebreak"><\/a>/g' $@.tmp1 > $@.tmp2
+#@sed -e 's/\[\([0-9]*\)\.\]/<a id="page-\1" class="pagebreak"><\/a>/g' $@.tmp2 > $@
 
 define build-xhtml-refs
 	# , must be relative or absolute to base URI
@@ -77,7 +91,6 @@ define build-xhtml-refs
 	# allow docs to make absolute references to withing the project
 	# XXX: it appears that setting HTML base href is not enough for the browser
 	# to resolve link/script references?
-	echo "Replacing refs in $< $@"
 	BASE_URI=`echo "$(BASE_HREF)" | awk '{gsub("[~/:]", "\\\\\\\&");print}'`;\
 	sed \
 		-e 's/href="\(.\+\)\.rst"/href="\1"/g' \

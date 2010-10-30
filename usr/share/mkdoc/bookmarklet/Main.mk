@@ -8,7 +8,8 @@ js2bm-debug         = $(MK_SHARE)bookmarklet/js2bm.pl -d
 define build-bm
 	$(ll) file_target $@ "Building from" "$<";
 	$(reset-target)
-	$(ee) "javascript:void((function(){"`cat $<`"})())" > $@.tmp
+    JS=$$(cat $<);\
+	$(ee) "javascript:void((function(){$$JS})())" > $@.tmp
 	$(js2bm) $@.tmp > $@
 	rm $@.tmp
 endef
