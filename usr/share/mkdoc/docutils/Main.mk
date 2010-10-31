@@ -12,8 +12,7 @@ DU_XML           :=
 DU_LATEX         := --use-latex-docinfo --documentclass=article --lang=nl \
 	--documentoptions="14pt,a4paper" 
 DU_ODT           := --create-sections --create-links --generate-oowriter-toc \
-	--add-syntax-highlighting 
-#--cloak-email-addresses 
+	--add-syntax-highlighting --cloak-email-addresses 
 # --stylesheet=/usr/share/pyshared/docutils/writers/odf_odt/styles.odt
 # --odf-config-file=
 # --custom-odt-header=CUSTOM_HEADER --custom-odt-footer=CUSTOM_FOOTER
@@ -22,18 +21,18 @@ DU_ODT           := --create-sections --create-links --generate-oowriter-toc \
 XHT_CSS          :=
 XHT_JS           :=
 
+
 ifeq ($(shell which rst2xml),)
-rst-xhtml   = rst2html.py $(DU_GEN) $(DU_READ) $(DU_HTML)
-rst-xml     = rst2xml.py $(DU_GEN) $(DU_READ) $(DU_XML)
+rst-xhtml         = rst2html.py $(DU_GEN) $(DU_READ) $(DU_HTML)
+rst-xml           = rst2xml.py $(DU_GEN) $(DU_READ) $(DU_XML)
 else
-rst-xhtml   = rst2html $(DU_GEN) $(DU_READ) $(DU_HTML)
-rst-xml     = rst2xml $(DU_GEN) $(DU_READ) $(DU_XML)
-rst-latex   = rst2latex $(DU_GEN) $(DU_READ) $(DU_LATEX)
-rst-newlatex   =rst2newlatex $(DU_GEN) $(DU_READ) $(DU_LATEX)
+rst-xhtml         = rst2html $(DU_GEN) $(DU_READ) $(DU_HTML)
+rst-xml           = rst2xml $(DU_GEN) $(DU_READ) $(DU_XML)
+rst-latex         = rst2latex $(DU_GEN) $(DU_READ) $(DU_LATEX)
+rst-newlatex      = rst2newlatex $(DU_GEN) $(DU_READ) $(DU_LATEX)
 endif
-rst-dep     = $(rst-xml) --record-dependencies=$2 $1 /dev/null 2> /dev/null
-tidy-xhtml  = tidy -q -wrap 0 -asxhtml -utf8 -i
-path2rstlist = $(MK_SHARE)/docutils/path2rstlist.py
+rst-dep           = $(rst-xml) --record-dependencies=$2 $1 /dev/null 2> /dev/null
+path2rstlist      = $(MK_SHARE)/docutils/path2rstlist.py
 
 
 define mk-rst-include-deps
@@ -49,8 +48,8 @@ define mk-rst-include-deps
 		T=$${f};\
 		echo $$T: DIR := $$DIR >> $@; \
 		echo $$T: $$F >> $@; done;
-	#rm $<.src;
 endef
+
 
 define rst-to-xhtml
 	$(ll) file_target "$@" "Building XHTML from rSt" "$<"
@@ -81,9 +80,9 @@ define rst-to-xhtml
 	   done;
 	# Process references
 	$(build-xhtml-refs)
-	mv $@ $@.tmp1
-	# Tidy up html output
-	-$(tidy-xhtml) $@.tmp1 > $@; \
+	rm $@.tmp1
+	# Check output		
+	$(tidy-check) $@; \
 	 if test $$? -gt 0; then $(ee) ""; fi; # put xtra line if err-msgs
 endef
 #@sed -e 's/<p>\[\([0-9]*\)\.\]<\/p>/<a id="page-\1" class="pagebreak"><\/a>/g' $@.tmp1 > $@.tmp2

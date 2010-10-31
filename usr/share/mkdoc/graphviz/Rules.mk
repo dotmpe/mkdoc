@@ -11,24 +11,29 @@ define gv-svg
 endef
 
 
-$/%,graph.png:  $/%.gv
+%,graph.png:  %.gv
 	@$(ll) file_target "$@" because "$?"
 	@$(gv-png)
 	@$(ll) file_ok "$@" "<--($(GRAPHVIZ_ENGINE))-" "$<"
 
-$(BUILD)$/%.gv.png: 		$/%.gv
-	@$(ll) file_target "$@" because "$?"
-	@$(gv-png)
-	@$(ll) file_ok "$@" "<--($(GRAPHVIZ_ENGINE))-" "$<"
-
-
-$(BUILD)$/%,graph.png:  $/%.gv
+$(BUILD)%.gv.png: 		%.gv
 	@$(ll) file_target "$@" because "$?"
 	@$(gv-png)
 	@$(ll) file_ok "$@" "<--($(GRAPHVIZ_ENGINE))-" "$<"
 
 
-$(BUILD)$/%,graph.svg:  $/%.gv
+$(BUILD)%,graph.png:  %.gv
+	@$(ll) file_target "$@" because "$?"
+	@$(gv-png)
+	@$(ll) file_ok "$@" "<--($(GRAPHVIZ_ENGINE))-" "$<"
+
+
+%,graph.svg:  %.gv
+	@$(ll) file_target "$@" because "$?"
+	@$(gv-svg)
+	@$(ll) file_ok "$@" "<--($(GRAPHVIZ_ENGINE))-" "$<"
+
+$(BUILD)%,graph.svg:  %.gv
 	@$(ll) file_target "$@" because "$?"
 	@$(gv-svg)
 	@$(ll) file_ok "$@" "<--($(GRAPHVIZ_ENGINE))-" "$<"

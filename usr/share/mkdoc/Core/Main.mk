@@ -101,6 +101,12 @@ remove-line         = if test -e "$1"; then LINE=$$($(call sed-escape,$2));mv "$
 assert-line         = if test -z "$$(cat $1|grep $2)";then echo "$2" >> $1; fi; 
 #parents             = $()
 filter-mount        = $(foreach M,$1,$(if $(shell mount|grep $M),$(shell echo $M)))                        
+sub-dirs            = $(abspath $(realpath $(shell \
+						for sub in $1/*; do \
+						  if test -d "$$sub"; then \
+						    echo "$$sub"; fi; done)))
+safe-paths          = $(shell D="$(call sed-escape,$1)";ls "$1"|grep '^[\/a-zA-Z0-9\+\.,_-]\+$$'|sed "s/^/$$D/g")
+unsafe-paths        = $(shell D="$(call sed-escape,$1)";ls "$1"|grep -v '^[\/a-zA-Z0-9\+\.,_-]\+$$'|sed "s/^/$$D/g")
 rules               = $(shell for D in $1; do \
                         if test -f "$$(echo $$D/Rules.mk)"; then \
                           echo $$D/Rules.mk; else \
