@@ -3,8 +3,10 @@ MK               += $(MK_SHARE)/docutils/Main.mk
 
 DU_READ          := 
 DU_GEN           := --language=en --traceback --no-generator \
-	--no-footnote-backlinks -i utf-8 -o utf-8 --date
-DU_HTML          := --field-name-limit=22 --link-stylesheet --no-compact-lists \
+	--no-footnote-backlinks -i utf-8 -o utf-8 --date \
+	--rfc-references --rfc-base-url=http://tools.ietf.org/html/rfc
+DU_HTML          := --field-name-limit=22 --link-stylesheet \
+	--no-compact-lists \
 	--footnote-references=superscript --cloak-email-addresses 
 DU_XML           := 
 DU_LATEX         := --use-latex-docinfo --documentclass=article --lang=nl \
@@ -26,6 +28,8 @@ rst-xml     = rst2xml.py $(DU_GEN) $(DU_READ) $(DU_XML)
 else
 rst-xhtml   = rst2html $(DU_GEN) $(DU_READ) $(DU_HTML)
 rst-xml     = rst2xml $(DU_GEN) $(DU_READ) $(DU_XML)
+rst-latex   = rst2latex $(DU_GEN) $(DU_READ) $(DU_LATEX)
+rst-newlatex   =rst2newlatex $(DU_GEN) $(DU_READ) $(DU_LATEX)
 endif
 rst-dep     = $(rst-xml) --record-dependencies=$2 $1 /dev/null 2> /dev/null
 tidy-xhtml  = tidy -q -wrap 0 -asxhtml -utf8 -i
