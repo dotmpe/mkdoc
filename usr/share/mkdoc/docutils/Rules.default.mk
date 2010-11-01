@@ -39,16 +39,25 @@ $(BUILD)%.xhtml:	%.rst
 
 %.xml: %.rst
 	@$(ll) file_target "$@" because "$?"
-	@rst2xml $(DU_GEN) $(DU_READ) $(DU_XML) $< $@
-	@$(ll) file_ok "$@" Done
-	
-%.tex: %.rst
-	@$(ll) file_target "$@" because "$?"
-	@rst2latex $(DU_GEN) $(DU_READ) $(DU_LATEX) $< $@
+	@$(rst-xml) $< $@
 	@$(ll) file_ok "$@" Done
 
-%.odt: %.rst
+
+$(BUILD)%,newlatex.latex: %.rst
 	@$(ll) file_target "$@" because "$?"
-	@rst2odt $(DU_GEN) $(DU_READ) $(DU_ODT) $< $@
+	@$(rst-newlatex)  $< $@
 	@$(ll) file_ok "$@" Done
+
+$(BUILD)%.latex: %.rst
+	@$(ll) file_target "$@" because "$?"
+	@$(rst-latex)  $< $@
+	@$(ll) file_ok "$@" Done
+
+
+$(BUILD)%.odt: %.rst
+	@$(ll) file_target "$@" because "$?"
+	@$(rst-odt) $< $@
+	@$(ll) file_ok "$@" Done
+
+
 

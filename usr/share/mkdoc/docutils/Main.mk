@@ -11,8 +11,10 @@ DU_HTML          := --field-name-limit=22 --link-stylesheet \
 DU_XML           := 
 DU_LATEX         := --use-latex-docinfo --documentclass=article --lang=nl \
 	--documentoptions="14pt,a4paper" 
+DU_NLATEX        := 
 DU_ODT           := --create-sections --create-links --generate-oowriter-toc \
-	--add-syntax-highlighting --cloak-email-addresses 
+	--add-syntax-highlighting 
+# XXX: not working in Du/0.7 --cloak-email-addresses 
 # --stylesheet=/usr/share/pyshared/docutils/writers/odf_odt/styles.odt
 # --odf-config-file=
 # --custom-odt-header=CUSTOM_HEADER --custom-odt-footer=CUSTOM_FOOTER
@@ -29,7 +31,8 @@ else
 rst-xhtml         = rst2html $(DU_GEN) $(DU_READ) $(DU_HTML)
 rst-xml           = rst2xml $(DU_GEN) $(DU_READ) $(DU_XML)
 rst-latex         = rst2latex $(DU_GEN) $(DU_READ) $(DU_LATEX)
-rst-newlatex      = rst2newlatex $(DU_GEN) $(DU_READ) $(DU_LATEX)
+rst-newlatex      = rst2newlatex $(DU_GEN) $(DU_READ) $(DU_NLATEX)
+rst-odt           = rst2odt $(DU_GEN) $(DU_READ) $(DU_ODT)
 endif
 rst-dep           = $(rst-xml) --record-dependencies=$2 $1 /dev/null 2> /dev/null
 path2rstlist      = $(MK_SHARE)/docutils/path2rstlist.py
@@ -68,12 +71,12 @@ define rst-to-xhtml
 	$(rst-xhtml) $<.src $@.tmp1
 	rm $<.src
 	# Additional styles 'n scripts
-	JS=`echo "$(XHT_JS)"| tr ' ' ' '`; \
+	JS="$(call sed-escape,$(XHT_JS))"; \
 	   for js_ref in $${JS}; do \
 	   	sed -e "s/<\/head>/<script type=\"text\/javascript\" src=\"$$js_ref\"><\/script><\/head>/" $@.tmp1 > $@.tmp2; \
 	   	mv $@.tmp2 $@.tmp1; \
 	   done;
-	CSS=`echo "$(XHT_CSS)"|tr ' ' ' '`; \
+	CSS="$(call sed-escape,$(XHT_CSS))"; \
 	   for css_ref in $${CSS}; do \
 	   	sed -e "s/<\/head>/<link rel=\"stylesheet\" type=\"text\/css\" href=\"$$css_ref\"\/><\/head>/" $@.tmp1 > $@.tmp2; \
 	   	mv $@.tmp2 $@.tmp1; \
