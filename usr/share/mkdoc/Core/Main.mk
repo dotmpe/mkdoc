@@ -54,6 +54,7 @@ kwds-file           = if test -f "$(KWDS_./$(<D))"; then \
 						  echo $(KWDS_$(@D)); fi; fi; fi; fi;
 kwds-file           = if test -f "$(KWDS_$(DIR))"; then \
 						  echo $(KWDS_$(DIR)); fi;
+init-dir            = if test ! -d $1; then mkdir -p $1; fi
 init-file           = if test ! -f $1; then mkdir -p $$(dirname $1); touch $1; fi
 init-target         = $(call init-file,$@)
 
@@ -88,6 +89,7 @@ count-list          = $(shell if test -f "$1"; then\
 contains            = for Z in "$1"; do if test "$$Z" = "$2"; then \
 					    echo "$$Z"; fi; done;
 expand-path         = $(shell echo $1)
+exists              = $(shell realpath "$1" 2> /dev/null)
 is-path             = $(shell if test -e "$1";then echo $1; fi;)
 is-file             = $(shell if test -f "$1";then echo $1; fi;)
 is-dir              = $(shell if test -d "$1";then echo $1; fi;)

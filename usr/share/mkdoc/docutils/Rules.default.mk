@@ -37,24 +37,24 @@ $(BUILD)%.xhtml:	%.rst
 	@$(ll) file_ok "$@" Done
 
 
-%.xml: %.rst
+%,du.xml:                    %.rst
 	@$(ll) file_target "$@" because "$?"
 	@$(rst-xml) $< $@
 	@$(ll) file_ok "$@" Done
 
 
-$(BUILD)%,newlatex.latex: %.rst
+$(BUILD)%,du-newlatex.latex: %.rst
 	@$(ll) file_target "$@" because "$?"
 	@$(rst-newlatex)  $< $@
 	@$(ll) file_ok "$@" Done
 
-$(BUILD)%.latex: %.rst
+$(BUILD)%,du.latex: %.rst
 	@$(ll) file_target "$@" because "$?"
 	@$(rst-latex)  $< $@
 	@$(ll) file_ok "$@" Done
 
 
-$(BUILD)%.odt: %.rst
+$(BUILD)%,du.odt: %.rst
 	@$(ll) file_target "$@" because "$?"
 	@$(rst-odt) $< $@
 	@$(ll) file_ok "$@" Done

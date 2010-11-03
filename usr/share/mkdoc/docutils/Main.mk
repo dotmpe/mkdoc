@@ -98,8 +98,11 @@ define build-xhtml-refs
 	# XXX: it appears that setting HTML base href is not enough for the browser
 	# to resolve link/script references?
 	BASE_URI=`echo "$(BASE_HREF)" | awk '{gsub("[~/:]", "\\\\\\\&");print}'`;\
+	ROOT=`echo "$(ROOT)" | awk '{gsub("[~/:]", "\\\\\\\&");print}'`;\
 	sed \
-		-e 's/href="\(.\+\)\.rst"/href="\1"/g' \
+		-e "s/src=\"$$ROOT\(.\+\)\"/src=\"\1\"/g" \
+		-e "s/href=\"$$ROOT\(.\+\)\"/href=\"\1\"/g" \
+		-e "s/href=\"\(.\+\)\.rst\"/href=\"\1\"/g" \
 		-e "s/<table/<table summary=\"Docutils rSt table\"/g" \
 			$@.tmp1 > $@ 
 @#		-e "s/<\/head>/<base href=\"$$BASE_URI\" \/><\/head>/"\
