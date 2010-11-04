@@ -60,4 +60,19 @@ $(BUILD)%,du.odt: %.rst
 	@$(ll) file_ok "$@" Done
 
 
+# rst2gxl by S. Merten
+# XXX: it seems internal or local references are mapped to edges
+# not external links or includes
+$(BUILD)%,du.gxl: %.rst
+	@$(ll) file_target "$@" because "$?"
+	@# XXX: wrong attr. name:
+	@rst2gxl.py $< | sed 's/name=\"name\"/name="label"/g' > $@
+	@$(tidy-xml) $@
+	@$(ll) file_ok "$@" Done
+
+%,du.gxl: %.rst
+	@$(ll) file_target "$@" because "$?"
+	@rst2gxl.py $< | sed 's/name=\"name\"/name="label"/g' > $@
+	@$(tidy-xml) $@
+	@$(ll) file_ok "$@" Done
 

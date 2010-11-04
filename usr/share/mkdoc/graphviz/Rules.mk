@@ -11,6 +11,17 @@ define gv-svg
 endef
 
 
+%,gxl.gv: %.gxl
+	@$(ll) file_target "$@" because "$?"
+	@gxl2gv -d -o$@ $< 
+	@$(ll) file_ok "$@" Done
+
+%,gv.gxl: %.gv
+	@$(ll) file_target "$@" because "$?"
+	@gxl2gv -g -o$@ $< 
+	@$(ll) file_ok "$@" Done
+
+
 %,graph.png:  %.gv
 	@$(ll) file_target "$@" because "$?"
 	@$(gv-png)
