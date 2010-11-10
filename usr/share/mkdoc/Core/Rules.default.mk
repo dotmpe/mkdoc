@@ -7,7 +7,7 @@ default:              stat
 
 ## Add default MkDoc targets and set special targets
 STRGT 			   += default stat help info list lists dmk dep build test \
-					  clean clean-pyc install all
+					  clean clean-pyc install all src
 .PHONY: 		      $(STRGT)
 
 
@@ -68,7 +68,7 @@ lists:
 	@#$(ll) header2 "All Generated Targets" '$(strip $(CLN))'
 	@$(ll) OK $@ 
 
-stat: $(SRC) dep dmk
+stat: src dep dmk
 	@OFFLINE=$(strip $(abspath $(OFFLINE)));\
 	 if test -n "$$OFFLINE"; then \
  	   $(ll) Warning "Offline" "directories unavailable:" "$$OFFLINE";\
@@ -84,6 +84,8 @@ stat: $(SRC) dep dmk
 
 build: stat $(TRGT)
 	@$(call log,Done,$@,$(call count,$(TRGT)) targets ready)
+
+src: $(SRC) 
 
 dep: $(DEP)
 	@$(call log,Done,$@,$(call count,$(DEP)) generated dependencies ready) 

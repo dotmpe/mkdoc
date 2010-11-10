@@ -42,7 +42,7 @@ RES :=
 
 ll                  = $(MK_SHARE)Core/log.sh
 ee                  = /bin/echo -e
-mk-target-dir       = if test ! -d $(@D); then mkdir -p $(@D); fi
+mk-target-dir       = if test ! -d $(@D); then mkdir -p $(@D); fi;
 sed-trim            = sed 's/^ *//g' | sed 's/ *$$//g'
 kwds-file           = if test -f "$(KWDS_./$(<D))"; then \
 						  echo $(KWDS_./$(<D)); \
@@ -60,13 +60,13 @@ init-target         = $(call init-file,$@)
 
 define mk-target
 	$(mk-target-dir)
-	if test ! -f "$@"; then touch $@; fi
+	if test ! -f "$@"; then touch $@; fi;
 endef
 
 define reset-target
 	$(mk-target-dir)
-	if test -f "$@"; then rm $@; fi
-	touch $@
+	if test -f "$@"; then rm $@; fi;
+	touch $@;
 endef
 
 define mk-include
@@ -173,6 +173,19 @@ define post-proc-tags
 		mv $@.tmp $@;
 #			#line=$($(ee) $$l | tr '\t' '\n');
 #
+endef
+
+define build-dir-index
+	$(ll) file_target "$@" "Checking" "$<"
+	ls $(<D) | sort | grep -v '^\.\.?$$' > $@.tmp
+	if test -f $@; then \
+	   if test -n "`diff $@ $@.tmp`"; then \
+	       mv $@.tmp $@; \
+	   	$(ll) file_ok "$@" "Updated index"; \
+	   else rm $@.tmp; \
+		$(ll) file_ok "$@" "Nothing to do"; fi; \
+	else mv $@.tmp $@; \
+	   $(ll) file_ok "$@" "New index"; fi
 endef
 
 

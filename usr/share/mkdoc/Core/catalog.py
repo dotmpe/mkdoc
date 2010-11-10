@@ -12,6 +12,7 @@ on the command line as arguments and ordered to priority.
 Whenever the mediafile is missing or moved, this script may attempt to relink to
 an existing source.
 
+TODO: not working, see catlink for quickhack
 
 Requirements
   - Multiple mediafiles allowed per catalog entry.

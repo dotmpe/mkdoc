@@ -5,6 +5,7 @@ import sys, os, optparse, hashlib
 from os import sep, symlink, mkdir, rename
 from os.path import expanduser, exists, isdir, isfile, \
         abspath, basename, dirname, join
+from shutil import move        
 
 
 
@@ -52,9 +53,9 @@ def main():
             mkdirs(dest_dir)
     assert not isfile(dest_path)
     sha1sum = hashlib.sha1(open(src_path).read()).hexdigest()
-    if not opts.no_act:
-        rename(src_path, dest_path)
     print "Moving <%s> to <%s>" % (src_path, dest_path)
+    if not opts.no_act:
+        move(src_path, dest_path)
     if not opts.no_act:
         open(dest_path+'.sha1sum', 'w').write(
             sha1sum+'  '+basename(dest_path)+'\n')
@@ -69,6 +70,8 @@ def main():
     if not opts.no_act:
         symlink(dest_path, catpath)
         symlink(catpath, src_path)
+    if opts.no_act:
+        print " **Dry Run** "
 
 if __name__ == '__main__':
     main()
