@@ -51,9 +51,13 @@ kwds-file           = if test -f "$(KWDS_./$(<D))"; then \
 						else if test -f "$(KWDS_$(<D))"; then \
 						  echo $(KWDS_$(<D)); \
 						else if test -f "$(KWDS_$(@D))"; then \
-						  echo $(KWDS_$(@D)); fi; fi; fi; fi;
-kwds-file           = if test -f "$(KWDS_$(DIR))"; then \
-						  echo $(KWDS_$(DIR)); fi;
+						  echo $(KWDS_$(@D)); \
+						else if test -f "$(KWDS_$(DIR))"; then \
+						  echo $(KWDS_$(DIR)); \
+						else if test -f "$(KWDS_.)"; then \
+						  echo $(KWDS_.); \
+						else if test -f "$(KWDS)"; then \
+						  echo $(KWDS); fi; fi; fi; fi; fi; fi; fi;
 init-dir            = if test ! -d $1; then mkdir -p $1; fi
 init-file           = if test ! -f $1; then mkdir -p $$(dirname $1); touch $1; fi
 init-target         = $(call init-file,$@)

@@ -1,8 +1,10 @@
 
 %,latex.pdf:        %.latex
 	@$(ll) file_target "$@" because "$?"
-	@rubber --inplace --pdf $<
-	@rubber --inplace --clean $<
+	@if test -n "$(DIR)"; then D=$(@D);else D=$(DIR);fi;\
+	 cd $$D;\
+	 rubber --inplace --pdf $(<F);\
+	 rubber --inplace --clean $(<F)
 	@mv $(<D)/$$(basename $< .latex).pdf $@
 	@$(ll) file_ok "$@" Done
 

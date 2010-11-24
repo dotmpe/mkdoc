@@ -39,6 +39,38 @@ $(BUILD)%,graph.png:  %.gv
 	@$(ll) file_ok "$@" "<--($(GRAPHVIZ_ENGINE))-" "$^"
 
 
+$(BUILD)%,neato,graph.png:  %.gv
+	@$(ll) file_target "$@" because "$?"
+	@$(gv-png)
+	@$(ll) file_ok "$@" "<--($(GRAPHVIZ_ENGINE))-" "$^"
+$(BUILD)%,neato,graph.png:  GRAPHVIZ_ENGINE:=$(GRAPHVIZ_ENGINE:dot%=neato%)
+
+$(BUILD)%,twopi,graph.png:  %.gv
+	@$(ll) file_target "$@" because "$?"
+	@$(gv-png)
+	@$(ll) file_ok "$@" "<--($(GRAPHVIZ_ENGINE))-" "$^"
+$(BUILD)%,twopi,graph.png:  GRAPHVIZ_ENGINE:=$(GRAPHVIZ_ENGINE:dot%=twopi%)
+
+$(BUILD)%,fdp,graph.png:  %.gv
+	@$(ll) file_target "$@" because "$?"
+	@$(gv-png)
+	@$(ll) file_ok "$@" "<--($(GRAPHVIZ_ENGINE))-" "$^"
+$(BUILD)%,fdp,graph.png:  GRAPHVIZ_ENGINE:=$(GRAPHVIZ_ENGINE:dot%=fdp%)
+
+$(BUILD)%,circo,graph.png:  %.gv
+	@$(ll) file_target "$@" because "$?"
+	@$(gv-png)
+	@$(ll) file_ok "$@" "<--($(GRAPHVIZ_ENGINE))-" "$^"
+$(BUILD)%,circo,graph.png:  GRAPHVIZ_ENGINE:=$(GRAPHVIZ_ENGINE:dot%=circo%)
+
+
+#$(BUILD)%.svg.png: 		$d/%.svg
+#	@$(reset-target)
+#	@rsvg-convert -o $@ $^
+#	@file -s $@
+#	@$(ee) "* $^ -> $@"
+
+
 %,graph.svg:  %.gv
 	@$(ll) file_target "$@" because "$?"
 	@$(gv-svg)
@@ -48,11 +80,4 @@ $(BUILD)%,graph.svg:  %.gv
 	@$(ll) file_target "$@" because "$?"
 	@$(gv-svg)
 	@$(ll) file_ok "$@" "<--($(GRAPHVIZ_ENGINE))-" "$^"
-
-
-#$(BUILD)%.svg.png: 		$d/%.svg
-#	@$(reset-target)
-#	@rsvg-convert -o $@ $^
-#	@file -s $@
-#	@$(ee) "* $^ -> $@"
 

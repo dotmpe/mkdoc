@@ -15,14 +15,15 @@ include                $(MK_SHARE)Core/Main.mk \
 
 MK                  += $(DIR)/Makefile
 
-include                $(MK_SHARE)docutils/Rules.default.mk \
+include                \
 					   $(MK_SHARE)bookmarklet/Rules.default.mk \
                        $(MK_SHARE)graphviz/Rules.mk \
-                       $(MK_SHARE)rubber/Rules.default.mk 
+                       $(MK_SHARE)rubber/Rules.default.mk \
+					   $(MK_SHARE)docutils/Rules.default.mk \
 #					   $(MK_SHARE)Core/Rules.archive.mk
 
 # Include specific rules and set SRC, DEP, TRGT and CLN variables.
-include                $(call rules,$(DIR)) 
+include                $(call rules,$(DIR)/) 
 
 # Now set some standard targets
 include                $(MK_SHARE)Core/Rules.default.mk

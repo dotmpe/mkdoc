@@ -33,6 +33,7 @@ rst-xml           = rst2xml $(DU_GEN) $(DU_READ) $(DU_XML)
 rst-latex         = rst2latex $(DU_GEN) $(DU_READ) $(DU_LATEX)
 rst-newlatex      = rst2newlatex $(DU_GEN) $(DU_READ) $(DU_NLATEX)
 rst-odt           = rst2odt $(DU_GEN) $(DU_READ) $(DU_ODT)
+rst-s5            = rst2s5 $(DU_GEN) $(DU_READ) $(DU_ODT)
 endif
 rst-dep           = $(rst-xml) --record-dependencies=$2 $1 /dev/null 2> /dev/null
 path2rstlist      = $(MK_SHARE)/docutils/path2rstlist.py
@@ -43,16 +44,30 @@ define mk-rst-include-deps
 	$(if $(call is-file,$(shell $(kwds-file))),
 		$(ante-proc-tags),
 		$(shell cp $< $<.src))
+	# write deps
+	# Rule-source is rSt file, rule-target the generated-makefile
 	$(call rst-dep,$<.src,-) | while read f; do \
-		DIR=$(<D);\
-		DIR=$${DIR##./}/;\
-		F=$${f##$$DIR}; \
-		T=$${f/%.rst/.xhtml}; \
-		T=$${f};\
-		echo $$T: DIR := $$DIR >> $@; \
-		echo $$T: $$F >> $@; done;
+		DEPF=./$${f}; \
+		DEPT=$${DEPF/%.rst/.xhtml}; \
+		DEPT=$${DEPF/%.rst/.xhtml}; \
+		RULEF=./$<;\
+		DIR=$(call sed-escape,$(DIR)/);BUILD=$(call sed-escape,$(BUILD));\
+		RULET=$${RULEF/%.rst/.xhtml};RULET=$${RULET/#$$DIR/$$BUILD};\
+		echo "#  Rule: $@: $< "> $@; \
+		echo "#     *: $* ">> $@; \
+		echo "#   DIR: $$DIR ">> $@; \
+		echo "#   DEP: $$f ">> $@; \
+		echo "# BUILD: $$BUILD  ">> $@; \
+		echo "$$DEPT: DIR := $$DIR ">> $@; \
+		echo "$$DEPT: $$DEPF ">> $@; \
+		echo "$@: $$RULEF $$DEPF $(call rules,$(DIR))">> $@; \
+		echo "$$RULET: $$DEPF ">> $@; done
 endef
 
+
+define rst-to-src
+	$(ll) file_target "$@" "Updating Document from rSt" "$<"
+endef
 
 define rst-to-xhtml
 	$(ll) file_target "$@" "Building XHTML from rSt" "$<"

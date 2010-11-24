@@ -15,13 +15,15 @@ $(BUILD)%.include.mk: %.rst
 
 
 # TODO: step to .src instead
-$(BUILD)%.rst:      %.rst
-	@$(ll) file_target "$@" because "$?"
-	$(if $(call is-file,$(shell $(kwds-file))),
-		$(ante-proc-tags),
-		$(shell cp $< $<.src))
-	@mv $<.src $@	
-	@$(ll) file_ok "$@" Done
+#$(BUILD)%.rst:      %.rst
+#	@echo 'in' $?
+#	@echo 'out' $@
+#	@$(ll) file_target "$@" because "$?"
+#	$(if $(call is-file,$(shell $(kwds-file))),
+#		$(ante-proc-tags),
+#		$(shell cp $< $<.src))
+#	@mv $<.src $@	
+#	@$(ll) file_ok "$@" Done
 
 
 %.xhtml:			%.rst
@@ -39,25 +41,30 @@ $(BUILD)%.xhtml:	%.rst
 
 %,du.xml:                    %.rst
 	@$(ll) file_target "$@" because "$?"
-	@$(rst-xml) $< $@
+	@$(reset-target)
+	@T=$$(realpath $@);cd $(<D);$(rst-xml) $(<F) $$T
 	@$(ll) file_ok "$@" Done
 
 
 $(BUILD)%,du-newlatex.latex: %.rst
 	@$(ll) file_target "$@" because "$?"
-	@$(rst-newlatex)  $< $@
+	@$(reset-target)
+	@T=$$(realpath $@);cd $(<D);$(rst-newlatex) $(<F) $$T
 	@$(ll) file_ok "$@" Done
 
 $(BUILD)%,du.latex: %.rst
 	@$(ll) file_target "$@" because "$?"
-	@$(rst-latex)  $< $@
+	@$(reset-target)
+	@T=$$(realpath $@);cd $(<D);$(rst-latex) $(<F) $$T
 	@$(ll) file_ok "$@" Done
 
 
 $(BUILD)%,du.odt: %.rst
 	@$(ll) file_target "$@" because "$?"
-	@$(rst-odt) $< $@
+	@$(reset-target)
+	@T=$$(realpath $@);cd $(<D);$(rst-odt) $(<F) $$T
 	@$(ll) file_ok "$@" Done
+
 
 
 # rst2gxl by S. Merten
