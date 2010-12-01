@@ -25,16 +25,27 @@ XHT_JS           :=
 
 
 ifeq ($(shell which rst2xml),)
-rst-xhtml         = rst2html.py $(DU_GEN) $(DU_READ) $(DU_HTML)
+rst-html          = rst2html.py $(DU_GEN) $(DU_READ) $(DU_HTML)
+rst-latex         = rst2latex.py $(DU_GEN) $(DU_READ) $(DU_LATEX)
+rst-man           = rst2man.py $(DU_GEN) $(DU_READ) $(DU_NLATEX)
+rst-newlatex      = rst2newlatex.py $(DU_GEN) $(DU_READ) $(DU_NLATEX)
+rst-odt           = rst2odt.py $(DU_GEN) $(DU_READ) $(DU_ODT)
+rst-pseudoxml     = rst2psueudoxml.py $(DU_GEN) $(DU_READ) $(DU_ODT)
+rst-s5            = rst2s5.py $(DU_GEN) $(DU_READ) $(DU_ODT)
+rst-xetex         = rst2xetex.py $(DU_GEN) $(DU_READ) $(DU_ODT)
 rst-xml           = rst2xml.py $(DU_GEN) $(DU_READ) $(DU_XML)
 else
-rst-xhtml         = rst2html $(DU_GEN) $(DU_READ) $(DU_HTML)
-rst-xml           = rst2xml $(DU_GEN) $(DU_READ) $(DU_XML)
+rst-html          = rst2html $(DU_GEN) $(DU_READ) $(DU_HTML)
 rst-latex         = rst2latex $(DU_GEN) $(DU_READ) $(DU_LATEX)
+rst-man           = rst2man $(DU_GEN) $(DU_READ) $(DU_NLATEX)
 rst-newlatex      = rst2newlatex $(DU_GEN) $(DU_READ) $(DU_NLATEX)
 rst-odt           = rst2odt $(DU_GEN) $(DU_READ) $(DU_ODT)
+rst-pseudoxml     = rst2psueudoxml $(DU_GEN) $(DU_READ) $(DU_ODT)
 rst-s5            = rst2s5 $(DU_GEN) $(DU_READ) $(DU_ODT)
+rst-xetex         = rst2xetex $(DU_GEN) $(DU_READ) $(DU_ODT)
+rst-xml           = rst2xml $(DU_GEN) $(DU_READ) $(DU_XML)
 endif
+# FIXME: fail if any of the above do not exist..
 rst-dep           = $(rst-xml) --record-dependencies=$2 $1 /dev/null 2> /dev/null
 path2rstlist      = $(MK_SHARE)/docutils/path2rstlist.py
 
@@ -83,7 +94,12 @@ define rst-to-xhtml
 	$(path2rstlist) /$< >> $@.src
 	# Make XHTML tree (in original directory)
 	cp $@.src $<.src
-	$(rst-xhtml) $<.src $@.tmp1
+	# --source-url="/$<.rst" XXX extension gets stripped
+	#echo $(rst-html) $<.src $@.tmp1
+	#echo 'READ ' $(DU_READ)
+	#echo 'HTML ' $(DU_HTML)
+	#echo 'GEN ' $(DU_GEN)
+	$(rst-html) $<.src $@.tmp1
 	rm $<.src
 	# Additional styles 'n scripts
 	JS="$(call sed-escape,$(XHT_JS))"; \

@@ -4,6 +4,6 @@ D_$(SP)             := $d
 d                   := $(DIR)
 /                   := $d/
 #      ------------ -- 
-$(info =================== == $/)
+$(info $(shell $(ll) file_target "$/" "Loading makefile.." ))
 #             ------------ -- 
 
