@@ -48,20 +48,20 @@ STDTRGT            := \
 STDSTAT            := \
 					  help stat list lists info
 
-DESCRIPTION := all='build, test and install'
-DESCRIPTION += dep='generate dependencies'
-DESCRIPTION += dmk='generate dynamic makefiles'
-DESCRIPTION += test='TODO: run tests'
-DESCRIPTION += build='builds all targets'
-DESCRIPTION += install='TODO (no-op)'
-DESCRIPTION += clean='delete all targets'
-DESCRIPTION += cleandep='delete all dynamic makefiles and dependencies'
+DESCRIPTION        := all='build, test and install'
+DESCRIPTION        += dep='generate dependencies'
+DESCRIPTION        += dmk='generate dynamic makefiles'
+DESCRIPTION        += test='TODO: run tests'
+DESCRIPTION        += build='builds all targets'
+DESCRIPTION        += install='TODO (no-op)'
+DESCRIPTION        += clean='delete all targets'
+DESCRIPTION        += cleandep='delete all dynamic makefiles and dependencies'
 
-DESCRIPTION += help='print this help'
-DESCRIPTION += stat='assert sources, dynamic makefiles and other dependencies'
-DESCRIPTION += list='print SRC and TRGT lists'
-DESCRIPTION += lists='print all other lists'
-DESCRIPTION += info='..'
+DESCRIPTION        += help='print this help'
+DESCRIPTION        += stat='assert sources, dynamic makefiles and other dependencies'
+DESCRIPTION        += list='print SRC and TRGT lists'
+DESCRIPTION        += lists='print all other lists'
+DESCRIPTION        += info='..'
 
 
 ll                  = $(MK_SHARE)Core/log.sh

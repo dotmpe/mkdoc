@@ -1,7 +1,7 @@
 MkDoc
 =====
 :date: 2010-09-19
-:update: 2010-10-16
+:update: 2010-12-04
 :author: \B. van Berkum  <dev@dotmpe.com>
 :homepage: http://dotmpe.com/project/mkdoc
 :url: http://github.org/dotmpe/mkdoc/blob/master/usr/share/doc/mkdoc/README.rst
@@ -15,15 +15,18 @@ A set of Makefiles:
 
 It is useful in quick bootstrapping of make rules, but I think it is the ugliest
 code I have worked on. Nevertheless it is an nice exercise in Make+Bash scripting
-but also leaves much to be desired.
+but also leaves much to be desired (example: I just noted $(eval) may help in
+streamlining current recipes and rules further). It probably is not getting more
+legible thought.
 
-Since this data is cross-linked and interdependent, the source and target paths
-that are worked upon are referred to as mkdoc trees. 
+Since the data (SRC/TRGT/.. sets) are cross-linked and interdependent, 
+the paths that are worked upon are referred to as mkdoc trees. 
 
 I use this GNU/Make setup in individual software projects and in websites that 
-(among others) include these projects. In fact, for websites I make it a point to 
-only keep original content in the source trees, symlinking to content that is part 
-of other projects or disk partitions.
+(among others) include these projects. Ideally, content has only one specific
+location. Pieces written for a website reside in a (project) directory for that
+website, while notes included in the website may be part of other project
+directires (symlinked).
 
 .. [#] The non-recursive implementation is from `Implementing non-recursive make  <http://www.xs4all.nl/~evbergen/nonrecursive-make.html>`__, which tries to address the issues from `Recursive Make Considered Harmful  <http://miller.emu.id.au/pmiller/books/rmch/>`__. Obviously there are other solutions, possibly without boilerplate in sub-files. See e.g. `What is your experience with non-recursive make? <http://stackoverflow.com/questions/559216/what-is-your-experience-with-non-recursive-make>`__ or `Painless non-recursive Make <http://www.cmcrossroads.com/ask-mr-make/8133-painless-non-recursive-make>`__.
 
