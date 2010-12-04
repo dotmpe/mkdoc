@@ -24,6 +24,7 @@ ROOT               := $(shell pwd)
 endif
 
 
+# global path/file lists
 SRC                :=
 DMK                :=
 MK                 :=
@@ -39,6 +40,29 @@ MISSING            :=
 OFFLINE            :=
 
 RES := 
+
+
+# standard targets (append to STRGT) see Rules.default.mk
+STDTRGT            := \
+					  all dep dmk test build install clean cleandep
+STDSTAT            := \
+					  help stat list lists info
+
+DESCRIPTION := all='build, test and install'
+DESCRIPTION += dep='generate dependencies'
+DESCRIPTION += dmk='generate dynamic makefiles'
+DESCRIPTION += test='TODO: run tests'
+DESCRIPTION += build='builds all targets'
+DESCRIPTION += install='TODO (no-op)'
+DESCRIPTION += clean='delete all targets'
+DESCRIPTION += cleandep='delete all dynamic makefiles and dependencies'
+
+DESCRIPTION += help='print this help'
+DESCRIPTION += stat='assert sources, dynamic makefiles and other dependencies'
+DESCRIPTION += list='print SRC and TRGT lists'
+DESCRIPTION += lists='print all other lists'
+DESCRIPTION += info='..'
+
 
 ll                  = $(MK_SHARE)Core/log.sh
 ee                  = /bin/echo -e
@@ -113,6 +137,9 @@ sub-dirs            = $(abspath $(realpath $(shell \
 						    echo "$$sub"; fi; done)))
 safe-paths          = $(shell D="$(call sed-escape,$1)";ls "$1"|grep '^[\/a-zA-Z0-9\+\.,_-]\+$$'|sed "s/^/$$D/g")
 unsafe-paths        = $(shell D="$(call sed-escape,$1)";ls "$1"|grep -v '^[\/a-zA-Z0-9\+\.,_-]\+$$'|sed "s/^/$$D/g")
+# mkid: rewrite filename/path to Make/Bash safe variable ID
+mkid                = $(shell echo $1|sed 's/[\/\.,;:_\+]\+/_/g')
+# rules: return Rules files for each directory in $1
 rules               = $(shell for D in $1; do \
                         if test -f "$$(echo $$D/Rules.mk)"; then \
                           echo $$D/Rules.mk; else \
@@ -132,7 +159,9 @@ def-rules           = $(shell for D in $1; do \
                         if test -f "$$(echo $$D/.Rules.$(HOST).mk)"; then \
 						  echo $$D/.Rules.$(HOST).mk; else \
 						  echo $$D/Rules.mk; fi; fi; fi; fi; done )
+# sub-rules: return ./*/[.]Rules[.host].mk, ie. rules from subdirs
 sub-rules           = $(foreach V,$1,$(call rules,$V/*))
+# complement: return items from $1 not in $2
 complement          = $(shell \
 					    for X in $1; do \
 					      if test -z "$$(for Z in $2; do if test "$$Z" = "$$X"; \

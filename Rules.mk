@@ -1,6 +1,6 @@
 include                $(MK_SHARE)Core/Main.dirstack.mk
 
-MK                  += $d/Rules.mk
+MK                  += $/Rules.mk
 
 
 #      ------------ -- 

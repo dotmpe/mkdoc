@@ -6,32 +6,47 @@ default:              stat
 -include              $(DMK)
 
 ## Add default MkDoc targets and set special targets
-STRGT 			   += default stat help info list lists dmk dep build test \
-					  clean clean-pyc install all src
+STD                := $(STDTRGT) $(STDSTAT)
+STRGT 			   += $(STD)
 .PHONY: 		      $(STRGT)
-
 
 ### Standard Rule(s)
 help:
 	@$(ee) 
-	@$(ll) header $@     "Scrow project Makefile"
-	@$(ee) 
-	@$(ll) header2 all   "build, test and install"
-	@$(ll) header2 dep   "generate dependencies"
-	@$(ll) header2 dmk   "generate dynamic makefiles"
-	@$(ll) header2 test  "TODO: run tests"
-	@$(ll) header2 build "builds all targets"
-	@$(ll) header2 install "TODO (no-op)"
-	@$(ll) header2 clean "delete all targets"
-	@$(ll) header2 clean-dep "delete all dynamic makefiles and dependencies"
-	@$(ee) 
-	@$(ll) header $@     "No-ops and summary targets:"
-	@$(ll) header2 help "."
-	@$(ll) header2 stat  "assert sources, dynamic makefiles and other dependencies."
-	@$(ll) header2 list "."
-	@$(ll) header2 lists  "."
-	@$(ll) header2 info  "."
-	@$(ee) 
+	@# See STRGT and DESCRIPTION vars, STD (STDTARGT or STDSTAT) without DESCRIPTION is not printed
+	@declare $(DESCRIPTION);\
+	$(ll) header $@     "$$PROJECT project Makefile";\
+	$(ee) ;\
+	for strgt in $(STDTRGT);\
+	do\
+		V=$$strgt;\
+		if test -n "$${!V}";\
+		then\
+			$(ll) header2 $$strgt "$${!V}";\
+		fi;\
+	done;\
+	$(ee) ;\
+	$(ll) header $@     "No-ops and summary targets";\
+	for strgt in $(STDSTAT);\
+	do\
+		V=$$strgt;\
+		if test -n "$${!V}";\
+		then\
+			$(ll) header2 $$strgt "$${!V}";\
+		fi;\
+	done;\
+	$(ee) ;\
+	OTHER="$(call complement,$(STRGT),$(STD))";\
+	if test -n "$(OTHER)";\
+	then\
+		$(ll) header $@     "Other special targets";\
+		for strgt in $(call complement,$(STRGT),$(STD));\
+		do\
+			V=$$strgt;\
+			$(ll) header2 $$strgt "$${!V}";\
+		done;\
+		$(ee);\
+	fi;
 	@$(ll) OK $@ 
 
 info:
@@ -102,7 +117,7 @@ clean:
 	 if test $$? -gt 0; then $(echo) ""; fi; # put xtra line if err-msgs
 	@$(call log,Done,$@,$(call count,$(CLN)) targets)
 
-clean-dep:
+cleandep:
 	@$(ll) warning $@ "cleaning dependencies" "$(DEP) $(DMK)"
 	@-rm $(DEP) $(DMK);\
 	 if test $$? -gt 0; then echo; fi; # put extra line if err-msg
