@@ -46,11 +46,11 @@ $(BUILD)%.xhtml:	%.rst
 	@$(ll) file_ok "$@" Done
 
 
-$(BUILD)%,du-newlatex.latex: %.rst
-	@$(ll) file_target "$@" because "$?"
-	@$(reset-target)
-	@T=$$(realpath $@);cd $(<D);$(rst-newlatex) $(<F) $$T
-	@$(ll) file_ok "$@" Done
+#$(BUILD)%,du-newlatex.latex: %.rst
+#	@$(ll) file_target "$@" because "$?"
+#	@$(reset-target)
+#	@T=$$(realpath $@);cd $(<D);$(rst-newlatex) $(<F) $$T
+#	@$(ll) file_ok "$@" Done
 
 $(BUILD)%,du.latex: %.rst
 	@$(ll) file_target "$@" because "$?"
@@ -63,6 +63,13 @@ $(BUILD)%,du.odt: %.rst
 	@$(ll) file_target "$@" because "$?"
 	@$(reset-target)
 	@T=$$(realpath $@);cd $(<D);$(rst-odt) $(<F) $$T
+	@$(ll) file_ok "$@" Done
+
+
+$(BUILD)%,du.pxml: %.rst
+	@$(ll) file_target "$@" because "$?"
+	@$(reset-target)
+	@T=$$(realpath $@);cd $(<D);$(rst-pseudoxml) $(<F) $$T
 	@$(ll) file_ok "$@" Done
 
 

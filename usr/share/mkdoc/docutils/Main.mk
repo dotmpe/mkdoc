@@ -1,23 +1,34 @@
 MK               += $(MK_SHARE)/docutils/Main.mk
 
 
-DU_READ          := 
+# generic Du flags
 DU_GEN           := --language=en --traceback --no-generator \
 	--no-footnote-backlinks -i utf-8 -o utf-8 --date \
+# Du (Stand alone) reader flags
+DU_READ          := --no-section-subtitles
+# Du rSt parser flags
+DU_RST           := \
+	--file-insertion-enabled \
+	--pep-references \
 	--rfc-references --rfc-base-url=http://tools.ietf.org/html/rfc
+# writer flags
 DU_HTML          := --field-name-limit=22 --link-stylesheet \
 	--no-compact-lists \
 	--footnote-references=superscript --cloak-email-addresses 
 DU_XML           := 
 DU_LATEX         := --use-latex-docinfo --documentclass=article --lang=nl \
 	--documentoptions="14pt,a4paper" 
-DU_NLATEX        := 
+#old DU_NLATEX        := 
 DU_ODT           := --create-sections --create-links --generate-oowriter-toc \
 	--add-syntax-highlighting 
 # XXX: not working in Du/0.7 --cloak-email-addresses 
 # --stylesheet=/usr/share/pyshared/docutils/writers/odf_odt/styles.odt
 # --odf-config-file=
 # --custom-odt-header=CUSTOM_HEADER --custom-odt-footer=CUSTOM_FOOTER
+DU_MAN           :=
+DU_PXML          :=
+DU_S5            :=
+DU_XETEX         :=
 
 
 XHT_CSS          :=
@@ -25,25 +36,25 @@ XHT_JS           :=
 
 
 ifeq ($(shell which rst2xml),)
-rst-html          = rst2html.py $(DU_GEN) $(DU_READ) $(DU_HTML)
-rst-latex         = rst2latex.py $(DU_GEN) $(DU_READ) $(DU_LATEX)
-rst-man           = rst2man.py $(DU_GEN) $(DU_READ) $(DU_NLATEX)
-rst-newlatex      = rst2newlatex.py $(DU_GEN) $(DU_READ) $(DU_NLATEX)
-rst-odt           = rst2odt.py $(DU_GEN) $(DU_READ) $(DU_ODT)
-rst-pseudoxml     = rst2psueudoxml.py $(DU_GEN) $(DU_READ) $(DU_ODT)
-rst-s5            = rst2s5.py $(DU_GEN) $(DU_READ) $(DU_ODT)
-rst-xetex         = rst2xetex.py $(DU_GEN) $(DU_READ) $(DU_ODT)
-rst-xml           = rst2xml.py $(DU_GEN) $(DU_READ) $(DU_XML)
+rst-html          = rst2html.py      $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_HTML)
+rst-latex         = rst2latex.py     $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_LATEX)
+rst-man           = rst2man.py       $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_MAN)
+#rst-newlatex      = rst2newlatex.py  $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_NLATEX)
+rst-odt           = rst2odt.py       $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_ODT)
+rst-pseudoxml     = rst2pseudoxml.py $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_PXML)
+rst-s5            = rst2s5.py        $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_S5)
+rst-xetex         = rst2xetex.py     $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_XETEX)
+rst-xml           = rst2xml.py       $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_XML)
 else
-rst-html          = rst2html $(DU_GEN) $(DU_READ) $(DU_HTML)
-rst-latex         = rst2latex $(DU_GEN) $(DU_READ) $(DU_LATEX)
-rst-man           = rst2man $(DU_GEN) $(DU_READ) $(DU_NLATEX)
-rst-newlatex      = rst2newlatex $(DU_GEN) $(DU_READ) $(DU_NLATEX)
-rst-odt           = rst2odt $(DU_GEN) $(DU_READ) $(DU_ODT)
-rst-pseudoxml     = rst2psueudoxml $(DU_GEN) $(DU_READ) $(DU_ODT)
-rst-s5            = rst2s5 $(DU_GEN) $(DU_READ) $(DU_ODT)
-rst-xetex         = rst2xetex $(DU_GEN) $(DU_READ) $(DU_ODT)
-rst-xml           = rst2xml $(DU_GEN) $(DU_READ) $(DU_XML)
+rst-html          = rst2html         $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_HTML)
+rst-latex         = rst2latex        $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_LATEX)
+rst-man           = rst2man          $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_MAN)
+#rst-newlatex      = rst2newlatex     $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_NLATEX)
+rst-odt           = rst2odt          $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_ODT)
+rst-pseudoxml     = rst2pseudoxml    $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_PXML)
+rst-s5            = rst2s5           $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_S5)
+rst-xetex         = rst2xetex        $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_XETEX)
+rst-xml           = rst2xml          $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_XML)
 endif
 # FIXME: fail if any of the above do not exist..
 rst-dep           = $(rst-xml) --record-dependencies=$2 $1 /dev/null 2> /dev/null

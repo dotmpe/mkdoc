@@ -37,7 +37,7 @@ help:
 	done;\
 	$(ee) ;\
 	OTHER="$(call complement,$(STRGT),$(STD))";\
-	if test -n "$(OTHER)";\
+	if test -n "$$OTHER";\
 	then\
 		$(ll) header $@     "Other special targets";\
 		for strgt in $(call complement,$(STRGT),$(STD));\
