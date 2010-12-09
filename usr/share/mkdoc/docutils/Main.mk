@@ -91,6 +91,18 @@ define rst-to-src
 	$(ll) file_target "$@" "Updating Document from rSt" "$<"
 endef
 
+# ready to use recipes
+define rst-to-latex
+	@$(ll) file_target "$@" because "$?"
+	@$(reset-target)
+	@$(if $(call is-file,$(shell $(kwds-file))),
+		$(ante-proc-tags),
+		$(shell cp $< $<.src))
+	@T=$$(realpath $@);cd $(<D);$(rst-latex) $(<F).src $$T
+	@rm $<.src
+	@$(ll) file_ok "$@" Done
+endef
+
 define rst-to-xhtml
 	$(ll) file_target "$@" "Building XHTML from rSt" "$<"
 	$(reset-target)
