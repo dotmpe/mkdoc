@@ -53,7 +53,7 @@ $(BUILD)%.xhtml:	%.rst
 #	@$(ll) file_ok "$@" Done
 
 $(BUILD)%,du.latex: %.rst
-	$(rst-to-latex)
+	@$(rst-to-latex)
 
 $(BUILD)%,du.odt: %.rst
 	@$(ll) file_target "$@" because "$?"
