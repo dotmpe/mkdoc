@@ -59,6 +59,8 @@ endif
 # FIXME: fail if any of the above do not exist..
 rst-dep           = $(rst-xml) --record-dependencies=$2 $1 /dev/null 2> /dev/null
 path2rstlist      = $(MK_SHARE)/docutils/path2rstlist.py
+rst-pre-proc-include = $(MK_SHARE)/docutils/rst-includes.py
+rst-pdf-figure-to-png = $(MK_SHARE)/docutils/rst-pdf-figure-to-png.py
 
 
 define mk-rst-include-deps
@@ -93,15 +95,24 @@ endef
 
 # ready to use recipes
 define rst-to-latex
-	@$(ll) file_target "$@" because "$?"
-	@$(reset-target)
-	@$(if $(call is-file,$(shell $(kwds-file))),
-		$(ante-proc-tags),
-		$(shell cp $< $<.src))
-	@T=$$(realpath $@);cd $(<D);$(rst-latex) $(<F).src $$T
-	@rm $<.src
-	@$(ll) file_ok "$@" Done
+	$(ll) file_target "$@" because "$?"
+	$(reset-target)
+	$(if $(call is-file,$(shell $(kwds-file))),
+	 $(ante-proc-tags),
+	 $(shell cp $< $<.src))
+	#echo $(rst-latex) $(<F).src $$T
+	T=$$(realpath $@);cd $(<D);$(rst-latex) $(<F).src $$T
+	rm $<.src
+	$(ll) file_ok "$@" Done
 endef
+
+define rst-to-pseudoxml
+	$(ll) file_target "$@" because "$?"
+	$(reset-target)
+	T=$$(realpath $@);cd $(<D);$(rst-pseudoxml) $(<F) $$T
+	$(ll) file_ok "$@" Done
+endef
+
 
 define rst-to-xhtml
 	$(ll) file_target "$@" "Building XHTML from rSt" "$<"
@@ -110,19 +121,23 @@ define rst-to-xhtml
 	$(if $(call is-file,$(shell $(kwds-file))),
 		$(ante-proc-tags),
 		$(shell cp $< $<.src))
-	mv $<.src $@.src
 	#./opt/rst-preproc.py --alt-headers < $<.tmp > $<.src
-	#$(ee) "\n.. header::\n   \n   - null\n\n..\n" >> $@.src
 	# Add path list
-	$(path2rstlist) /$< >> $@.src
+	$(path2rstlist) /$< >> $<.src
+	# Rewrite includes (includes must be non-indented!)
+	$(rst-pre-proc-include) $<.src > $<.src2
+	mv $<.src2 $<.src
+	# Rewrite PDF image/figure to PNG
+	$(rst-pdf-figure-to-png) $<.src > $<.src2
+	mv $<.src2 $<.src
 	# Make XHTML tree (in original directory)
-	cp $@.src $<.src
 	# --source-url="/$<.rst" XXX extension gets stripped
 	#echo $(rst-html) $<.src $@.tmp1
 	#echo 'READ ' $(DU_READ)
 	#echo 'HTML ' $(DU_HTML)
 	#echo 'GEN ' $(DU_GEN)
 	$(rst-html) $<.src $@.tmp1
+	cp $<.src $@.src
 	rm $<.src
 	# Additional styles 'n scripts
 	JS="$(call sed-escape,$(XHT_JS))"; \

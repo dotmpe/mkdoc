@@ -63,11 +63,7 @@ $(BUILD)%,du.odt: %.rst
 
 
 $(BUILD)%,du.pxml: %.rst
-	@$(ll) file_target "$@" because "$?"
-	@$(reset-target)
-	@T=$$(realpath $@);cd $(<D);$(rst-pseudoxml) $(<F) $$T
-	@$(ll) file_ok "$@" Done
-
+	@$(rst-to-pseudoxml)
 
 
 # rst2gxl by S. Merten

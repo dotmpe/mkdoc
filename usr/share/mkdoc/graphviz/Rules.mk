@@ -1,14 +1,3 @@
-define gv-png
-	$(reset-target)
-	$(GRAPHVIZ_ENGINE) -Tpng -o $@ $^
-	$(ll) info "$@" "`file -bs $@`"
-endef
-
-define gv-svg
-	$(reset-target)
-	$(GRAPHVIZ_ENGINE) -Tsvg:cairo -o $@ $^
-	$(ll) info "$@" "`file -bs $@`"
-endef
 
 
 %,gxl.gv: %.gxl
@@ -22,21 +11,21 @@ endef
 	@$(ll) file_ok "$@" Done
 
 
+%,graph.ps:  %.gv
+	@$(gv-to-ps)
+
+$(BUILD)%,graph.ps: 		%.gv
+	@$(gv-to-ps)
+
+
 %,graph.png:  %.gv
-	@$(ll) file_target "$@" because "$?"
-	@$(gv-png)
-	@$(ll) file_ok "$@" "<--($(GRAPHVIZ_ENGINE))-" "$^"
+	@$(gv-to-png)
 
-$(BUILD)%.gv.png: 		%.gv
-	@$(ll) file_target "$@" because "$?"
-	@$(gv-png)
-	@$(ll) file_ok "$@" "<--($(GRAPHVIZ_ENGINE))-" "$^"
+#$(BUILD)%.gv.png: 		%.gv
+#	@$(gv-to-png)
 
-
-$(BUILD)%,graph.png:  %.gv
-	@$(ll) file_target "$@" because "$?"
-	@$(gv-png)
-	@$(ll) file_ok "$@" "<--($(GRAPHVIZ_ENGINE))-" "$^"
+$(BUILD)%,graph.png: 		%.gv
+	@$(gv-to-png)
 
 
 $(BUILD)%,neato,graph.png:  %.gv
