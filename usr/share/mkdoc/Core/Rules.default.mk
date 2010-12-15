@@ -100,6 +100,10 @@ stat: src dep dmk
 build: stat $(TRGT)
 	@$(call log,Done,$@,$(call count,$(TRGT)) targets ready)
 
+# TODO: add some scaffolding for pub/rsync/..?
+pub: build 
+	@$(call log,Done,$@,$(call count,$(TRGT)) targets ready)
+
 src: $(SRC) 
 
 dep: $(DEP)

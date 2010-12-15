@@ -31,7 +31,7 @@ doc = open(inputname).read()
 if sys.argv[1:]:
 	targetname = sys.argv[2]
 	assert not sys.argv[3:], ERR_001 % sys.argv[2:]
-	assert isfile(targetname) or isdir(dirname(targetname)), ERR_002 % targetname
+	assert isfile(targetname) or (not dirname(targetname) or isdir(dirname(targetname))), ERR_002 % targetname
 else:
 	targetname = None
 # refuse to write to same source file, even if current impl. is compatible	
