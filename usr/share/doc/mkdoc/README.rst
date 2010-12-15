@@ -13,20 +13,34 @@ A set of Makefiles:
 - non-recursive use of make [#]_
 - shared common recipes.
 
-It is useful in quick bootstrapping of make rules, but I think it is the ugliest
-code I have worked on. Nevertheless it is an nice exercise in Make+Bash scripting
-but also leaves much to be desired (example: I just noted $(eval) may help in
-streamlining current recipes and rules further). It probably is not getting more
-legible thought.
+.. admonition:: Some kind of disclaimer
 
-Since the data (SRC/TRGT/.. sets) are cross-linked and interdependent, 
-the paths that are worked upon are referred to as mkdoc trees. 
+   It is useful in quick bootstrapping of make rules, but I think it is the ugliest
+   code I have worked on. Nevertheless it is an nice exercise in Make+Bash scripting
+   but also leaves much to be desired (example: I just noted $(eval) may help in
+   streamlining current recipes and rules further). It probably is not getting more
+   legible though.
+
+   I use these myself whenever I need to grab to GNU/Make for automation.
+   So there are quite some projects using this, I myself have found every day
+   use for it.
+
+
+Objectives are primarily building of document contents, and offering a toolkit
+for various operations in Makefiles.
+There is a framework to define special targets in place, used by `Rules.default.mk`__.
+Also an external script does formatting and colored output.
+
+.. __: usr/share/mkdoc/Core/Rules.default.mk
 
 I use this GNU/Make setup in individual software projects and in websites that 
 (among others) include these projects. Ideally, content has only one specific
 location. Pieces written for a website reside in a (project) directory for that
 website, while notes included in the website may be part of other project
 directires (symlinked).
+
+Since the data (SRC/TRGT/.. sets) are cross-linked and interdependent, 
+the paths that are worked upon are referred to as mkdoc trees. 
 
 .. [#] The non-recursive implementation is from `Implementing non-recursive make  <http://www.xs4all.nl/~evbergen/nonrecursive-make.html>`__, which tries to address the issues from `Recursive Make Considered Harmful  <http://miller.emu.id.au/pmiller/books/rmch/>`__. Obviously there are other solutions, possibly without boilerplate in sub-files. See e.g. `What is your experience with non-recursive make? <http://stackoverflow.com/questions/559216/what-is-your-experience-with-non-recursive-make>`__ or `Painless non-recursive Make <http://www.cmcrossroads.com/ask-mr-make/8133-painless-non-recursive-make>`__.
 

@@ -12,13 +12,21 @@ endef
 
 define gv-svg
 	$(reset-target)
-	$(GRAPHVIZ_ENGINE) -Tsvg:cairo -o $@ $^
+	$(GRAPHVIZ_ENGINE) -Tsvg:cairo -o $@ $<
 	$(ll) info "$@" "`file -bs $@`"
 endef
 
 define gv-ps2
 	$(reset-target)
-	$(GRAPHVIZ_ENGINE) -Tps2 -o $@ $^
+	echo $(GRAPHVIZ_ENGINE) -Tps2 -o $@ $<
+	$(GRAPHVIZ_ENGINE) -Tps2 -o $@ $<
+	$(ll) info "$@" "`file -bs $@`"
+endef
+
+define gv-eps
+	$(reset-target)
+	echo $(GRAPHVIZ_ENGINE) -Teps -o $@ $<
+	$(GRAPHVIZ_ENGINE) -Teps -o $@ $<
 	$(ll) info "$@" "`file -bs $@`"
 endef
 
@@ -26,6 +34,12 @@ endef
 define gv-to-png
 	$(ll) file_target "$@" because "$?"
 	$(gv-png)
+	$(ll) file_ok "$@" "<--($(GRAPHVIZ_ENGINE))-" "$^"
+endef
+
+define gv-to-eps 
+	$(ll) file_target "$@" because "$?"
+	$(gv-eps)
 	$(ll) file_ok "$@" "<--($(GRAPHVIZ_ENGINE))-" "$^"
 endef
 

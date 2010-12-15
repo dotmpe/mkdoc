@@ -125,10 +125,10 @@ define rst-to-xhtml
 	# Add path list
 	$(path2rstlist) /$< >> $<.src
 	# Rewrite includes (includes must be non-indented!)
-	$(rst-pre-proc-include) $<.src > $<.src2
+	$(ll) info "source includes" "$$($(rst-pre-proc-include) $<.src $<.src2)"
 	mv $<.src2 $<.src
 	# Rewrite PDF image/figure to PNG
-	$(rst-pdf-figure-to-png) $<.src > $<.src2
+	$(ll) info "web types" "$$($(rst-pdf-figure-to-png) $<.src $<.src2)"
 	mv $<.src2 $<.src
 	# Make XHTML tree (in original directory)
 	# --source-url="/$<.rst" XXX extension gets stripped
