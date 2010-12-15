@@ -45,16 +45,16 @@ fi
 mk_title_blue="$c7$c41%s$c7:$c0"
 mk_title_blue_faint="$c7$c4%s$c7:$c0"
 mk_p_trgt_blue="$c41[$c7%s$c41]$c0"
-mk_p_trgt_blue_faint="$c4[$c7%s$c4]$c0"
+#mk_p_trgt_blue_faint="$c4[$c7%s$c4]$c0"
 mk_trgt_blue="$c41<$c7%s$c41>$c0"
-mk_trgt_blue_faint="$c4<$c7%s$c4>$c0"
+#mk_trgt_blue_faint="$c4<$c7%s$c4>$c0"
 mk_trgt_yellow="$c31<$c7%s$c31>$c0"
-mk_trgt_yellow_faint="$c3<$c7%s$c3>$c0"
-mk_p_trgt_yellow="$c3[$c7%s$c3]$c0"
+#mk_trgt_yellow_faint="$c3<$c7%s$c3>$c0"
+mk_p_trgt_yellow="$c31[$c7%s$c31]$c0"
+#mk_p_trgt_yellow_faint="$c3[$c7%s$c3]$c0"
 mk_p_trgt_green="$c21[$c7%s$c21]$c0"
-mk_p_trgt_green_faint="$c2[$c7%s$c2]$c0"
 mk_trgt_green="$c21<$c7%s$c21>$c0"
-mk_trgt_green_faint="$c2<$c7%s$c2>$c0"
+#mk_trgt_green_faint="$c2<$c7%s$c2>$c0"
 mk_p_trgt_red="$c1[$c7%s$c1]$c0"
 mk_updtd="$c4<$c7%s$c4>$c0"
 
@@ -77,12 +77,17 @@ case "$linetype" in
         targets=$(printf "$mk_p_trgt_blue" "$targets")
         ;;
     'header2' )
+        targets=$(printf "$mk_title_blue" "$targets")
+        ;;
+    'header3' )
         targets=$(printf "$mk_title_blue_faint" "$targets")
         ;;
-    'debug' ) # yellow
-        targets=$(printf "$mk_p_trgt_yellow_faint" "$targets")
+    'debug' )
+        targets="";
+        trgt_len=0
+            #$(printf "$mk_p_trgt_yellow_faint" "$targets")
         ;;
-    'warning' )
+    attention | 'warning' )
         targets=$(printf "$mk_p_trgt_yellow" "$targets")
         ;;
     'file_target' )
@@ -91,30 +96,17 @@ case "$linetype" in
     'file_ok' )
         targets=$(printf "$mk_trgt_green" "$targets")
         ;;
-    'error' ) # red
+    'error' | 'fatal' ) # red
         targets=$(printf "$mk_p_trgt_red" "$targets")
         ;;
-    'fatal' )
-        targets=$(printf "$mk_p_trgt_red_faint" "$targets")
-                #sources=$()
-        ;;
-    attention ) # green
+     ok | "done" | 'info'|*  )
         targets=$(printf "$mk_p_trgt_green" "$targets")
-        ;;
-     'info')
-        targets=$(printf "$mk_p_trgt_green_faint" "$targets")
-        ;;
-     ok|"done" )
-        targets=$(printf "$mk_p_trgt_green" "$targets")
-        ;;
-     'info'|* )
-        targets=$(printf "$mk_p_trgt_green_faint" "$targets")
         ;;
 esac
 case "$linetype" in
-    'file_target'|'file_ok'|'header'|'header1'|'header2'|'debug'|'warning'|'info'|'attention')
+    'file_target'|'file_ok'|'header'|'header1'|'header2'|'header3'|'debug'|'info'|'attention')
         ;;
-    'fatal'|'error'|'ok'|'done'|* )
+    'warning'|'fatal'|'error'|'ok'|'done'|* )
         if [ -n "$msg" ]
         then msg="$c9$1$c0, $msg";
         else msg="$c9$1$c0"; fi
@@ -126,7 +118,10 @@ then
 fi
 len=$(expr $FIRSTTAB - $trgt_len)
 case "$linetype" in
-    'header2')
+    debug)
+        len=$(expr $len + 2)
+        ;;
+    'header2'|header3)
         len=$(expr $len + 1)
         ;;
 esac

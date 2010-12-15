@@ -114,7 +114,7 @@ if __name__ == '__main__':
         lines = sys.stdin.readlines()
         for line in lines:
             line = line.split('\t')
-            print ' '.join(state[line[0]](*line[1:]))
+            print ' '.join(state[line[0].lower()](*line[1:]))
     else:
-        print ' '.join(state[args[0]](*args[1:]))
+        print ' '.join(state[args[0].lower()](*args[1:]))
 

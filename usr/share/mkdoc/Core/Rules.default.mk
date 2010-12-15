@@ -49,7 +49,28 @@ help:
 	fi;
 	@$(ll) OK $@ 
 
-info:
+examples::
+	@$(ee)
+	@$(ll) header "$@" "The following is an example list of log output lines"
+	@$(ee)
+	@$(ll) file_target "./example/path.o" "(file_target) File targets and other paths use angle brackets" "and a list of paths"
+	@$(ll) file_ok "./example/path.o" "(file_ok) this is a message to be printed" "with another list of paths"
+	@$(ee)
+	@$(ll) done "$@" "Special targets use square brackets" "and may always list paths"
+	@$(ll) ok "$@" "this is a message to be printed" "with another list of paths"
+	@$(ll) OK "$@" "see that line-types are case-insensitive"
+	@$(ll) header "$@" "This line type (header1) is not included on the line"
+	@$(ll) header2 "$@" "(header2) This is a message to be printed" 
+	@$(ll) header3 "$@" "(header3) This is a message to be printed" 
+	@$(ll) debug "$@" "(debug) This is a message to be printed" 
+	@$(ll) info "$@" "(info) This is a message to be printed" 
+	@$(ll) attention "$@" "(attention) This is a message to be printed" 
+	@$(ll) warning "$@" "(warning) This is a message to be printed" 
+	@$(ll) error "$@" "(error) this is a message to be printed" 
+	@$(ll) fatal "$@" "this script better halt now"
+	@$(ll) "* (type?)" "$@" "All logs are printed, including those with unrecognized linetype" 
+
+info::
 	@$(ll) header $@ "Package Info"
 	@$(ll) header2 Root     "" $(ROOT)
 	@$(ll) header2 MkDoc    "" $(MK_ROOT)
@@ -83,7 +104,15 @@ lists:
 	@#$(ll) header2 "All Generated Targets" '$(strip $(CLN))'
 	@$(ll) OK $@ 
 
-stat: src dep dmk
+src:: $(SRC) 
+
+dep:: src $(DEP)
+	@$(call log,Done,$@,$(call count,$(DEP)) generated dependencies ready) 
+
+dmk:: dep $(DMK)
+	@$(call log,Done,$@,$(call count,$(DMK)) generated makefiles ready) 
+
+stat:: dmk
 	@OFFLINE=$(strip $(abspath $(OFFLINE)));\
 	 if test -n "$$OFFLINE"; then \
  	   $(ll) Warning "Offline" "directories unavailable:" "$$OFFLINE";\
@@ -97,25 +126,20 @@ stat: src dep dmk
 	   $(ll) OK $@ \
 	 "counted $(call count,$(SRC)) sources, $(call count,$(TRGT)) targets"; fi
 
-build: stat $(TRGT)
+build:: stat $(TRGT)
 	@$(call log,Done,$@,$(call count,$(TRGT)) targets ready)
 
 # TODO: add some scaffolding for pub/rsync/..?
-pub: build 
+pub:: push build
 	@$(call log,Done,$@,$(call count,$(TRGT)) targets ready)
 
-src: $(SRC) 
-
-dep: $(DEP)
-	@$(call log,Done,$@,$(call count,$(DEP)) generated dependencies ready) 
-
-dmk: dep $(DMK)
-	@$(call log,Done,$@,$(call count,$(DMK)) generated makefiles ready) 
+push::
+	@$(call log,Done,$@,$(call count,$(TRGT)) targets ready)
 
 #test: dep $(TEST)
 #	$(call mk_ok_s,"tested")
 
-clean:
+clean::
 	@$(ll) warning $@ cleaning "$(CLN)"
 	@-rm -f $(CLN);\
 	 if test $$? -gt 0; then $(echo) ""; fi; # put xtra line if err-msgs

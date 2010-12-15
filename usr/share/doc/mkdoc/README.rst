@@ -106,4 +106,6 @@ Other ToDo, ideas
 -----------------
 - Fix `make pub`
 - Use `tee` somehow to write error logs for targets?
+- Fix processing so included files/dependencies are also 'fully' processed, ie.
+  KEYWORDS expanded, etc.
 

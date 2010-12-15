@@ -170,11 +170,10 @@ complement          = $(shell \
     
 ### Canned
 define ante-proc-tags
-	@# Process all source files and expand tag references.
-	@$(ll) file_target "$<.src" "Replacing tags for" "$<"
-	@cp $< $<.src;
-	@chmod +rw $<.src
-	@FILEMDATETIME=$$(date -r "$<" +"%Y-%m-%d %H:%M:%S %:z");\
+	# Process all source files and expand tag references.
+	$(ll) info "source tags" "Expanding keywords tags from " $$($(kwds-file))
+	if test ! -e $<.src; then exit; fi
+	FILEMDATETIME=$$(date -r "$<" +"%Y-%m-%d %H:%M:%S %:z");\
 	 KWDF="$(shell $(kwds-file))";\
 	 KWD=$$(cat $$KWDF);\
 	 XTR=$$($(ee) \

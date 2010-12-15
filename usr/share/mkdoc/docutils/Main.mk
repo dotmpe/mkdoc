@@ -115,18 +115,23 @@ endef
 
 
 define rst-to-xhtml
-	$(ll) file_target "$@" "Building XHTML from rSt" "$<"
+	$(ll) info "Du/XHTML" "Building from rST at " "$<"
 	$(reset-target)
-	# pre-proc
+	### Pre-processing
+	cp $< $<.src
+	chmod +rw $<.src
+	# Rewrite KEYWORD tags (twice, one before, one after includes. need to have
+	# better included doc processing...)
 	$(if $(call is-file,$(shell $(kwds-file))),
-		$(ante-proc-tags),
-		$(shell cp $< $<.src))
-	#./opt/rst-preproc.py --alt-headers < $<.tmp > $<.src
+		$(ante-proc-tags))
+	# oldish ./opt/rst-preproc.py --alt-headers < $<.tmp > $<.src
 	# Add path list
 	$(path2rstlist) /$< >> $<.src
 	# Rewrite includes (includes must be non-indented!)
-	$(ll) info "source includes" "$$($(rst-pre-proc-include) $<.src $<.src2)"
-	mv $<.src2 $<.src
+	$(ll) info "source includes" "$$($(rst-pre-proc-include) $<.src $<.src2)"; mv $<.src2 $<.src
+	# Rewrite KEYWORD tags
+	$(if $(call is-file,$(shell $(kwds-file))),
+		$(ante-proc-tags))
 	# Rewrite PDF image/figure to PNG
 	$(ll) info "web types" "$$($(rst-pdf-figure-to-png) $<.src $<.src2)"
 	mv $<.src2 $<.src

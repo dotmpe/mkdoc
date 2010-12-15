@@ -18,6 +18,7 @@ ERR_002 = "Target directory does not exist: %s"
 ERR_003 = "Will not write to same output as input file: %s"
 ERR_004 = "Source file does not exist: %s" 
 ERR_005 = "Source is not a file: %s" 
+ERR_006 = "Include directive does not specify a file: %s" 
 
 
 # 0. parse argv
@@ -53,6 +54,9 @@ includes = find_includes(doc)
 def _repl(match):
 	incres = match.group(1).strip()
 	if (incres[0], incres[-1]) == ('<','>'):
+		return ".. include:: %s " % incres
+	if not isfile(incres):
+		print >>sys.stderr, ERR_006 % incres
 		return ".. include:: %s " % incres
 	# FIXME: indent = match.group(1)
 	included = open(incres).read()
