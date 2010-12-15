@@ -102,3 +102,8 @@ recommended to keep dep paths absolute?
 XXX: By default the '/' root dir is also included. No sure if needed for
 absolute paths?
 
+Other ToDo, ideas
+-----------------
+- Fix `make pub`
+- Use `tee` somehow to write error logs for targets?
+
