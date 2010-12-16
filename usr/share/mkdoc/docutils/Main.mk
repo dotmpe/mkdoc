@@ -57,6 +57,12 @@ rst-xetex         = rst2xetex        $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_XETEX)
 rst-xml           = rst2xml          $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_XML)
 endif
 # FIXME: fail if any of the above do not exist..
+
+list-references   = $(rst-xml) $1 | xsltproc --novalid $(MK_SHARE)docutils/refuri-dep.xslt -
+list-titles       =
+rst-doc-title     = $(rst-xml) $1 | xsltproc --novalid $(MK_SHARE)docutils/doc-title.xslt -
+rst-xml-doc-title = xsltproc --novalid $(MK_SHARE)docutils/doc-title.xslt $1
+#tab-titles        = $(foreach $1,RST,$(shell find XML from env?))
 rst-dep           = $(rst-xml) --record-dependencies=$2 $1 /dev/null 2> /dev/null
 path2rstlist      = $(MK_SHARE)/docutils/path2rstlist.py
 rst-pre-proc-include = $(MK_SHARE)/docutils/rst-includes.py
@@ -164,6 +170,8 @@ define rst-to-xhtml
 endef
 #@sed -e 's/<p>\[\([0-9]*\)\.\]<\/p>/<a id="page-\1" class="pagebreak"><\/a>/g' $@.tmp1 > $@.tmp2
 #@sed -e 's/\[\([0-9]*\)\.\]/<a id="page-\1" class="pagebreak"><\/a>/g' $@.tmp2 > $@
+
+
 
 define build-xhtml-refs
 	# , must be relative or absolute to base URI

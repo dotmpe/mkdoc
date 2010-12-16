@@ -1,13 +1,13 @@
 MK               += $(MK_SHARE)/docutils/Rules.default.mk
 
 
-%.include.mk:       %.rst 
+%.include.mk:           %.rst 
 	@$(ll) file_target $@ "Creating XHTML dependencies for $* from" "$<"
 	@$(reset-target)
 	@$(mk-rst-include-deps)
 	@$(ll) file_ok $@ Done
 
-$(BUILD)%.include.mk: %.rst 
+$(BUILD)%.include.mk:   %.rst 
 	@$(ll) file_target $@ "Creating XHTML dependencies for $* from" "$<"
 	@$(reset-target)
 	@$(mk-rst-include-deps)
@@ -15,7 +15,7 @@ $(BUILD)%.include.mk: %.rst
 
 
 # TODO: step to .src instead
-#$(BUILD)%.rst:      %.rst
+#$(BUILD)%.rst:        %.rst
 #	@echo 'in' $?
 #	@echo 'out' $@
 #	@$(ll) file_target "$@" because "$?"
@@ -26,20 +26,27 @@ $(BUILD)%.include.mk: %.rst
 #	@$(ll) file_ok "$@" Done
 
 
-%.xhtml:			%.rst
+# TODO: rename this to ,du
+%.xhtml:			         %.rst
 	@$(ll) file_target "$@" because "$?"
 	@$(rst-to-xhtml)
 	@$(target-stats)
 	@$(ll) file_ok "$@" Done
 
-$(BUILD)%.xhtml:	%.rst
+$(BUILD)%.xhtml:	     %.rst
 	@$(ll) file_target "$@" because "$?"
 	@$(rst-to-xhtml)
 	@$(target-stats)
 	@$(ll) file_ok "$@" Done
 
 
-%,du.xml:                    %.rst
+%,du.xml:              %.rst
+	@$(ll) file_target "$@" because "$?"
+	@$(reset-target)
+	@T=$$(realpath $@);cd $(<D);$(rst-xml) $(<F) $$T
+	@$(ll) file_ok "$@" Done
+
+$(BUILD)%,du.xml:      %.rst
 	@$(ll) file_target "$@" because "$?"
 	@$(reset-target)
 	@T=$$(realpath $@);cd $(<D);$(rst-xml) $(<F) $$T
@@ -52,33 +59,35 @@ $(BUILD)%.xhtml:	%.rst
 #	@T=$$(realpath $@);cd $(<D);$(rst-newlatex) $(<F) $$T
 #	@$(ll) file_ok "$@" Done
 
-$(BUILD)%,du.latex: %.rst
+$(BUILD)%,du.latex:    %.rst
 	@$(rst-to-latex)
 
-$(BUILD)%,du.odt: %.rst
+$(BUILD)%,du.odt:      %.rst
 	@$(ll) file_target "$@" because "$?"
 	@$(reset-target)
 	@T=$$(realpath $@);cd $(<D);$(rst-odt) $(<F) $$T
 	@$(ll) file_ok "$@" Done
 
 
-$(BUILD)%,du.pxml: %.rst
+$(BUILD)%,du.pxml:     %.rst
 	@$(rst-to-pseudoxml)
 
 
 # rst2gxl by S. Merten
 # XXX: it seems internal or local references are mapped to edges
 # not external links or includes
-$(BUILD)%,du.gxl: %.rst
+$(BUILD)%,du.gxl:      %.rst
 	@$(ll) file_target "$@" because "$?"
 	@# XXX: wrong attr. name:
 	@rst2gxl.py $< | sed 's/name=\"name\"/name="label"/g' > $@
 	@$(tidy-xml) $@
 	@$(ll) file_ok "$@" Done
 
-%,du.gxl: %.rst
+%,du.gxl: i            %.rst
 	@$(ll) file_target "$@" because "$?"
 	@rst2gxl.py $< | sed 's/name=\"name\"/name="label"/g' > $@
 	@$(tidy-xml) $@
 	@$(ll) file_ok "$@" Done
+
+# 1    ------------ -- 
 
