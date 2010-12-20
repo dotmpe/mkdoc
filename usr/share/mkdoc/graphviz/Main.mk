@@ -18,15 +18,19 @@ endef
 
 define gv-ps2
 	$(reset-target)
-	echo $(GRAPHVIZ_ENGINE) -Tps2 -o $@ $<
 	$(GRAPHVIZ_ENGINE) -Tps2 -o $@ $<
 	$(ll) info "$@" "`file -bs $@`"
 endef
 
 define gv-eps
 	$(reset-target)
-	echo $(GRAPHVIZ_ENGINE) -Teps -o $@ $<
 	$(GRAPHVIZ_ENGINE) -Teps -o $@ $<
+	$(ll) info "$@" "`file -bs $@`"
+endef
+
+define gv-cmapx 
+	$(reset-target)
+	$(GRAPHVIZ_ENGINE) -Tcmapx -o $@ $^
 	$(ll) info "$@" "`file -bs $@`"
 endef
 
@@ -42,6 +46,7 @@ define gv-to-eps
 	$(gv-eps)
 	$(ll) file_ok "$@" "<--($(GRAPHVIZ_ENGINE))-" "$^"
 endef
+
 
 # PS for PDF
 define gv-to-ps2 

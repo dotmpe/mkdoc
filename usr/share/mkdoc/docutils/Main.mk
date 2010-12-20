@@ -35,38 +35,7 @@ XHT_CSS          :=
 XHT_JS           :=
 
 
-ifeq ($(shell which rst2xml),)
-rst-html          = rst2html.py      $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_HTML)
-rst-latex         = rst2latex.py     $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_LATEX)
-rst-man           = rst2man.py       $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_MAN)
-#rst-newlatex      = rst2newlatex.py  $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_NLATEX)
-rst-odt           = rst2odt.py       $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_ODT)
-rst-pseudoxml     = rst2pseudoxml.py $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_PXML)
-rst-s5            = rst2s5.py        $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_S5)
-rst-xetex         = rst2xetex.py     $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_XETEX)
-rst-xml           = rst2xml.py       $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_XML)
-else
-rst-html          = rst2html         $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_HTML)
-rst-latex         = rst2latex        $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_LATEX)
-rst-man           = rst2man          $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_MAN)
-#rst-newlatex      = rst2newlatex     $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_NLATEX)
-rst-odt           = rst2odt          $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_ODT)
-rst-pseudoxml     = rst2pseudoxml    $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_PXML)
-rst-s5            = rst2s5           $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_S5)
-rst-xetex         = rst2xetex        $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_XETEX)
-rst-xml           = rst2xml          $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_XML)
-endif
-# FIXME: fail if any of the above do not exist..
-
-list-references   = $(rst-xml) $1 | xsltproc --novalid $(MK_SHARE)docutils/refuri-dep.xslt -
-list-titles       =
-rst-doc-title     = $(rst-xml) $1 | xsltproc --novalid $(MK_SHARE)docutils/doc-title.xslt -
-rst-xml-doc-title = xsltproc --novalid $(MK_SHARE)docutils/doc-title.xslt $1
-#tab-titles        = $(foreach $1,RST,$(shell find XML from env?))
-rst-dep           = $(rst-xml) --record-dependencies=$2 $1 /dev/null 2> /dev/null
-path2rstlist      = $(MK_SHARE)/docutils/path2rstlist.py
-rst-pre-proc-include = $(MK_SHARE)/docutils/rst-includes.py
-rst-pdf-figure-to-png = $(MK_SHARE)/docutils/rst-pdf-figure-to-png.py
+include             $(MK_SHARE)/docutils/Main.bin.mk
 
 
 define mk-rst-include-deps
@@ -134,7 +103,9 @@ define rst-to-xhtml
 	# Add path list
 	$(path2rstlist) /$< >> $<.src
 	# Rewrite includes (includes must be non-indented!)
-	$(ll) info "source includes" "$$($(rst-pre-proc-include) $<.src $<.src2)"; mv $<.src2 $<.src
+	if test -n "$(PRE_PROC_INCLUDES)"; then\
+		$(ll) info "source includes" "$$($(rst-pre-proc-include) $<.src $<.src2)"; mv $<.src2 $<.src;\
+	fi;
 	# Rewrite KEYWORD tags
 	$(if $(call is-file,$(shell $(kwds-file))),
 		$(ante-proc-tags))

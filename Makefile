@@ -20,6 +20,7 @@ include                \
                        $(MK_SHARE)graphviz/Rules.mk \
                        $(MK_SHARE)rubber/Rules.default.mk \
 					   $(MK_SHARE)docutils/Rules.default.mk \
+					   $(MK_SHARE)plotutils/Rules.default.mk \
 #					   $(MK_SHARE)Core/Rules.archive.mk
 
 # Include specific rules and set SRC, DEP, TRGT and CLN variables.
