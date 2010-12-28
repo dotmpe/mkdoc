@@ -97,6 +97,16 @@ define reset-target
 	touch $@;
 endef
 
+info-target-type = $(ll) info "$@" "`file -bs $@`"
+info-target-chars = $(ll) info "$@" "`cat $@|wc -m` chars"
+info-target-lines = $(ll) info "$@" "`cat $@|wc -l` lines"
+target-stats         = \
+					$(info-target-lines);\
+					$(info-target-chars);\
+					$(info-target-type);
+info-text-stat = $(ll) info "$@" "`cat $@|wc -l` lines, `cat $@|wc -m` chars, `file -bs $@`"
+info-bin-stat = $(ll) info "$@" "`cat $@|wc -c` bytes, `file -bs $@`"
+
 define mk-include
 	$(reset-target)
 	for f in $(MK_FILES); do \

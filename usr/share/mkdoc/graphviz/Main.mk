@@ -1,57 +1,20 @@
 ## Build diagrams
-GRAPHVIZ_ENGINE := dot -Gsplines=true 
+GRAPHVIZ_ENGINE     := dot
 #values: dot,twopi,circo,fdp,neato
+GRAPHVIZ_FLAGS      := -Gsplines=true 
+GRAPHVIZ_OUT        := 
+#      ------------ -- 
 
-
-
-define gv-png
+define gv-graph
 	$(reset-target)
-	$(GRAPHVIZ_ENGINE) -Tpng -o $@ $^
-	$(ll) info "$@" "`file -bs $@`"
-endef
-
-define gv-svg
-	$(reset-target)
-	$(GRAPHVIZ_ENGINE) -Tsvg:cairo -o $@ $<
-	$(ll) info "$@" "`file -bs $@`"
-endef
-
-define gv-ps2
-	$(reset-target)
-	$(GRAPHVIZ_ENGINE) -Tps2 -o $@ $<
-	$(ll) info "$@" "`file -bs $@`"
-endef
-
-define gv-eps
-	$(reset-target)
-	$(GRAPHVIZ_ENGINE) -Teps -o $@ $<
-	$(ll) info "$@" "`file -bs $@`"
-endef
-
-define gv-cmapx 
-	$(reset-target)
-	$(GRAPHVIZ_ENGINE) -Tcmapx -o $@ $^
-	$(ll) info "$@" "`file -bs $@`"
+	$(GRAPHVIZ_ENGINE) $(GRAPHVIZ_FLAGS) -T$(GRAPHVIZ_OUT) -o $@ $<
 endef
 
 
-define gv-to-png
-	$(ll) file_target "$@" because "$?"
-	$(gv-png)
-	$(ll) file_ok "$@" "<--($(GRAPHVIZ_ENGINE))-" "$^"
-endef
-
-define gv-to-eps 
-	$(ll) file_target "$@" because "$?"
-	$(gv-eps)
-	$(ll) file_ok "$@" "<--($(GRAPHVIZ_ENGINE))-" "$^"
-endef
-
-
-# PS for PDF
-define gv-to-ps2 
-	$(ll) file_target "$@" because "$?"
-	$(gv-ps2)
+define gv-to-graph
+	$(ll) file_target "$@" "Generating $(GRAPHVIZ_OUT) because" "$?"
+	$(gv-graph)
+	$(bin-stat)
 	$(ll) file_ok "$@" "<--($(GRAPHVIZ_ENGINE))-" "$^"
 endef
 

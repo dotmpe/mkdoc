@@ -72,12 +72,18 @@ endef
 define rst-to-latex
 	$(ll) file_target "$@" because "$?"
 	$(reset-target)
+	### Pre-processing
+	cp $< $<.src
+	chmod +rw $<.src
 	$(if $(call is-file,$(shell $(kwds-file))),
-	 $(ante-proc-tags),
-	 $(shell cp $< $<.src))
-	#echo $(rst-latex) $(<F).src $$T
+		$(ante-proc-tags))
+	if test -n "$(PRE_PROC_INCLUDES)"; then\
+		$(ll) info "source includes" "$$($(rst-pre-proc-include) $<.src $<.src2)"; \
+		mv $<.src2 $<.src;\
+	fi;
 	T=$$(realpath $@);cd $(<D);$(rst-latex) $(<F).src $$T
 	rm $<.src
+	$(info-text-stat)
 	$(ll) file_ok "$@" Done
 endef
 
@@ -85,6 +91,7 @@ define rst-to-pseudoxml
 	$(ll) file_target "$@" because "$?"
 	$(reset-target)
 	T=$$(realpath $@);cd $(<D);$(rst-pseudoxml) $(<F) $$T
+	$(info-text-stat)
 	$(ll) file_ok "$@" Done
 endef
 
@@ -104,7 +111,8 @@ define rst-to-xhtml
 	$(path2rstlist) /$< >> $<.src
 	# Rewrite includes (includes must be non-indented!)
 	if test -n "$(PRE_PROC_INCLUDES)"; then\
-		$(ll) info "source includes" "$$($(rst-pre-proc-include) $<.src $<.src2)"; mv $<.src2 $<.src;\
+		$(ll) info "source includes" "$$($(rst-pre-proc-include) $<.src $<.src2)"; \
+		mv $<.src2 $<.src;\
 	fi;
 	# Rewrite KEYWORD tags
 	$(if $(call is-file,$(shell $(kwds-file))),

@@ -5,12 +5,14 @@ MK               += $(MK_SHARE)/docutils/Rules.default.mk
 	@$(ll) file_target $@ "Creating XHTML dependencies for $* from" "$<"
 	@$(reset-target)
 	@$(mk-rst-include-deps)
+	@$(info-text-stat)
 	@$(ll) file_ok $@ Done
 
 $(BUILD)%.include.mk:   %.rst 
 	@$(ll) file_target $@ "Creating XHTML dependencies for $* from" "$<"
 	@$(reset-target)
 	@$(mk-rst-include-deps)
+	@$(info-text-stat)
 	@$(ll) file_ok $@ Done
 
 
@@ -30,13 +32,13 @@ $(BUILD)%.include.mk:   %.rst
 %.xhtml:			         %.rst
 	@$(ll) file_target "$@" because "$?"
 	@$(rst-to-xhtml)
-	@$(target-stats)
+	@$(info-text-stat)
 	@$(ll) file_ok "$@" Done
 
 $(BUILD)%.xhtml:	     %.rst
 	@$(ll) file_target "$@" because "$?"
 	@$(rst-to-xhtml)
-	@$(target-stats)
+	@$(info-text-stat)
 	@$(ll) file_ok "$@" Done
 
 
@@ -44,12 +46,14 @@ $(BUILD)%.xhtml:	     %.rst
 	@$(ll) file_target "$@" because "$?"
 	@$(reset-target)
 	@T=$$(realpath $@);cd $(<D);$(rst-xml) $(<F) $$T
+	@$(info-text-stat)
 	@$(ll) file_ok "$@" Done
 
 $(BUILD)%,du.xml:      %.rst
 	@$(ll) file_target "$@" because "$?"
 	@$(reset-target)
 	@T=$$(realpath $@);cd $(<D);$(rst-xml) $(<F) $$T
+	@$(info-text-stat)
 	@$(ll) file_ok "$@" Done
 
 
@@ -66,6 +70,7 @@ $(BUILD)%,du.odt:      %.rst
 	@$(ll) file_target "$@" because "$?"
 	@$(reset-target)
 	@T=$$(realpath $@);cd $(<D);$(rst-odt) $(<F) $$T
+	@$(info-target-stats)
 	@$(ll) file_ok "$@" Done
 
 
@@ -81,12 +86,14 @@ $(BUILD)%,du.gxl:      %.rst
 	@# XXX: wrong attr. name:
 	@rst2gxl.py $< | sed 's/name=\"name\"/name="label"/g' > $@
 	@$(tidy-xml) $@
+	@$(info-text-stat)
 	@$(ll) file_ok "$@" Done
 
-%,du.gxl: i            %.rst
+%,du.gxl:              %.rst
 	@$(ll) file_target "$@" because "$?"
 	@rst2gxl.py $< | sed 's/name=\"name\"/name="label"/g' > $@
 	@$(tidy-xml) $@
+	@$(info-text-stat)
 	@$(ll) file_ok "$@" Done
 
 # 1    ------------ -- 

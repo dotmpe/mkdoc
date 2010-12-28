@@ -6,5 +6,6 @@
 	 rubber --inplace --pdf $(<F);\
 	 rubber --inplace --clean $(<F)
 	@mv $(<D)/$$(basename $< .latex).pdf $@
+	@$(info-bin-stat)
 	@$(ll) file_ok "$@" Done
 
