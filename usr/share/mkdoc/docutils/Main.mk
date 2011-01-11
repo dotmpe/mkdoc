@@ -126,15 +126,21 @@ define rst-to-xhtml
 	#echo 'READ ' $(DU_READ)
 	#echo 'HTML ' $(DU_HTML)
 	#echo 'GEN ' $(DU_GEN)
+	if test -n "$(VERBOSE)"; \
+		then echo $(rst-html) $<.src $@.tmp1; fi
 	$(rst-html) $<.src $@.tmp1
 	cp $<.src $@.src
 	rm $<.src
 	# Additional styles 'n scripts
+	if test -n "$(VERBOSE)"; \
+		then echo Adding scripts $(XHT_JS); fi
 	JS="$(call sed-escape,$(XHT_JS))"; \
 	   for js_ref in $${JS}; do \
 	   	sed -e "s/<\/head>/<script type=\"text\/javascript\" src=\"$$js_ref\"><\/script><\/head>/" $@.tmp1 > $@.tmp2; \
 	   	mv $@.tmp2 $@.tmp1; \
 	   done;
+	if test -n "$(VERBOSE)"; \
+		then echo Adding styles $(XHT_CSS); fi
 	CSS="$(call sed-escape,$(XHT_CSS))"; \
 	   for css_ref in $${CSS}; do \
 	   	sed -e "s/<\/head>/<link rel=\"stylesheet\" type=\"text\/css\" href=\"$$css_ref\"\/><\/head>/" $@.tmp1 > $@.tmp2; \
