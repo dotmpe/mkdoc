@@ -1,3 +1,5 @@
+MK               += $(MK_SHARE)/bookmarklet/Rules.default.mk
+$(info $(shell $(ll) file_target "bookmarklet" "Javascript bookmarklet default rules" ))
 
 
 %.bm.uriref: %.js

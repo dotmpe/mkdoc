@@ -1,3 +1,4 @@
+$(info $(shell $(ll) file_target "rubber" "Rubber (LaTeX to PDF) default rules" ))
 
 %,latex.pdf:        %.latex
 	@$(ll) file_target "$@" because "$?"

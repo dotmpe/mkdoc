@@ -1,3 +1,4 @@
+$(info $(shell $(ll) file_target "graphviz" "Graphviz rules" ))
 GRAPHVIZ_SUFFIX     := ,graph
 #
 #      ------------ -- 

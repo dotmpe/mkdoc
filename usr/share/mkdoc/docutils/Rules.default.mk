@@ -1,4 +1,5 @@
 MK               += $(MK_SHARE)/docutils/Rules.default.mk
+$(info $(shell $(ll) file_target "docutils" "Docutils default rules" ))
 
 
 %.include.mk:           %.rst 

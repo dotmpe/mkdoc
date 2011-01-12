@@ -1,4 +1,7 @@
-MK               += $(MK_SHARE)/bookmarklet/Main.mk
+MK                  += $(MK_SHARE)/bookmarklet/Main.mk
+$(info $(shell $(ll) file_target "bookmarklet" "Javascript bookmarklets" ))
+#
+#      ------------ -- 
 
 
 js2bm               = $(MK_SHARE)bookmarklet/js2bm.pl

@@ -1,3 +1,4 @@
+$(info $(shell $(ll) file_target "graphviz" "Graphviz main" ))
 ## Build diagrams
 GRAPHVIZ_ENGINE     := dot
 #values: dot,twopi,circo,fdp,neato

@@ -1,3 +1,4 @@
+$(info $(shell $(ll) file_target "haxe" "HaXe main" ))
 MK               += $(DIR)/haxe/Main.mk
 
 ### Flags

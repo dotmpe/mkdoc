@@ -1,4 +1,5 @@
 MK               += $(MK_SHARE)/docutils/Main.mk
+$(info $(shell $(ll) file_target "docutils" "Docutils Python document publisher" ))
 
 
 # generic Du flags

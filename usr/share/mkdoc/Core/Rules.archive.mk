@@ -1,4 +1,5 @@
 ## Dirstack
+$(info $(shell $(ll) file_target "$/" "Archive make. " ))
 $(info ========================$(DIR)/Rules.archive.mk)
 SP                  := $(SP).x
 D_$(SP)             := $d
