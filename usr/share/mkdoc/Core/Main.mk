@@ -1,5 +1,6 @@
 ### MkDocs Core Makefile
 # :Date: 2010-10-04
+# :Last Update: 2011-01-16
 # :Author: B. van Berkum  <dev@dotmpe.com>
 #
 # This is a non-recursive makefile,
@@ -42,7 +43,8 @@ OFFLINE            :=
 RES := 
 
 
-# standard targets (append to STRGT) see Rules.default.mk
+### standard targets 
+# (append to STRGT) see Rules.default.mk
 STDTRGT            := \
 					  all dep dmk test build install clean cleandep
 STDSTAT            := \
@@ -63,6 +65,8 @@ DESCRIPTION        += list='print SRC and TRGT lists'
 DESCRIPTION        += lists='print all other lists'
 DESCRIPTION        += info='..'
 
+
+### Various snippets
 
 ll                  = $(MK_SHARE)Core/log.sh
 ee                  = /bin/echo -e
@@ -119,7 +123,15 @@ define mk-include
 	done;
 endef
 
+
+### Functions
+
 log                 = $(ll) "$1" "$2" "$3" "$4"
+log-module          = # $1 $2
+ifneq ($(VERBOSE), )
+log-module          = $(info $(shell if test -n "$(VERBOSE)"; then \
+						$(ll) header2 $1 $2; fi))
+endif
 count               = $(shell if test -n "$1"; then\
 					    echo $1|wc -w; else echo 0; fi;)
 count-list          = $(shell if test -f "$1"; then\
@@ -159,6 +171,11 @@ rules               = $(shell for D in $1; do \
                           echo $$D/Rules.$(HOST).mk; else \
                         if test -f "$$(echo $$D/.Rules.$(HOST).mk)"; then \
 						  echo $$D/.Rules.$(HOST).mk; fi; fi; fi; fi; done )
+shared-rules        = $(shell for D in $1; do \
+                        if test -f "$$(echo $$D/Rules.shared.mk)"; then \
+                          echo $$D/Rules.shared.mk; else \
+                        if test -f "$$(echo $$D/.Rules.shared.mk)"; then \
+						  echo $$D/.Rules.shared.mk; fi; fi; done )
 def-rules           = $(shell for D in $1; do \
                         if test -f "$$(echo $$D/Rules.mk)"; then \
                           echo $$D/Rules.mk; else \
@@ -182,7 +199,7 @@ complement          = $(shell \
 define ante-proc-tags
 	# Process all source files and expand tag references.
 	$(ll) info "source tags" "Expanding keywords tags from " $$($(kwds-file))
-	if test ! -e $<.src; then exit; fi
+	if test ! -f "$<.src"; then cp $< $<.src; fi
 	FILEMDATETIME=$$(date -r "$<" +"%Y-%m-%d %H:%M:%S %:z");\
 	 KWDF="$(shell $(kwds-file))";\
 	 KWD=$$(cat $$KWDF);\

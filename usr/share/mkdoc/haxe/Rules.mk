@@ -1,2 +1,2 @@
-$(info $(shell $(ll) file_target "haxe" "TODO " ))
+$(call log-module,"haxe","TODO ")
 # see dotmpe-com/Rules.mk

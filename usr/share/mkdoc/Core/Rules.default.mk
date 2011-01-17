@@ -121,7 +121,9 @@ stat:: dmk
  	   $(ll) Error "Missing" "paths not found:" '$(strip $(MISSING))';\
 	 fi;
 	@if test -n "$(strip $(PENDING))"; then \
- 	   $(ll) Warning "Pending" "Please rebuild [$@] because:" '$(strip $(PENDING))';\
+	   $(ll) Done $@ \
+	 "counted $(call count,$(SRC)) sources, $(call count,$(TRGT)) targets"; \
+ 	   $(ll) Attention "Pending" "Please rebuild [$@] because:" '$(strip $(PENDING))';\
 	 else \
 	   $(ll) OK $@ \
 	 "counted $(call count,$(SRC)) sources, $(call count,$(TRGT)) targets"; fi

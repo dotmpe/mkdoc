@@ -4,7 +4,7 @@
 BUILD               := .build/
 DIR                 := .
 
-MK_ROOT             := ~/project/mkdoc/
+MK_ROOT             := $(HOME)/project/mkdoc/
 MK_SHARE            := $(MK_ROOT)usr/share/mkdoc/
 
 ifneq ($(VERBOSE), )
@@ -14,10 +14,14 @@ $(info mkdocs:MK_ROOT=$(MK_ROOT))
 $(info mkdocs:MK_SHARE=$(MK_SHARE))
 endif
 
+# 
 include                $(MK_SHARE)Core/Main.mk
 
-$(info $(shell $(ll) attention "mkdoc" "Core script loaded, reading shares" ))
+ifneq ($(VERBOSE), )
+$(info $(shell $(ll) header "mkdoc" "Core script loaded, reading shares" ))
+endif
 
+#
 include                \
                        $(MK_SHARE)docutils/Main.mk \
                        $(MK_SHARE)bookmarklet/Main.mk \
@@ -26,24 +30,33 @@ include                \
 
 MK                  += $(DIR)/Makefile
 
-$(info $(shell $(ll) attention "mkdoc" "Reading shared default rules" ))
+ifneq ($(VERBOSE), )
+$(info $(shell $(ll) header "mkdoc" "Reading shared default rules" ))
+endif
 
+#
 include                \
-					   $(MK_SHARE)bookmarklet/Rules.default.mk \
+                       $(MK_SHARE)bookmarklet/Rules.default.mk \
                        $(MK_SHARE)graphviz/Rules.mk \
                        $(MK_SHARE)rubber/Rules.default.mk \
-					   $(MK_SHARE)docutils/Rules.default.mk \
-					   $(MK_SHARE)plotutils/Rules.default.mk \
+                       $(MK_SHARE)docutils/Rules.default.mk \
+                       $(MK_SHARE)plotutils/Rules.default.mk \
 #					   $(MK_SHARE)Core/Rules.archive.mk
 
-$(info $(shell $(ll) attention "mkdoc" "Reading local rules" ))
+ifneq ($(VERBOSE), )
+$(info $(shell $(ll) header "mkdoc" "Reading local rules" ))
+endif
 
 # Include specific rules and set SRC, DEP, TRGT and CLN variables.
+#
 include                $(call rules,$(DIR)/) 
 
-$(info $(shell $(ll) attention "mkdoc" "Reading standard rules" ))
+ifneq ($(VERBOSE), )
+$(info $(shell $(ll) header "mkdoc" "Reading standard rules" ))
+endif
 
 # Now set some standard targets
+#
 include                $(MK_SHARE)Core/Rules.default.mk
 
 $(info $(shell $(ll) OK "mkdoc" "Starting $(MAKECMDGOALS).." ))

@@ -1,5 +1,5 @@
 MK               += $(MK_SHARE)/docutils/Main.mk
-$(info $(shell $(ll) file_target "docutils" "Docutils Python document publisher" ))
+$(call log-module,"docutils","Docutils Python document publisher")
 
 
 # generic Du flags
@@ -46,23 +46,27 @@ define mk-rst-include-deps
 		$(shell cp $< $<.src))
 	# write deps
 	# Rule-source is rSt file, rule-target the generated-makefile
+	if test -n "$(VERBOSE)"; then \
+		echo $(call rst-dep,$<.src,-); fi;
+	DIR=$(call sed-escape,$(DIR)/); \
+	BUILD=$(call sed-escape,$(BUILD));\
+	RULEF=./$<;\
+	RULET=$${RULEF/%.rst/.xhtml};RULET=$${RULET/#$$DIR/$$BUILD};\
+	echo "#        $* ">> $@; \
+	echo "#   DIR: $$DIR ">> $@; \
+	echo "# BUILD: $$BUILD  ">> $@; \
+	echo >> $@;\
 	$(call rst-dep,$<.src,-) | while read f; do \
 		DEPF=./$${f}; \
 		DEPT=$${DEPF/%.rst/.xhtml}; \
-		DEPT=$${DEPF/%.rst/.xhtml}; \
-		RULEF=./$<;\
-		DIR=$(call sed-escape,$(DIR)/);BUILD=$(call sed-escape,$(BUILD));\
-		RULET=$${RULEF/%.rst/.xhtml};RULET=$${RULET/#$$DIR/$$BUILD};\
-		echo "#  Rule: $@: $< "> $@; \
-		echo "#     *: $* ">> $@; \
-		echo "#   DIR: $$DIR ">> $@; \
-		echo "#   DEP: $$f ">> $@; \
-		echo "# BUILD: $$BUILD  ">> $@; \
-		echo "$$DEPT: DIR := $$DIR ">> $@; \
-		echo "$$DEPT: $$DEPF ">> $@; \
-		echo "$@: $$RULEF $$DEPF $(call rules,$(DIR))">> $@; \
-		echo "$$RULET: $$DEPF ">> $@; done
+		echo "$$RULET: $$DEPF ">> $@; \
+	done; \
+	echo >> $@;\
+	echo "$$RULET: $@">> $@;\
+	echo "$@: ./$< $(call rules,$(DIR))">> $@; 
 endef
+#		echo "$$DEPT: DIR := $$DIR ">> $@; \
+#		echo "$$DEPT: $$DEPF ">> $@; \
 
 
 define rst-to-src
@@ -128,8 +132,9 @@ define rst-to-xhtml
 	#echo 'HTML ' $(DU_HTML)
 	#echo 'GEN ' $(DU_GEN)
 	if test -n "$(VERBOSE)"; \
-		then echo $(rst-html) $<.src $@.tmp1; fi
-	$(rst-html) $<.src $@.tmp1
+	then echo $(rst-html) $<.src $@.tmp1; \
+		$(rst-html) --traceback $<.src $@.tmp1;\
+	else $(rst-html) $<.src $@.tmp1; fi
 	cp $<.src $@.src
 	rm $<.src
 	# Additional styles 'n scripts
@@ -171,8 +176,8 @@ define build-xhtml-refs
 		-e "s/src=\"$$ROOT\(.\+\)\"/src=\"\1\"/g" \
 		-e "s/href=\"$$ROOT\(.\+\)\"/href=\"\1\"/g" \
 		-e "s/href=\"\(.\+\)\.rst\"/href=\"\1\"/g" \
-		-e "s/<table/<table summary=\"Docutils rSt table\"/g" \
 			$@.tmp1 > $@ 
+@#		-e "s/<table/<table summary=\"Docutils rSt table\"/g" \
 @#		-e "s/<\/head>/<base href=\"$$BASE_URI\" \/><\/head>/"\
 @#		-e "s/href=\"\//href=\"$$BASE_URI/g"\
 @#		-e "s/src=\"\//src=\"$$BASE_URI/g" 

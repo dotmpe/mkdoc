@@ -1,5 +1,5 @@
 MK                  += $(MK_SHARE)/bookmarklet/Main.mk
-$(info $(shell $(ll) file_target "bookmarklet" "Javascript bookmarklets" ))
+$(call log-module,"bookmarklet","Javascript bookmarklets")
 #
 #      ------------ -- 
 

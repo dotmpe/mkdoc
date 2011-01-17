@@ -1,4 +1,4 @@
-$(info $(shell $(ll) file_target "haxe" "HaXe main" ))
+$(call log-module,"HaXe","Main")
 MK               += $(DIR)/haxe/Main.mk
 
 ### Flags
