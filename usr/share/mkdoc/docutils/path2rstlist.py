@@ -23,9 +23,9 @@ if __name__ == '__main__':
 		dn = dirs.pop()
 		if dn:
 			pathsegments -= 1
-			rstlist.append("%i. `%s <%s>`_%s" % (pathsegments, dn, sep.join(dirs+[dn]), sep))
+			rstlist.append("%i. `%s <%s>`__%s" % (pathsegments, dn, sep.join(dirs+[dn]), sep))
 	pathsegments -= 1
-	rstlist.append("%s. `%s <%s>`_" % (pathsegments, sep, sep))
+	rstlist.append("%s. `%s <%s>`__" % (pathsegments, sep, sep))
 
 	name, ext = splitext(name)
 

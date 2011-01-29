@@ -79,6 +79,25 @@ $(BUILD)%,du.pxml:     %.rst
 	@$(rst-to-pseudoxml)
 
 
+
+define rst-to-s5
+	$(ll) file_target "$@" because "$?"
+	$(reset-target)
+	T=$$(realpath $@);cd $(<D);$(rst-s5) $(<F) $$T;\
+		mv $$T $$T.tmp;\
+		echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">' > $$T;\
+		tail -n +3 $$T.tmp >> $$T; rm $$T.tmp
+	$(info-target-stats)
+	$(ll) file_ok "$@" Done
+endef
+
+%,du,s5.html:      %.rst
+	@$(rst-to-s5)
+
+$(BUILD)%,du,s5.html:      %.rst
+	@$(rst-to-s5)
+
+
 # rst2gxl by S. Merten
 # XXX: it seems internal or local references are mapped to edges
 # not external links or includes

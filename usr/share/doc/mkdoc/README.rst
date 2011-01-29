@@ -5,6 +5,7 @@ MkDoc
 :author: \B. van Berkum  <dev@dotmpe.com>
 :homepage: http://dotmpe.com/project/mkdoc
 :url: http://github.org/dotmpe/mkdoc/blob/master/usr/share/doc/mkdoc/README.rst
+
 .. :url: http://github.org/dotmpe/mkdoc/blob/master/README.rst
 
 
