@@ -81,14 +81,14 @@ info::
 	@$(ll) header2 Release  "" $(TAG)
 	@$(ll) OK $@ 
 
-list:
+list::
 	@$(ee) 
 	@$(ll) header2 Sources "" "$(strip $(SRC))"
 	@#$(ll) header2 Sources  "$(shell echo $(SRC)|sort -u)"
 	@$(ll) header2 "Build Targets" "" '$(strip $(TRGT))'
 	@$(ll) OK $@ 
 
-lists:
+lists::
 	@$(ll) header $@ "All targets"
 	@$(ll) header2 Sources               ""  '$(strip $(SRC))'
 	@$(ll) header2 "Build Targets"       ""  '$(strip $(TRGT))'
@@ -104,9 +104,9 @@ lists:
 	@#$(ll) header2 "All Generated Targets" '$(strip $(CLN))'
 	@$(ll) OK $@ 
 
-src:: $(SRC) 
+#src:: $(SRC) 
 
-dep:: src $(DEP)
+dep:: $(SRC) $(DEP)
 	@$(call log,Done,$@,$(call count,$(DEP)) generated dependencies ready) 
 
 dmk:: dep $(DMK)
@@ -138,8 +138,8 @@ pub:: push build
 push::
 	@$(call log,Done,$@,$(call count,$(TRGT)) targets ready)
 
-#test: dep $(TEST)
-#	$(call mk_ok_s,"tested")
+test:: dep $(TEST)
+	$(call mk_ok_s,"tested")
 
 clean::
 	@$(ll) warning $@ cleaning "$(CLN)"
