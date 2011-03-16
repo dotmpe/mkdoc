@@ -30,14 +30,15 @@ $(BUILD)%.include.mk:   %.rst
 
 
 # TODO: rename this to ,du
-%.xhtml:			         %.rst
-	@$(ll) file_target "$@" because "$?"
-	@$(rst-to-xhtml)
-	@$(info-text-stat)
-	@$(ll) file_ok "$@" Done
+#%.xhtml:			     %.rst
+#	@$(ll) file_target "$@" "to directory because" "$?"
+#	@$(rst-to-xhtml)
+#	@$(info-text-stat)
+#	@$(ll) file_ok "$@" Done
 
 $(BUILD)%.xhtml:	     %.rst
-	@$(ll) file_target "$@" because "$?"
+	@$(ll) file_target "$@" "to BUILD because" "$^"
+	@$(ll) file_target "$@" "to BUILD because" "$?"
 	@$(rst-to-xhtml)
 	@$(info-text-stat)
 	@$(ll) file_ok "$@" Done

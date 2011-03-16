@@ -3,6 +3,10 @@ MK                  += $/Rules.mk
 #
 #      ------------ -- 
 
+#
+#DIR                 := $/mydir
+#include                $(call rules,$(DIR)/)
+
 
 #      ------------ -- 
 #

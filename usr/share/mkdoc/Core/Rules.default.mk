@@ -11,7 +11,7 @@ STRGT 			   += $(STD)
 .PHONY: 		      $(STRGT)
 
 ### Standard Rule(s)
-help:
+help::
 	@$(ee) 
 	@# See STRGT and DESCRIPTION vars, STD (STDTARGT or STDSTAT) without DESCRIPTION is not printed
 	@declare $(DESCRIPTION);\
@@ -147,7 +147,7 @@ clean::
 	 if test $$? -gt 0; then $(echo) ""; fi; # put xtra line if err-msgs
 	@$(call log,Done,$@,$(call count,$(CLN)) targets)
 
-cleandep:
+cleandep::
 	@$(ll) warning $@ "cleaning dependencies" "$(DEP) $(DMK)"
 	@-rm $(DEP) $(DMK);\
 	 if test $$? -gt 0; then echo; fi; # put extra line if err-msg
@@ -156,7 +156,7 @@ cleandep:
 #install: test
 #	@$(echo) -e " $(mk_ok)  $(c2)nothing to install.$(c0)"
 
-all: build test install
+all:: build test install
 	$(call log,Done,$@,"built, tested and installed")
 
 

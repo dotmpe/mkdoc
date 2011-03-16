@@ -70,58 +70,10 @@ DESCRIPTION        += info='..'
 
 ll                  = $(MK_SHARE)Core/log.sh
 ee                  = /bin/echo -e
-mk-target-dir       = if test ! -d $(@D); then mkdir -p $(@D); fi;
 sed-trim            = sed 's/^ *//g' | sed 's/ *$$//g'
-kwds-file           = if test -f "$(KWDS_./$(<D))"; then \
-						  echo $(KWDS_./$(<D)); \
-						else if test -f "$(KWDS_./$(@D))"; then \
-						  echo $(KWDS_./$(@D)); \
-						else if test -f "$(KWDS_$(<D))"; then \
-						  echo $(KWDS_$(<D)); \
-						else if test -f "$(KWDS_$(@D))"; then \
-						  echo $(KWDS_$(@D)); \
-						else if test -f "$(KWDS_$(DIR))"; then \
-						  echo $(KWDS_$(DIR)); \
-						else if test -f "$(KWDS_.)"; then \
-						  echo $(KWDS_.); \
-						else if test -f "$(KWDS)"; then \
-						  echo $(KWDS); fi; fi; fi; fi; fi; fi; fi;
-init-dir            = if test ! -d $1; then mkdir -p $1; fi
-init-file           = if test ! -f $1; then mkdir -p $$(dirname $1); touch $1; fi
-init-target         = $(call init-file,$@)
-
-define mk-target
-	$(mk-target-dir)
-	if test ! -f "$@"; then touch $@; fi;
-endef
-
-define reset-target
-	$(mk-target-dir)
-	if test -f "$@"; then rm $@; fi;
-	touch $@;
-endef
-
-info-target-type = $(ll) info "$@" "`file -bs $@`"
-info-target-chars = $(ll) info "$@" "`cat $@|wc -m` chars"
-info-target-lines = $(ll) info "$@" "`cat $@|wc -l` lines"
-target-stats         = \
-					$(info-target-lines);\
-					$(info-target-chars);\
-					$(info-target-type);
-info-text-stat = $(ll) info "$@" "`cat $@|wc -l` lines, `cat $@|wc -m` chars, `file -bs $@`"
-info-bin-stat = $(ll) info "$@" "`cat $@|wc -c` bytes, `file -bs $@`"
-
-define mk-include
-	$(reset-target)
-	for f in $(MK_FILES); do \
-		echo "ifeq (\$$(realpath $$f 2>/dev/null),)" >> $@; \
-		echo "MISSING += $$f" >> $@; \
-		echo "else" >> $@; \
-		echo "DIR := `dirname $$f`" >> $@; \
-		echo "include $$f" >> $@; \
-		echo "endif" >> $@; \
-	done;
-endef
+filter-paths        = sed 's/\/\//\//g' | sed 's/\.\///g'
+getpaths            = cat "$$F" | $(filter-paths)
+count-lines         = wc -l "$$F" | sed 's/^\ *\([0-9]*\).*$$/\1/g'
 
 
 ### Functions
@@ -132,10 +84,13 @@ ifneq ($(VERBOSE), )
 log-module          = $(info $(shell if test -n "$(VERBOSE)"; then \
 						$(ll) header2 $1 $2; fi))
 endif
+init-dir            = if test ! -d $1; then mkdir -p $1; fi
+init-file           = if test ! -f $1; then mkdir -p $$(dirname $1); touch $1; fi
 count               = $(shell if test -n "$1"; then\
-					    echo $1|wc -w; else echo 0; fi;)
+					    echo $1|wc -w|sed 's/ //g'; else echo 0; fi;)
 count-list          = $(shell if test -f "$1"; then\
 					    cat $1|wc -l; else echo 0; fi;)
+f-count-lines       = $(shell F=$1; $(count-lines))
 contains            = for Z in "$1"; do if test "$$Z" = "$2"; then \
 					    echo "$$Z"; fi; done;
 expand-path         = $(shell echo $1)
@@ -147,6 +102,7 @@ filter-dir          = $(shell for D in $1; do if test -d "$$D"; then \
                         echo $$D; fi; done)
 filter-file         = $(shell for F in $1; do if test -f "$$F"; then \
                         echo $$F; fi; done)
+newer               = $(shell for F in $2; do if test $$F -nt $1; then echo $$F; fi; done; )
 #sed-escape          = echo "$1" | awk '{gsub("[~/:.]","\\\\&");print}'
 sed-escape          = $(shell echo "$1" | awk '{gsub("[~/:.]", "\\\\&");print}')
 remove-line         = if test -e "$1"; then LINE=$$($(call sed-escape,$2));mv "$1" "$1.tmp";cat "$1.tmp"|sed "s/$$LINE//">"$1";rm $1.tmp; else echo "Error: unknown file $1"; fi
@@ -194,8 +150,60 @@ complement          = $(shell \
 					      if test -z "$$(for Z in $2; do if test "$$Z" = "$$X"; \
 					        then echo $$X; fi; done)"; then \
 					        echo "$$X"; fi; done; )
-    
+f_getpaths          = $(shell F="$1"; $(getpaths))
+
+
 ### Canned
+init-target         = $(call init-file,$@)
+mk-target-dir       = if test ! -d $(@D); then mkdir -p $(@D); fi;
+kwds-file           = if test -f "$(KWDS_./$(<D))"; then \
+						  echo $(KWDS_./$(<D)); \
+						else if test -f "$(KWDS_./$(@D))"; then \
+						  echo $(KWDS_./$(@D)); \
+						else if test -f "$(KWDS_$(<D))"; then \
+						  echo $(KWDS_$(<D)); \
+						else if test -f "$(KWDS_$(@D))"; then \
+						  echo $(KWDS_$(@D)); \
+						else if test -f "$(KWDS_$(DIR))"; then \
+						  echo $(KWDS_$(DIR)); \
+						else if test -f "$(KWDS_.)"; then \
+						  echo $(KWDS_.); \
+						else if test -f "$(KWDS)"; then \
+						  echo $(KWDS); fi; fi; fi; fi; fi; fi; fi;
+
+define mk-target
+	$(mk-target-dir)
+	if test ! -f "$@"; then touch $@; fi;
+endef
+
+define reset-target
+	$(mk-target-dir)
+	if test -f "$@"; then rm $@; fi;
+	touch $@;
+endef
+
+info-target-type = $(ll) info "$@" "`file -bs $@`"
+info-target-chars = $(ll) info "$@" "`cat $@|wc -m` chars"
+info-target-lines = $(ll) info "$@" "`cat $@|wc -l` lines"
+target-stats         = \
+					$(info-target-lines);\
+					$(info-target-chars);\
+					$(info-target-type);
+info-text-stat = $(ll) info "$@" "`cat $@|wc -l` lines, `cat $@|wc -m` chars, `file -bs $@`"
+info-bin-stat = $(ll) info "$@" "`cat $@|wc -c` bytes, `file -bs $@`"
+
+define mk-include
+	$(reset-target)
+	for f in $(MK_FILES); do \
+		echo "ifeq (\$$(realpath $$f 2>/dev/null),)" >> $@; \
+		echo "MISSING += $$f" >> $@; \
+		echo "else" >> $@; \
+		echo "DIR := `dirname $$f`" >> $@; \
+		echo "include $$f" >> $@; \
+		echo "endif" >> $@; \
+	done;
+endef
+
 define ante-proc-tags
 	# Process all source files and expand tag references.
 	$(ll) info "source tags" "Expanding keywords tags from " $$($(kwds-file))

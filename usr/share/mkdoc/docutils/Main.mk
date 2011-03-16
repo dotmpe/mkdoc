@@ -190,7 +190,7 @@ define build-dir-index-rst
 	$(reset-target)
 	$(ee) ".. container:: directory\n" > $<.tmp-index
 	$(ee) "   .. class:: flat-index\n" >> $<.tmp-index
-	ls "$(<D)" | sed -e 's/\(\.xhtml\|\.rst\|\.png\|\.dot\|\.tab\|\.list\|\.csv\|\.txt\|\.html\|\.xml\|\.js\|\.jpg\)$$//g' - | sort -u |\
+	ls "$(<D)" | sed -e 's/\(\.xhtml\|\.rst\|\.png\|\.dot\|\.tab\|\.list\|\.csv\|\.txt\|\.html\|\.xml\|\.js\|\.jpg\)$$//g' | sort -u |\
   	 while read f; \
 	   do echo "      - \`$$f <./$$f>\`_" >> $<.tmp-index; done;
 	mv $<.tmp-index $@

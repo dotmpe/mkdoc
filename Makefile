@@ -1,15 +1,21 @@
 # Non-recursive makefile
 # Example of mkdoc usage, see git://github.org/dotmpe/mkdoc
 
+DOMAIN              := mpe
+
 BUILD               := .build/
 DIR                 := .
 
-MK_ROOT             := $(HOME)/project/mkdoc/
+SRC_PATH             := /src/
+PROJ_PATH             := /srv/project-$(DOMAIN)/
+
+MK_ROOT             := /srv/project-$(DOMAIN)/mkdoc/
 MK_SHARE            := $(MK_ROOT)usr/share/mkdoc/
 
 ifneq ($(VERBOSE), )
 $(info mkdocs:DIR=$(DIR))
 $(info mkdocs:BUILD=$(BUILD))
+
 $(info mkdocs:MK_ROOT=$(MK_ROOT))
 $(info mkdocs:MK_SHARE=$(MK_SHARE))
 endif
@@ -59,5 +65,5 @@ endif
 #
 include                $(MK_SHARE)Core/Rules.default.mk
 
-$(info $(shell $(ll) OK "mkdoc" "Starting $(MAKECMDGOALS).." ))
+$(info $(shell $(ll) OK "mkdoc" "starting $(MAKECMDGOALS).." ))
 
