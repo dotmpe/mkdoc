@@ -6,8 +6,8 @@ DOMAIN              := mpe
 BUILD               := .build/
 DIR                 := .
 
-SRC_PATH             := /src/
-PROJ_PATH             := /srv/project-$(DOMAIN)/
+SRC_PATH            := /src/
+PROJ_PATH           := /srv/project-$(DOMAIN)/
 
 MK_ROOT             := /srv/project-$(DOMAIN)/mkdoc/
 MK_SHARE            := $(MK_ROOT)usr/share/mkdoc/
@@ -20,19 +20,21 @@ $(info mkdocs:MK_ROOT=$(MK_ROOT))
 $(info mkdocs:MK_SHARE=$(MK_SHARE))
 endif
 
-# 
+#      ------------ -- 
+
 include                $(MK_SHARE)Core/Main.mk
 
 ifneq ($(VERBOSE), )
 $(info $(shell $(ll) header "mkdoc" "Core script loaded, reading shares" ))
 endif
 
-#
 include                \
                        $(MK_SHARE)docutils/Main.mk \
                        $(MK_SHARE)bookmarklet/Main.mk \
                        $(MK_SHARE)tidy/Main.mk \
                        $(MK_SHARE)graphviz/Main.mk 
+
+#      ------------ -- 
 
 MK                  += $(DIR)/Makefile
 
@@ -49,6 +51,8 @@ include                \
                        $(MK_SHARE)plotutils/Rules.default.mk \
 #					   $(MK_SHARE)Core/Rules.archive.mk
 
+#      ------------ -- 
+
 ifneq ($(VERBOSE), )
 $(info $(shell $(ll) header "mkdoc" "Reading local rules" ))
 endif
@@ -56,6 +60,8 @@ endif
 # Include specific rules and set SRC, DEP, TRGT and CLN variables.
 #
 include                $(call rules,$(DIR)/) 
+
+#      ------------ -- 
 
 ifneq ($(VERBOSE), )
 $(info $(shell $(ll) header "mkdoc" "Reading standard rules" ))
@@ -65,5 +71,7 @@ endif
 #
 include                $(MK_SHARE)Core/Rules.default.mk
 
-$(info $(shell $(ll) OK "mkdoc" "starting $(MAKECMDGOALS).." ))
+#      ------------ -- 
+
+$(info $(shell $(ll) OK "mkdoc" "starting 'make $(MAKECMDGOALS)'.." ))
 

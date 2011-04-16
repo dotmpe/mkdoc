@@ -88,15 +88,49 @@ list::
 	@$(ll) header2 "Build Targets" "" '$(strip $(TRGT))'
 	@$(ll) OK $@ 
 
+DESC_SRC  = Paths to build targets from  
+DESC_TRGT = Paths to build from source 
+DESC_TEST =  
+DESC_MK   = List of loaded Makefiles
+DESC_DMK  = List of (to be) generated Makefiles
+DESC_DEP  = Paths needed to build targets 
+DESC_CLN  = Paths that will be removed on next `make clean`  
+DESC_RES  =   
+
 lists::
-	@$(ll) header $@ "All targets"
-	@$(ll) header2 Sources               ""  '$(strip $(SRC))'
-	@$(ll) header2 "Build Targets"       ""  '$(strip $(TRGT))'
-	@$(ll) header2 "Test Targets"        ""  '$(strip $(TEST))'
-	@$(ll) header2 "Makefiles"  	     ""  '$(strip $(MK))'
-	@$(ll) header2 "Generated Makefiles" ""  '$(strip $(DMK))'
-	@$(ll) header2 "Other Dependencies"  ""  '$(strip $(DEP))'
-	@$(ll) header2 "Resources "  ""  '$(strip $(RES))'
+	@$(ll) header $@ "Printing all prerequisite lists."
+	@if test -n "$(strip $(SRC))"; then \
+	 $(ll) header2 SRC Sources                 '$(strip $(SRC))';\
+	 else\
+	 $(ll) header2 SRC "Sources (none)";\
+	 fi;
+	@if test -n "$(strip $(TRGT))"; then \
+	 $(ll) header2 TRGT 'Build Targets'        '$(strip $(TRGT))';\
+	 else\
+	 $(ll) header2 TRGT 'Build Targets (none)';\
+	 fi;
+	@if test -n "$(strip $(TEST))"; then \
+	 $(ll) header2 TEST 'Test Targets'         '$(strip $(TEST))';\
+	 fi;
+	@$(ll) header2 MK 'Makefiles'  	           '$(strip $(MK))'
+	@if test -n "$(strip $(DMK))"; then \
+	 $(ll) header2 DMK 'Generated Makefiles'   '$(strip $(DMK))';\
+	 else\
+	 $(ll) header2 DMK 'Generated Makefiles (none)' ;\
+	 fi;
+	@if test -n "$(strip $(DEP))"; then \
+	 $(ll) header2 DEP 'Other Dependencies'    '$(strip $(DEP))';\
+	 else\
+	 $(ll) header2 DEP 'Other Dependencies (none)';\
+	 fi
+	@if test -n "$(strip $(CLN))"; then \
+	 $(ll) header2 CLN 'Clean list'            '$(strip $(CLN))';\
+	 else\
+	 $(ll) header2 CLN 'Clean list (none)'   ;\
+	 fi
+	@if test -n "$(strip $(RES))"; then \
+	 $(ll) header2 RES 'Resources '            '$(strip $(RES))';\
+	 fi;
 	@if test -n "$(strip $(MISSING))"; then \
 	 $(ll) Error "Missing" "Paths not found " '$(strip $(MISSING))';\
 	 fi;

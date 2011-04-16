@@ -96,7 +96,7 @@ case "$linetype" in
     'file_ok' )
         targets=$(printf "$mk_trgt_green" "$targets")
         ;;
-    'error' | 'fatal' ) # red
+    error* | 'fatal' | fail* ) # red
         targets=$(printf "$mk_p_trgt_red" "$targets")
         ;;
      ok | "done" | 'info'|*  )
