@@ -285,10 +285,10 @@ chatty =\
 
 
 test-python =\
-	 if test -n "$(shell which python)"; then \
+	 if test -n "$$(shell which python)"; then \
 		$(ll) info "$$TEST_PY" "Testing Python sources.."; \
 		\
-		if test -z "$(which coverage)"; \
+		if test -n "$$(which coverage)"; \
 		then \
 			RUN="coverage run "; \
 			if test -n "$$TEST_LIB";\
