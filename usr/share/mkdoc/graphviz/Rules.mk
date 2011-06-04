@@ -1,5 +1,5 @@
-$(call log-module,"graphviz","Graphviz rules")
-GRAPHVIZ_SUFFIX     := ,graph
+$(call log-module_"graphviz"_"Graphviz rules")
+GRAPHVIZ_SUFFIX     := -graph
 #
 #      ------------ -- 
 
@@ -8,33 +8,41 @@ GRAPHVIZ_SUFFIX     := ,graph
 ### DOT png
 %$(GRAPHVIZ_SUFFIX).png:           %.gv
 	@$(gv-to-graph)
-%$(GRAPHVIZ_SUFFIX).png:      GRAPHVIZ_OUT := png
+%$(GRAPHVIZ_SUFFIX).png:            GRAPHVIZ_OUT := png
+
+%_dot$(GRAPHVIZ_SUFFIX).png:       %.gv
+	@$(gv-to-graph)
+%_dot$(GRAPHVIZ_SUFFIX).png:        GRAPHVIZ_OUT := png
 
 $B%$(GRAPHVIZ_SUFFIX).png:         %.gv
 	@$(gv-to-graph)
-$B%$(GRAPHVIZ_SUFFIX).png:    GRAPHVIZ_OUT := png
+$B%$(GRAPHVIZ_SUFFIX).png:          GRAPHVIZ_OUT := png
+
+$B%_dot$(GRAPHVIZ_SUFFIX).png:     %.gv
+	@$(gv-to-graph)
+$B%_dot$(GRAPHVIZ_SUFFIX).png:      GRAPHVIZ_OUT := png
 
 
 ### png graphs from other engines
-$B%,neato$(GRAPHVIZ_SUFFIX).png:   %.gv
+$B%_neato$(GRAPHVIZ_SUFFIX).png:   %.gv
 	@$(gv-to-graph)
-$B%,neato$(GRAPHVIZ_SUFFIX).png:     GRAPHVIZ_OUT := png
-$B%,neato$(GRAPHVIZ_SUFFIX).png:  GRAPHVIZ_ENGINE := $(GRAPHVIZ_ENGINE:dot%=neato%)
+$B%_neato$(GRAPHVIZ_SUFFIX).png:    GRAPHVIZ_OUT := png
+$B%_neato$(GRAPHVIZ_SUFFIX).png: GRAPHVIZ_ENGINE := $(GRAPHVIZ_ENGINE:dot%=neato%)
 
-$B%,twopi$(GRAPHVIZ_SUFFIX).png:   %.gv
+$B%_twopi$(GRAPHVIZ_SUFFIX).png:   %.gv
 	@$(gv-to-graph)
-$B%,twopi$(GRAPHVIZ_SUFFIX).png:     GRAPHVIZ_OUT := png
-$B%,twopi$(GRAPHVIZ_SUFFIX).png:  GRAPHVIZ_ENGINE := $(GRAPHVIZ_ENGINE:dot%=twopi%)
+$B%_twopi$(GRAPHVIZ_SUFFIX).png:    GRAPHVIZ_OUT := png
+$B%_twopi$(GRAPHVIZ_SUFFIX).png: GRAPHVIZ_ENGINE := $(GRAPHVIZ_ENGINE:dot%=twopi%)
 
-$B%,fdp$(GRAPHVIZ_SUFFIX).png:     %.gv
+$B%_fdp$(GRAPHVIZ_SUFFIX).png:     %.gv
 	@$(gv-to-graph)
-$B%,fdp$(GRAPHVIZ_SUFFIX).png:     GRAPHVIZ_OUT := png
-$B%,fdp$(GRAPHVIZ_SUFFIX).png:  GRAPHVIZ_ENGINE := $(GRAPHVIZ_ENGINE:dot%=fdp%)
+$B%_fdp$(GRAPHVIZ_SUFFIX).png:      GRAPHVIZ_OUT := png
+$B%_fdp$(GRAPHVIZ_SUFFIX).png:   GRAPHVIZ_ENGINE := $(GRAPHVIZ_ENGINE:dot%=fdp%)
 
-$B%,circo$(GRAPHVIZ_SUFFIX).png:   %.gv
+$B%_circo$(GRAPHVIZ_SUFFIX).png:   %.gv
 	@$(gv-to-graph)
-$B%,circo$(GRAPHVIZ_SUFFIX).png:     GRAPHVIZ_OUT := png
-$B%,circo$(GRAPHVIZ_SUFFIX).png:  GRAPHVIZ_ENGINE := $(GRAPHVIZ_ENGINE:dot%=circo%)
+$B%_circo$(GRAPHVIZ_SUFFIX).png:    GRAPHVIZ_OUT := png
+$B%_circo$(GRAPHVIZ_SUFFIX).png: GRAPHVIZ_ENGINE := $(GRAPHVIZ_ENGINE:dot%=circo%)
 
 # XXX: non-graphviz svg -> png
 #$B%.svg.png: 		$d/%.svg
@@ -55,13 +63,13 @@ $B%$(GRAPHVIZ_SUFFIX).ps:          %.gv
 $B%$(GRAPHVIZ_SUFFIX).ps:     GRAPHVIZ_OUT := ps
 
 # DOT ps2 (PDF)
-%$(GRAPHVIZ_SUFFIX),ps2.ps:            %.gv
+%$(GRAPHVIZ_SUFFIX)_ps2.ps:            %.gv
 	@$(gv-to-graph)
-%$(GRAPHVIZ_SUFFIX),ps2.ps:       GRAPHVIZ_OUT := ps2
+%$(GRAPHVIZ_SUFFIX)_ps2.ps:       GRAPHVIZ_OUT := ps2
 
-$B%$(GRAPHVIZ_SUFFIX),ps2.ps:          %.gv
+$B%$(GRAPHVIZ_SUFFIX)_ps2.ps:          %.gv
 	@$(gv-to-graph)
-$B%$(GRAPHVIZ_SUFFIX),ps2.ps:     GRAPHVIZ_OUT := ps2
+$B%$(GRAPHVIZ_SUFFIX)_ps2.ps:     GRAPHVIZ_OUT := ps2
 
 # DOT cmapx (HTML imagemap)
 %$(GRAPHVIZ_SUFFIX).cmapx:         %.gv
@@ -93,12 +101,12 @@ $B%$(GRAPHVIZ_SUFFIX).svg:  GRAPHVIZ_OUT := svg:cairo
 
 
 # third-party graph language
-$B%,gxl.gv: %.gxl
+$B%_gxl.gv: %.gxl
 	@$(ll) file_target "$@" because "$?"
 	@gxl2gv -d -o$@ $< 
 	@$(ll) file_ok "$@" Done
 
-$B%,gv.gxl: %.gv
+$B%_gv.gxl: %.gv
 	@$(ll) file_target "$@" because "$?"
 	@gxl2gv -g -o$@ $< 
 	@$(ll) file_ok "$@" Done

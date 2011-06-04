@@ -23,6 +23,7 @@ HOST               := $(shell hostname -s | tr 'A-Z' 'a-z')
 ifndef ROOT
 ROOT               := $(shell pwd)
 endif
+OS                 := $(shell uname)
 
 
 # global path/file lists
@@ -63,13 +64,24 @@ DESCRIPTION        += help='print this help'
 DESCRIPTION        += stat='assert sources, dynamic makefiles and other dependencies'
 DESCRIPTION        += list='print SRC and TRGT lists'
 DESCRIPTION        += lists='print all other lists'
-DESCRIPTION        += info='..'
+DESCRIPTION        += info='print other metadata'
 
 
 ### Various snippets
 
 ll                  = $(MK_SHARE)Core/log.sh
+
+ifneq ($(VERBOSE), )
+$(info $(shell $(ll) "info" "OS" "on "$(OS)))
+$(info $(shell $(ll) "info" "HOST" "at '"$(HOST)"'"))
+$(info $(shell $(ll) "info" "ROOT" "from '"$(ROOT)"'"))
+endif
+
+ifeq ("$(OS)","Darwin")
+ee                  = /bin/echo
+else
 ee                  = /bin/echo -e
+endif
 sed-trim            = sed 's/^ *//g' | sed 's/ *$$//g'
 filter-paths        = sed 's/\/\//\//g' | sed 's/\.\///g'
 getpaths            = cat "$$F" | $(filter-paths)
@@ -79,6 +91,8 @@ count-lines         = wc -l "$$F" | sed 's/^\ *\([0-9]*\).*$$/\1/g'
 ### Functions
 
 log                 = $(ll) "$1" "$2" "$3" "$4"
+log_line            = $(ll) "$1" "$2" "$3" "$4"
+# log:  1.LINETYPE  2.TARGETS  3.MESSAGE  4.SOURCES
 log-module          = # $1 $2
 ifneq ($(VERBOSE), )
 log-module          = $(info $(shell if test -n "$(VERBOSE)"; then \
@@ -116,7 +130,7 @@ sub-dirs            = $(abspath $(realpath $(shell \
 safe-paths          = $(shell D="$(call sed-escape,$1)";ls "$1"|grep '^[\/a-zA-Z0-9\+\.,_-]\+$$'|sed "s/^/$$D/g")
 unsafe-paths        = $(shell D="$(call sed-escape,$1)";ls "$1"|grep -v '^[\/a-zA-Z0-9\+\.,_-]\+$$'|sed "s/^/$$D/g")
 # mkid: rewrite filename/path to Make/Bash safe variable ID
-mkid                = $(shell echo $1|sed 's/[\/\.,;:_\+]\+/_/g')
+mkid                = $(shell echo $1|sed 's/[\/\.,;:_\+]/_/g')
 # rules: return Rules files for each directory in $1
 rules               = $(shell for D in $1; do \
                         if test -f "$$(echo $$D/Rules.mk)"; then \
@@ -151,6 +165,13 @@ complement          = $(shell \
 					        then echo $$X; fi; done)"; then \
 					        echo "$$X"; fi; done; )
 f_getpaths          = $(shell F="$1"; $(getpaths))
+zero_exit_test = \
+	if test '$1' != 0; \
+	then \
+		$(ll) error "$2" "$4"; \
+	else \
+		$(ll) OK "$2" "$3"; \
+	fi
 
 
 ### Canned

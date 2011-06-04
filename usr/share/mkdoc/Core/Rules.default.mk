@@ -16,7 +16,7 @@ help::
 	@# See STRGT and DESCRIPTION vars, STD (STDTARGT or STDSTAT) without DESCRIPTION is not printed
 	@declare $(DESCRIPTION);\
 	$(ll) header $@     "$$PROJECT project Makefile";\
-	$(ee) ;\
+	$(ee) "" ;\
 	for strgt in $(STDTRGT);\
 	do\
 		V=$$strgt;\
@@ -25,7 +25,6 @@ help::
 			$(ll) header2 $$strgt "$${!V}";\
 		fi;\
 	done;\
-	$(ee) ;\
 	$(ll) header $@     "No-ops and summary targets";\
 	for strgt in $(STDSTAT);\
 	do\
@@ -35,7 +34,6 @@ help::
 			$(ll) header2 $$strgt "$${!V}";\
 		fi;\
 	done;\
-	$(ee) ;\
 	OTHER="$(call complement,$(STRGT),$(STD))";\
 	if test -n "$$OTHER";\
 	then\
@@ -51,24 +49,24 @@ help::
 
 examples::
 	@$(ee)
-	@$(ll) header "$@" "The following is an example list of log output lines"
+	@$(ll) header       "$@" "The following is an example list of log output lines"
 	@$(ee)
 	@$(ll) file_target "./example/path.o" "(file_target) File targets and other paths use angle brackets" "and a list of paths"
 	@$(ll) file_ok "./example/path.o" "(file_ok) this is a message to be printed" "with another list of paths"
 	@$(ee)
-	@$(ll) done "$@" "Special targets use square brackets" "and may always list paths"
-	@$(ll) ok "$@" "this is a message to be printed" "with another list of paths"
-	@$(ll) OK "$@" "see that line-types are case-insensitive"
-	@$(ll) header "$@" "This line type (header1) is not included on the line"
-	@$(ll) header2 "$@" "(header2) This is a message to be printed" 
-	@$(ll) header3 "$@" "(header3) This is a message to be printed" 
-	@$(ll) debug "$@" "(debug) This is a message to be printed" 
-	@$(ll) info "$@" "(info) This is a message to be printed" 
-	@$(ll) attention "$@" "(attention) This is a message to be printed" 
-	@$(ll) warning "$@" "(warning) This is a message to be printed" 
-	@$(ll) error "$@" "(error) this is a message to be printed" 
-	@$(ll) fatal "$@" "this script better halt now"
-	@$(ll) "* (type?)" "$@" "All logs are printed, including those with unrecognized linetype" 
+	@$(ll) done         "$@" "Special targets use square brackets" "and may always list paths"
+	@$(ll) ok           "$@" "this is a message to be printed" "with another list of paths"
+	@$(ll) OK           "$@" "see that line-types are case-insensitive"
+	@$(ll) header       "$@" "This line type (header1) is not included on the line"
+	@$(ll) header2      "$@" "(header2) This is a message to be printed" 
+	@$(ll) header3      "$@" "(header3) This is a message to be printed" 
+	@$(ll) debug        "$@" "(debug) This is a message to be printed" 
+	@$(ll) info         "$@" "(info) This is a message to be printed" 
+	@$(ll) attention    "$@" "(attention) This is a message to be printed" 
+	@$(ll) warning      "$@" "(warning) This is a message to be printed" 
+	@$(ll) error        "$@" "(error) this is a message to be printed" 
+	@$(ll) fatal        "$@" "this script better halt now"
+	@$(ll) "* (type?)"  "$@" "All logs are printed, including those with unrecognized linetype" 
 
 info::
 	@$(ll) header $@ "Package Info"
@@ -83,10 +81,10 @@ info::
 
 list::
 	@$(ee) 
-	@$(ll) header2 Sources "" "$(strip $(SRC))"
+	@$(ll) header2 Sources                  "" "$(strip $(SRC))"
 	@#$(ll) header2 Sources  "$(shell echo $(SRC)|sort -u)"
-	@$(ll) header2 "Build Targets" "" '$(strip $(TRGT))'
-	@$(ll) OK $@ 
+	@$(ll) header2 "Build Targets"          "" '$(strip $(TRGT))'
+	@$(ll) header2 "Special Targets"        "" '$(strip $(STRGT))'
 
 DESC_SRC  = Paths to build targets from  
 DESC_TRGT = Paths to build from source 
@@ -128,6 +126,11 @@ lists::
 	 else\
 	 $(ll) header2 CLN 'Clean list (none)'   ;\
 	 fi
+	@if test -n "$(strip $(STRGT))"; then \
+	 $(ll) header2 STRGT 'Special Targets'     '$(strip $(STRGT))';\
+	 else\
+	 $(ll) header2 STRGT 'Special Targets (none)';\
+	 fi;
 	@if test -n "$(strip $(RES))"; then \
 	 $(ll) header2 RES 'Resources '            '$(strip $(RES))';\
 	 fi;
@@ -135,8 +138,6 @@ lists::
 	 $(ll) Error "Missing" "Paths not found " '$(strip $(MISSING))';\
 	 fi;
 
-	@#$(ll) header2 "All Generated Targets" '$(strip $(CLN))'
-	@$(ll) OK $@ 
 
 #src:: $(SRC) 
 
@@ -172,7 +173,7 @@ pub:: push build
 push::
 	@$(call log,Done,$@,$(call count,$(TRGT)) targets ready)
 
-test:: dep $(TEST)
+test:: $(TEST)
 	$(call mk_ok_s,"tested")
 
 clean::
