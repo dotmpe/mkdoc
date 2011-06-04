@@ -10,7 +10,7 @@
 # Finally, include some standard rules or set these yourself. See:
 # $(MK_SHARE)Core/Rules.default.mk
 
-VPATH              := . / 
+VPATH              := . /
 SHELL              := /bin/bash
 
 .SUFFIXES:
@@ -32,19 +32,19 @@ DMK                :=
 MK                 :=
 DEP                :=
 TRGT               :=
-STRGT              := 
+STRGT              :=
 CLN                :=
 TEST               :=
 INSTALL            :=
 
 PENDING            :=
-MISSING            :=  
+MISSING            :=
 OFFLINE            :=
 
-RES := 
+RES :=
 
 
-### standard targets 
+### standard targets
 # (append to STRGT) see Rules.default.mk
 STDTRGT            := \
 					  all dep dmk test build install clean cleandep
@@ -120,9 +120,9 @@ newer               = $(shell for F in $2; do if test $$F -nt $1; then echo $$F;
 #sed-escape          = echo "$1" | awk '{gsub("[~/:.]","\\\\&");print}'
 sed-escape          = $(shell echo "$1" | awk '{gsub("[~/:.]", "\\\\&");print}')
 remove-line         = if test -e "$1"; then LINE=$$($(call sed-escape,$2));mv "$1" "$1.tmp";cat "$1.tmp"|sed "s/$$LINE//">"$1";rm $1.tmp; else echo "Error: unknown file $1"; fi
-assert-line         = if test -z "$$(cat $1|grep $2)";then echo "$2" >> $1; fi; 
+assert-line         = if test -z "$$(cat $1|grep $2)";then echo "$2" >> $1; fi;
 #parents             = $()
-filter-mount        = $(foreach M,$1,$(if $(shell mount|grep $M),$(shell echo $M)))                        
+filter-mount        = $(foreach M,$1,$(if $(shell mount|grep $M),$(shell echo $M)))
 sub-dirs            = $(abspath $(realpath $(shell \
 						for sub in $1/*; do \
 						  if test -d "$$sub"; then \
@@ -166,7 +166,7 @@ complement          = $(shell \
 					        echo "$$X"; fi; done; )
 f_getpaths          = $(shell F="$1"; $(getpaths))
 zero_exit_test = \
-	if test '$1' != 0; \
+	if test $1 != 0; \
 	then \
 		$(ll) error "$2" "$4"; \
 	else \
@@ -241,7 +241,7 @@ define ante-proc-tags
 			value=`echo "$$2" | awk '{gsub("[~/:.]", "\\\\\\\&");print}'`; \
 			sed -e "s/@$$tag/$$value/g" $<.src > $<.tmp; \
 			mv $<.tmp $<.src; \
-		done; 
+		done;
 endef
 
 define post-proc-tags
@@ -276,6 +276,43 @@ define build-dir-index
 	   $(ll) file_ok "$@" "New index"; fi
 endef
 
+chatty =\
+		if test -z "$$VERBOSE"; then VERBOSE=1; fi;\
+		if test $$VERBOSE -ge $1;\
+		then \
+			$(ll) "$2" "$3" "$4" "$5"; \
+		fi
 
-default:               
+
+test-python =\
+	 if test -n "$(shell which python)"; then \
+		$(ll) info "$$TEST_PY" "Testing Python sources.."; \
+		\
+		if test -z "$(which coverage)"; \
+		then \
+			RUN="coverage run "; \
+			if test -n "$$TEST_LIB";\
+			then\
+				RUN=$$RUN" --source="$$TEST_LIB;\
+			fi;\
+		else \
+			$(call chatty,1,warning,$@,Coverage for python not available); \
+			RUN=python;\
+		fi; \
+		$(call chatty,2,attention,$$,$$RUN,$$TEST_PY);\
+		$$RUN $$TEST_PY \
+		$(call catty,2,header,exit-status,$$?);\
+		$(call zero_exit_test,$$?,$@,Python tested,Python testing failed); \
+		\
+		if test -n "$(shell which coverage)"; \
+		then \
+			coverage html; \
+			$(call chatty,0,file_OK,htmlcov/,Generated test coverage report in HTML); \
+		fi; \
+	else \
+		$(ll) error "$@" "Tests require Python interpreter. "; \
+	fi;
+
+
+default:
 
