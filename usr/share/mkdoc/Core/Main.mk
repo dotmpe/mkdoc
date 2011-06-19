@@ -285,7 +285,7 @@ chatty =\
 
 
 test-python =\
-	 if test -n "$$(shell which python)"; then \
+	 if test -n "$$(which python)"; then \
 		$(ll) info "$$TEST_PY" "Testing Python sources.."; \
 		\
 		if test -n "$$(which coverage)"; \
@@ -300,11 +300,11 @@ test-python =\
 			RUN=python;\
 		fi; \
 		$(call chatty,2,attention,$$,$$RUN,$$TEST_PY);\
-		$$RUN $$TEST_PY \
+		$$RUN $$TEST_PY; \
 		$(call catty,2,header,exit-status,$$?);\
 		$(call zero_exit_test,$$?,$@,Python tested,Python testing failed); \
 		\
-		if test -n "$(shell which coverage)"; \
+		if test -n "$$(which coverage)"; \
 		then \
 			coverage html; \
 			$(call chatty,0,file_OK,htmlcov/,Generated test coverage report in HTML); \
