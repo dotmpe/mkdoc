@@ -59,77 +59,98 @@ mk_p_trgt_red="$c1[$c7%s$c1]$c0"
 mk_updtd="$c4<$c7%s$c4>$c0"
 
 
+__log ()
+{
+	linetype=$(echo $1|tr 'A-Z' 'a-z')
+	targets=$(echo "$2")
+	trgt_len=${#targets}
+	msg=$3
+	sources=$(echo "$4")
 
-linetype=$(echo $1|tr 'A-Z' 'a-z')
-targets=$(echo "$2")
-trgt_len=${#targets}
-msg=$3
-sources=$(echo "$4")
+	if [ -n "$sources" ];
+	then
+		sources=$(printf "$mk_trgt_blue" "$sources")
+		msg="$msg $sources"
+	fi
+	case "$linetype" in 
+		'header' | 'header1') # blue
+			#targets=$(printf "$mk_title_blue" "$targets")
+			targets=$(printf "$mk_p_trgt_blue" "$targets")
+			;;
+		'header2' )
+			targets=$(printf "$mk_title_blue" "$targets")
+			;;
+		'header3' )
+			targets=$(printf "$mk_title_blue_faint" "$targets")
+			;;
+		'debug' )
+			targets="";
+			trgt_len=0
+				#$(printf "$mk_p_trgt_yellow_faint" "$targets")
+			;;
+		attention | 'warning' )
+			targets=$(printf "$mk_p_trgt_yellow" "$targets")
+			;;
+		'file_target' )
+			targets=$(printf "$mk_trgt_yellow" "$targets")
+			;;
+		'file_ok' )
+			targets=$(printf "$mk_trgt_green" "$targets")
+			;;
+		error* | 'fatal' | fail* ) # red
+			targets=$(printf "$mk_p_trgt_red" "$targets")
+			;;
+		 ok | "done" | 'info'|*  )
+			targets=$(printf "$mk_p_trgt_green" "$targets")
+			;;
+	esac
+	case "$linetype" in
+		'file_target'|'file_ok'|'header'|'header1'|'header2'|'header3'|'debug'|'info'|'attention')
+			;;
+		'warning'|'fatal'|'error'|'ok'|'done'|* )
+			if [ -n "$msg" ]
+			then msg="$c9$1$c0, $msg";
+			else msg="$c9$1$c0"; fi
+			;;
+	esac
+	if [ -n "$msg" -a -z "$sources" ]
+	then
+		msg="$msg.";
+	fi
+	len=$(expr $FIRSTTAB - $trgt_len)
+	case "$linetype" in
+		debug)
+			len=$(expr $len + 2)
+			;;
+		'header2'|header3)
+			len=$(expr $len + 1)
+			;;
+	esac
+	if [ $len -lt 0 ]; then len=0; fi
+	padd=" ";
+	padding=''
+	while [ ${#padding} -lt $len ]; do
+		padding="$padd$padding"
+	done;
+	echo -e " $padding$targets $msg$c0 "
+}
 
-if [ -n "$sources" ];
+
+# Start in stream mode or print one line and exit.
+if test $1 = '-'
 then
-    sources=$(printf "$mk_trgt_blue" "$sources")
-    msg="$msg $sources"
+	IFS='	'; # tab-separated fields for $inp
+	while read inp;
+	do
+		__log $inp;
+	done
+else 
+	# quoted arguments:
+	__log "$1" "$2" "$3" "$4";
 fi
-case "$linetype" in 
-    'header' | 'header1') # blue
-        #targets=$(printf "$mk_title_blue" "$targets")
-        targets=$(printf "$mk_p_trgt_blue" "$targets")
-        ;;
-    'header2' )
-        targets=$(printf "$mk_title_blue" "$targets")
-        ;;
-    'header3' )
-        targets=$(printf "$mk_title_blue_faint" "$targets")
-        ;;
-    'debug' )
-        targets="";
-        trgt_len=0
-            #$(printf "$mk_p_trgt_yellow_faint" "$targets")
-        ;;
-    attention | 'warning' )
-        targets=$(printf "$mk_p_trgt_yellow" "$targets")
-        ;;
-    'file_target' )
-        targets=$(printf "$mk_trgt_yellow" "$targets")
-        ;;
-    'file_ok' )
-        targets=$(printf "$mk_trgt_green" "$targets")
-        ;;
-    error* | 'fatal' | fail* ) # red
-        targets=$(printf "$mk_p_trgt_red" "$targets")
-        ;;
-     ok | "done" | 'info'|*  )
-        targets=$(printf "$mk_p_trgt_green" "$targets")
-        ;;
-esac
-case "$linetype" in
-    'file_target'|'file_ok'|'header'|'header1'|'header2'|'header3'|'debug'|'info'|'attention')
-        ;;
-    'warning'|'fatal'|'error'|'ok'|'done'|* )
-        if [ -n "$msg" ]
-        then msg="$c9$1$c0, $msg";
-        else msg="$c9$1$c0"; fi
-        ;;
-esac
-if [ -n "$msg" -a -z "$sources" ]
-then
-    msg="$msg.";
-fi
-len=$(expr $FIRSTTAB - $trgt_len)
-case "$linetype" in
-    debug)
-        len=$(expr $len + 2)
-        ;;
-    'header2'|header3)
-        len=$(expr $len + 1)
-        ;;
-esac
-if [ $len -lt 0 ]; then len=0; fi
-padd=" ";
-padding=''
-while [ ${#padding} -lt $len ]; do
-    padding="$padd$padding"
-done;
-echo -e " $padding$targets $msg$c0 "
+
+
+
+
+
 
