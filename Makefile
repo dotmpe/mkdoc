@@ -31,6 +31,7 @@ endif
 include                \
                        $(MK_SHARE)docutils/Main.mk \
                        $(MK_SHARE)bookmarklet/Main.mk \
+                       $(MK_SHARE)vc/Main.mk \
                        $(MK_SHARE)tidy/Main.mk \
                        $(MK_SHARE)graphviz/Main.mk 
 

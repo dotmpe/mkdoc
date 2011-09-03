@@ -25,6 +25,7 @@ help::
 			$(ll) header2 $$strgt "$${!V}";\
 		fi;\
 	done;\
+	echo;\
 	$(ll) header $@     "No-ops and summary targets";\
 	for strgt in $(STDSTAT);\
 	do\
@@ -37,6 +38,7 @@ help::
 	OTHER="$(call complement,$(STRGT),$(STD))";\
 	if test -n "$$OTHER";\
 	then\
+		echo;\
 		$(ll) header $@     "Other special targets";\
 		for strgt in $(call complement,$(STRGT),$(STD));\
 		do\

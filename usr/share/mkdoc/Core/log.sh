@@ -5,41 +5,41 @@ FIRSTTAB=32
 
 if [ -z "$CS" ]
 then
-    echo "make: warning, using dark colorscheme (set CS to override)" 1>&2
-    CS=dark
+	echo "make: warning, using dark colorscheme (set CS to override)" 1>&2
+	CS=dark
 fi
 COLOURIZE=yes
 
 # Shell colors
 if [ "$COLOURIZE" == "yes" ]
 then
-    if [ "$CS" == "light" ]
-    then
-        # primary, black
-        c0="\x1b[0;0;30m"
-        # pale (inverted white)
-        c7="\x1b[0;7;37m"
-        # hard (bright black, ie. dark gray)
-        c9="\x1b[0;1;30m"
-    else    
-        # primary, pale white
-        c0="\x1b[0;0;0m"
-        # pale (normal white, ie. light gray)
-        c7="\x1b[0;0;37m"
-        # hard (bold white)
-        c9="\x1b[1;1;37m"
-    fi
-    # warning color, red
-    c1="\x1b[0;1;31m"
-    # ok color, green
-    c2="\x1b[0;0;32m"
-    c21="\x1b[0;1;32m"
-    # running, orange
-    c3="\x1b[0;0;33m"
-    c31="\x1b[0;1;33m"
-    # updated, blue
-    c41="\x1b[0;1;34m"
-    c4="\x1b[0;0;34m"
+	if [ "$CS" == "light" ]
+	then
+		# primary, black
+		c0="\x1b[0;0;30m"
+		# pale (inverted white)
+		c7="\x1b[0;7;37m"
+		# hard (bright black, ie. dark gray)
+		c9="\x1b[0;1;30m"
+	else	
+		# primary, pale white
+		c0="\x1b[0;0;0m"
+		# pale (normal white, ie. light gray)
+		c7="\x1b[0;0;37m"
+		# hard (bold white)
+		c9="\x1b[1;1;37m"
+	fi
+	# warning color, red
+	c1="\x1b[0;1;31m"
+	# ok color, green
+	c2="\x1b[0;0;32m"
+	c21="\x1b[0;1;32m"
+	# running, orange
+	c3="\x1b[0;0;33m"
+	c31="\x1b[0;1;33m"
+	# updated, blue
+	c41="\x1b[0;1;34m"
+	c4="\x1b[0;0;34m"
 fi
 ## Make output strings
 mk_title_blue="$c7$c41%s$c7:$c0"
@@ -51,7 +51,7 @@ mk_trgt_blue="$c41<$c7%s$c41>$c0"
 mk_trgt_yellow="$c31<$c7%s$c31>$c0"
 #mk_trgt_yellow_faint="$c3<$c7%s$c3>$c0"
 mk_p_trgt_yellow="$c31[$c7%s$c31]$c0"
-#mk_p_trgt_yellow_faint="$c3[$c7%s$c3]$c0"
+mk_p_trgt_yellow_faint="$c3[$c7%s$c3]$c0"
 mk_p_trgt_green="$c21[$c7%s$c21]$c0"
 mk_trgt_green="$c21<$c7%s$c21>$c0"
 #mk_trgt_green_faint="$c2<$c7%s$c2>$c0"
@@ -88,6 +88,9 @@ __log ()
 			trgt_len=0
 				#$(printf "$mk_p_trgt_yellow_faint" "$targets")
 			;;
+		'verbose' )
+			targets=$(printf "$mk_p_trgt_yellow_faint" "$targets")
+			;;
 		attention | 'warning' )
 			targets=$(printf "$mk_p_trgt_yellow" "$targets")
 			;;
@@ -105,9 +108,9 @@ __log ()
 			;;
 	esac
 	case "$linetype" in
-		'file_target'|'file_ok'|'header'|'header1'|'header2'|'header3'|'debug'|'info'|'attention')
+		'file_target'|'file_ok'|'header'|'header1'|'header2'|'header3'|'debug'|'info'|'attention'|'error'|'verbose')
 			;;
-		'warning'|'fatal'|'error'|'ok'|'done'|* )
+		'fatal'|'ok'|'done'|* )
 			if [ -n "$msg" ]
 			then msg="$c9$1$c0, $msg";
 			else msg="$c9$1$c0"; fi
@@ -137,19 +140,17 @@ __log ()
 
 
 # Start in stream mode or print one line and exit.
-if test $1 = '-'
+if test "$1" = '-'
 then
-	IFS='	'; # tab-separated fields for $inp
-	while read inp;
+	export IFS="	"; # tab-separated fields for $inp
+	while read lt t m s;
 	do
-		__log $inp;
+		__log "$lt" "$t" "$m" "$s";
 	done
 else 
 	# quoted arguments:
 	__log "$1" "$2" "$3" "$4";
 fi
-
-
 
 
 
