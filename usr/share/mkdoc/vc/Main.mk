@@ -1,6 +1,5 @@
 clean-checkout = \
-	d=$$(realpath $(DIR));\
-		echo $$d;\
+	d=$$(readlink -f $(DIR));\
 		for f in $(GIT_$(DIR));\
 		do\
 			$(ll) header "$@" "Updating GIT" $$(dirname $$f);\
