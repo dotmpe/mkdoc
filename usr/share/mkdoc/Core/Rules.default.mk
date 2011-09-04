@@ -184,6 +184,8 @@ clean::
 	 if test $$? -gt 0; then $(echo) ""; fi; # put xtra line if err-msgs
 	@$(call log,Done,$@,$(call count,$(CLN)) targets)
 
+clean-dep:: cleandep
+
 cleandep::
 	@$(ll) warning $@ "cleaning dependencies" "$(DEP) $(DMK)"
 	@-rm $(DEP) $(DMK);\

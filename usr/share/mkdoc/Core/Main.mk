@@ -116,7 +116,7 @@ filter-dir          = $(shell for D in $1; do if test -d "$$D"; then \
                         echo $$D; fi; done)
 filter-file         = $(shell for F in $1; do if test -f "$$F"; then \
                         echo $$F; fi; done)
-newer               = $(shell for F in $2; do if test $$F -nt $1; then echo $$F; fi; done; )
+newer               = $(shell for F in $2; do if test $$F -nt $1; then echo $$F newer than $1; fi; done; )
 #sed-escape          = echo "$1" | awk '{gsub("[~/:.]","\\\\&");print}'
 sed-escape          = $(shell echo "$1" | awk '{gsub("[~/:.]", "\\\\&");print}')
 remove-line         = if test -e "$1"; then LINE=$$($(call sed-escape,$2));mv "$1" "$1.tmp";cat "$1.tmp"|sed "s/$$LINE//">"$1";rm $1.tmp; else echo "Error: unknown file $1"; fi
