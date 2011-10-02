@@ -88,6 +88,7 @@ list::
 	@$(ll) header2 "Build Targets"          "" '$(strip $(TRGT))'
 	@$(ll) header2 "Special Targets"        "" '$(strip $(STRGT))'
 
+# TODO use similar scheme as DESCRIPTION
 DESC_SRC  = Paths to build targets from  
 DESC_TRGT = Paths to build from source 
 DESC_TEST =  

@@ -48,8 +48,8 @@ define mk-rst-include-deps
 	# Rule-source is rSt file, rule-target the generated-makefile
 	if test -n "$(VERBOSE)"; then \
 		echo $(call rst-dep,$<.src,-); fi;
-	DIR=$(call sed-escape,$(DIR)/); \
-	BUILD=$(call sed-escape,$(BUILD));\
+	DIR=$(call f-sed-escape,$(DIR)/); \
+	BUILD=$(call f-sed-escape,$(BUILD));\
 	RULEF=./$<;\
 	RULET=$${RULEF/%.rst/.xhtml};RULET=$${RULET/#$$DIR/$$BUILD};\
 	echo "#        $* ">> $@; \
@@ -140,14 +140,14 @@ define rst-to-xhtml
 	# Additional styles 'n scripts
 	if test -n "$(VERBOSE)"; \
 		then echo Adding scripts $(XHT_JS); fi
-	JS="$(call sed-escape,$(XHT_JS))"; \
+	JS="$(call f-sed-escape,$(XHT_JS))"; \
 	   for js_ref in $${JS}; do \
 	   	sed -e "s/<\/head>/<script type=\"text\/javascript\" src=\"$$js_ref\"><\/script><\/head>/" $@.tmp1 > $@.tmp2; \
 	   	mv $@.tmp2 $@.tmp1; \
 	   done;
 	if test -n "$(VERBOSE)"; \
 		then echo Adding styles $(XHT_CSS); fi
-	CSS="$(call sed-escape,$(XHT_CSS))"; \
+	CSS="$(call f-sed-escape,$(XHT_CSS))"; \
 	   for css_ref in $${CSS}; do \
 	   	sed -e "s/<\/head>/<link rel=\"stylesheet\" type=\"text\/css\" href=\"$$css_ref\"\/><\/head>/" $@.tmp1 > $@.tmp2; \
 	   	mv $@.tmp2 $@.tmp1; \

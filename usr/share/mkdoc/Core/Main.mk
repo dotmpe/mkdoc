@@ -50,7 +50,7 @@ STDTRGT            := \
 					  all dep dmk test build install clean cleandep
 STDSTAT            := \
 					  help stat list lists info
-
+# descriptions of special targets for build
 DESCRIPTION        := all='build, test and install'
 DESCRIPTION        += dep='generate dependencies'
 DESCRIPTION        += dmk='generate dynamic makefiles'
@@ -83,7 +83,9 @@ else
 ee                  = /bin/echo -e
 endif
 sed-trim            = sed 's/^ *//g' | sed 's/ *$$//g'
-filter-paths        = sed 's/\/\//\//g' | sed 's/\.\///g'
+sed-escape          = awk '{gsub("[~/:.]", "\\\\&");print}'
+filter-paths        = grep -v ^\# | sed 's/\/\//\//g' | sed 's/\.\///g'
+
 getpaths            = cat "$$F" | $(filter-paths)
 count-lines         = wc -l "$$F" | sed 's/^\ *\([0-9]*\).*$$/\1/g'
 
@@ -116,10 +118,10 @@ filter-dir          = $(shell for D in $1; do if test -d "$$D"; then \
                         echo $$D; fi; done)
 filter-file         = $(shell for F in $1; do if test -f "$$F"; then \
                         echo $$F; fi; done)
-newer               = $(shell for F in $2; do if test $$F -nt $1; then echo $$F newer than $1; fi; done; )
-#sed-escape          = echo "$1" | awk '{gsub("[~/:.]","\\\\&");print}'
-sed-escape          = $(shell echo "$1" | awk '{gsub("[~/:.]", "\\\\&");print}')
-remove-line         = if test -e "$1"; then LINE=$$($(call sed-escape,$2));mv "$1" "$1.tmp";cat "$1.tmp"|sed "s/$$LINE//">"$1";rm $1.tmp; else echo "Error: unknown file $1"; fi
+older = $(shell for F in $2; do if test $$F -nt $1; then echo $$F newer than $1; fi; done; )
+newer = $(shell echo mkdoc: deprecated: newer;exit 1)
+f-sed-escape          = $(shell echo "$1" | $(sed-escape))
+remove-line         = if test -e "$1"; then LINE=$$(echo $2|$(sed-escape));mv "$1" "$1.tmp";cat "$1.tmp"|sed "s/$$LINE//">"$1";rm $1.tmp; else echo "Error: unknown file $1"; fi
 assert-line         = if test -z "$$(cat $1|grep $2)";then echo "$2" >> $1; fi;
 #parents             = $()
 filter-mount        = $(foreach M,$1,$(if $(shell mount|grep $M),$(shell echo $M)))
@@ -127,8 +129,8 @@ sub-dirs            = $(abspath $(realpath $(shell \
 						for sub in $1/*; do \
 						  if test -d "$$sub"; then \
 						    echo "$$sub"; fi; done)))
-safe-paths          = $(shell D="$(call sed-escape,$1)";ls "$1"|grep '^[\/a-zA-Z0-9\+\.,_-]\+$$'|sed "s/^/$$D/g")
-unsafe-paths        = $(shell D="$(call sed-escape,$1)";ls "$1"|grep -v '^[\/a-zA-Z0-9\+\.,_-]\+$$'|sed "s/^/$$D/g")
+safe-paths          = $(shell D="$(call f-sed-escape,$1)";ls "$1"|grep '^[\/a-zA-Z0-9\+\.,_-]\+$$'|sed "s/^/$$D/g")
+unsafe-paths        = $(shell D="$(call f-sed-escape,$1)";ls "$1"|grep -v '^[\/a-zA-Z0-9\+\.,_-]\+$$'|sed "s/^/$$D/g")
 # mkid: rewrite filename/path to Make/Bash safe variable ID
 mkid                = $(shell echo $1|sed 's/[\/\.,;:_\+]/_/g')
 # rules: return Rules files for each directory in $1
@@ -265,7 +267,7 @@ endef
 
 define build-dir-index
 	$(ll) file_target "$@" "Checking" "$<"
-	ls $(<D) | sort | grep -v '^\.\.?$$' > $@.tmp
+	ls $(<D) | sort | $(filter-paths) > $@.tmp
 	if test -f $@; then \
 	   if test -n "`diff $@ $@.tmp`"; then \
 	       mv $@.tmp $@; \
@@ -274,6 +276,21 @@ define build-dir-index
 		$(ll) file_ok "$@" "Nothing to do"; fi; \
 	else mv $@.tmp $@; \
 	   $(ll) file_ok "$@" "New index"; fi
+endef
+
+define build-res-index
+	$(ll) file_target "$@" "Checking" "$<"
+	echo "# <$@> from <$<> because <$?>" > $@.tmp; \
+	echo "# $$ find $< $(XTR) | $(filter-paths) " >> $@.tmp;\
+	find $< $(XTR) | sort | $(filter-paths) >> $@.tmp
+	if test -f $@; then \
+		if test -n "`diff $@ $@.tmp`"; then \
+			mv $@.tmp $@; \
+			$(ll) file_ok "$@" "Updated index"; \
+		else rm $@.tmp; \
+			$(ll) file_ok "$@" "Nothing to do"; fi; \
+	else mv $@.tmp $@; \
+		$(ll) file_ok "$@" "New index"; fi
 endef
 
 chatty =\

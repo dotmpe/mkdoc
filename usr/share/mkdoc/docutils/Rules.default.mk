@@ -37,7 +37,7 @@ $(BUILD)%.include.mk:   %.rst
 #	@$(ll) file_ok "$@" Done
 
 $(BUILD)%.xhtml:	     %.rst
-	@$(ll) file_target "$@" "to BUILD because" "$^"
+	@$(ll) file_target "$@" "to BUILD from" "$^"
 	@$(ll) file_target "$@" "to BUILD because" "$?"
 	@$(rst-to-xhtml)
 	@$(info-text-stat)
