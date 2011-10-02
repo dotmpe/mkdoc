@@ -38,7 +38,7 @@ $(BUILD)%.include.mk:  $/%.rst
 #	@$(info-text-stat)
 #	@$(ll) file_ok "$@" Done
 
-$B%.xhtml:	           $/%.rst
+$(BUILD)/%.xhtml:	           %.rst
 	@$(log-target-because-from)
 	@$(rst-to-xhtml)
 	@$(info-text-stat)

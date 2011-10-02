@@ -110,7 +110,8 @@ f-count-lines       = $(shell F=$1; $(count-lines))
 contains            = for Z in "$1"; do if test "$$Z" = "$2"; then \
 					    echo "$$Z"; fi; done;
 expand-path         = $(shell echo $1)
-exists              = $(shell realpath "$1" 2> /dev/null)
+#exists              = $(shell realpath "$1" 2> /dev/null)
+exists              = $(shell [ -e "$1" ] && echo "$1")
 is-path             = $(shell if test -e "$1";then echo $1; fi;)
 is-file             = $(shell if test -f "$1";then echo $1; fi;)
 is-dir              = $(shell if test -d "$1";then echo $1; fi;)
@@ -278,20 +279,25 @@ define build-dir-index
 endef
 
 define build-res-index
-	$(ll) file_target "$@" "Checking" "$<"
+	$(ll) file_target "$@" "Checking" "$<";\
+	D=$$(dirname "$@");\
+	[ -d $$D ] || \
+		mkdir -p $$D/ \
+		&& $(ll) file_target "$$D" "created dir";
 	P=$<; \
 		[ "$${P:0:1}" != "/" ] && \
 		[ "$${P:0:2}" != "./" ] && P=./$$P;\
 	echo "# <$@> from <$$P> because <$?>" > $@.tmp; \
-	echo "# $$ find $$P $(XTR) | $(filter-paths) " >> $@.tmp;\
-	find $$P $(XTR) | sort | $(filter-paths) >> $@.tmp
-	if test -f $@; then \
+	echo "# $$ find $$P $(XTR) " >> $@.tmp;\
+	find $$P $(XTR) | sort >> $@.tmp;\
+	if test -f \"$@\"; then \
 		if test -n "`diff $@ $@.tmp`"; then \
 			mv $@.tmp $@; \
 			$(ll) file_ok "$@" "Updated index"; \
 		else rm $@.tmp; \
 			$(ll) file_ok "$@" "Nothing to do"; fi; \
-	else mv $@.tmp $@; \
+	else \
+		mv $@.tmp $@; \
 		$(ll) file_ok "$@" "New index"; fi
 endef
 

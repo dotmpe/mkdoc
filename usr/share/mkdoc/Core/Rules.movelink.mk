@@ -28,19 +28,21 @@ $(RS_LS_$d):           $(RS_DIR_LS_$d) $(RS_SRC_LS_$d)
 	@$(log-target-because-from)
 	@TRGT_E=$$(echo $T | $(sed-escape));\
 		SRC_E=$$(echo $S | $(sed-escape));\
-		cat $^ | sed "s/^$$TRGT_E/$$SRC_E/g" | $(filter-paths) | sort -u > $@
+		cat $L | sed "s/^$$TRGT_E/$$SRC_E/g" | $(filter-paths) | sort -u > $@
 	@$(ll) file_ok $@ Done
 $(RS_LS_$d):      T := $(RS_DIR_$d)
 $(RS_LS_$d):      S := $(RS_SRC_DIR_$d)
+$(RS_LS_$d):      L := $(RS_DIR_LS_$d) $(RS_SRC_LS_$d)
 $(RS_LS_$d):      D := $d
 $(RS_LS_$d):      B := $B
+$(RS_LS_$d):           $(MK_$d) $(MK_SHARE)Core/Rules.movelink.mk
 
 DEP                 += $(RS_LS_$d)
 
 ifeq ($(call exists,$(RS_LS_$d)),)
 	PENDING           += $(RS_LS_$d)
 else
-	ifneq ($(call newer-than,$(RS_LS_$d),$(SRC_PATH) $(MK_$d) $($RS_DIR_LS_$d) $(RS_SRC_LS_$d)),)
+	ifneq ($(call newer-than,$(RS_LS_$d),$(MK_$d) $($RS_DIR_LS_$d) $(RS_SRC_LS_$d)),)
 		PENDING         += $(RS_LS_$d)
 	endif
 endif
@@ -49,21 +51,21 @@ endif
 
 define move-and-link
 	@[ -L "$<" ] && [ "$$(readlink $<)" != "$@" ] \
-		&& $(ll) file_target $@ "does not match target of" $< \
-		&& rm $<;
+		&& $(ll) file_target $@ "does not match target of" "$<" \
+		&& rm "$<";
 	@if test ! -L "$<"; then \
 		[ -d "$@" ] \
-			&& $(ll) error $@ "path exists and is directory" $<; \
+			&& $(ll) file_target "$@" "path exists and is directory" "$<"; \
 		[ -e "$@" ] \
-			&& $(ll) error $@ "path exists" $<; \
+			&& $(ll) error "$@" "path exists" "$<"; \
 		[ ! -f "$<" ] \
-			&& $(ll) error $@ "missing file for movelink" $<; \
+			&& $(ll) error "$@" "missing file for movelink" "$<"; \
 		[ ! -d "$$(dirname $@)" ] \
 		  && mkdir -p $$(dirname $@); \
 		[ ! -e "$@" ] && [ -f "$<" ] \
-			&& mv $< $@ \
-			&& ln -s $@ $< \
-			&& $(ll) file_ok $@ "<-movelink-" $< ; \
+			&& mv "$<" "$@" \
+			&& ln -s "$@" "$<" \
+			&& $(ll) file_ok $@ "<-movelink-" "$<" ; \
 	fi
 endef
 
@@ -75,17 +77,21 @@ $(RS_MK_$d):           $(RS_LS_$d)
 	for res in $$resources;\
 	do \
 		sub=$${res:$$rl};\
-		[ -L "$$res" ] && continue;\
-		if test ! -e "$$D$$sub"; then\
-			[ ! -f "$$res" ] \
-				&& $(ll) error "$@" "missing path" "$$res in $<" && continue;\
+		[ -L "$$res" ] && [ "$$(readlink $$res)" != "$D$$sub" ] \
+			&& rm $$res;\
+		[ -L "$$res" ] \
+			&& continue;\
+		if test ! -e "$D$$sub"; then\
 			echo "$D$$sub:: $$res" >> $@;\
 			echo -e "\t@\$$(log-target-because-from)" >> $@;\
 			echo -e "\t@\$$(ll) file_target \$$@ from \$$^ " >> $@;\
 			echo -e "\t@\$$(move-and-link)" >> $@;\
 			echo -e "\t@\$$(ll) file_ok \$$@ done" >> $@;\
 			echo "SRC += $D$$sub" >> $@;\
-		fi;\
+		else if test -f "$D$$sub"; then \
+			[ -d $$(dirname $$res) ] || mkdir -p $$(dirname $$res);\
+			ln -s $$(cd $D; pwd -P)$$sub $$res;\
+		fi;fi;\
 	done;
 	@touch $@;
 	@$(ll) file_ok "$@" done
