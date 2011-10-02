@@ -6,7 +6,7 @@ DOMAIN              := mpe
 BUILD               := .build/
 DIR                 := .
 
-SRC_PATH            := /src/
+SRC_PATH            := /src
 PROJ_PATH           := /srv/project-$(DOMAIN)/
 
 MK_ROOT             := /srv/project-$(DOMAIN)/mkdoc/

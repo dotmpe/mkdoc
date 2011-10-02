@@ -84,8 +84,8 @@ ee                  = /bin/echo -e
 endif
 sed-trim            = sed 's/^ *//g' | sed 's/ *$$//g'
 sed-escape          = awk '{gsub("[~/:.]", "\\\\&");print}'
-filter-paths        = grep -v ^\# | sed 's/\/\//\//g' | sed 's/\.\///g'
-
+filter-paths        = grep -v ^\# | grep -v ^\s*$$
+trim-paths          = sed 's/\/\//\//g' | sed 's/\.\///g'
 getpaths            = cat "$$F" | $(filter-paths)
 count-lines         = wc -l "$$F" | sed 's/^\ *\([0-9]*\).*$$/\1/g'
 
@@ -118,8 +118,7 @@ filter-dir          = $(shell for D in $1; do if test -d "$$D"; then \
                         echo $$D; fi; done)
 filter-file         = $(shell for F in $1; do if test -f "$$F"; then \
                         echo $$F; fi; done)
-older = $(shell for F in $2; do if test $$F -nt $1; then echo $$F newer than $1; fi; done; )
-newer = $(shell echo mkdoc: deprecated: newer;exit 1)
+newer-than = $(shell for F in $2; do if test $$F -nt $1; then echo $$F newer than $1; fi; done; )
 f-sed-escape          = $(shell echo "$1" | $(sed-escape))
 remove-line         = if test -e "$1"; then LINE=$$(echo $2|$(sed-escape));mv "$1" "$1.tmp";cat "$1.tmp"|sed "s/$$LINE//">"$1";rm $1.tmp; else echo "Error: unknown file $1"; fi
 assert-line         = if test -z "$$(cat $1|grep $2)";then echo "$2" >> $1; fi;
@@ -280,9 +279,12 @@ endef
 
 define build-res-index
 	$(ll) file_target "$@" "Checking" "$<"
-	echo "# <$@> from <$<> because <$?>" > $@.tmp; \
-	echo "# $$ find $< $(XTR) | $(filter-paths) " >> $@.tmp;\
-	find $< $(XTR) | sort | $(filter-paths) >> $@.tmp
+	P=$<; \
+		[ "$${P:0:1}" != "/" ] && \
+		[ "$${P:0:2}" != "./" ] && P=./$$P;\
+	echo "# <$@> from <$$P> because <$?>" > $@.tmp; \
+	echo "# $$ find $$P $(XTR) | $(filter-paths) " >> $@.tmp;\
+	find $$P $(XTR) | sort | $(filter-paths) >> $@.tmp
 	if test -f $@; then \
 		if test -n "`diff $@ $@.tmp`"; then \
 			mv $@.tmp $@; \
@@ -330,6 +332,10 @@ test-python =\
 		$(ll) error "$@" "Tests require Python interpreter. "; \
 	fi;
 
+
+log-target-because-from = \
+	$(ll) file_target "$@" because "$?";\
+	$(ll) file_target "$@" from "$^";
 
 default:
 

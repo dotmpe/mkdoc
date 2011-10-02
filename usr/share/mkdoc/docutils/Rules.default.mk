@@ -1,15 +1,17 @@
-MK               += $(MK_SHARE)/docutils/Rules.default.mk
+MK                  += $(MK_SHARE)/docutils/Rules.default.mk
 $(call log-module,"docutils","Docutils default rules")
+#
+#      ------------ -- 
 
 
-%.include.mk:           %.rst 
+%.include.mk:          $/%.rst 
 	@$(ll) file_target $@ "Creating XHTML dependencies for $* from" "$<"
 	@$(reset-target)
 	@$(mk-rst-include-deps)
 	@$(info-text-stat)
 	@$(ll) file_ok $@ Done
 
-$(BUILD)%.include.mk:   %.rst 
+$(BUILD)%.include.mk:  $/%.rst 
 	@$(ll) file_target $@ "Creating XHTML dependencies for $* from" "$<"
 	@$(reset-target)
 	@$(mk-rst-include-deps)
@@ -36,23 +38,22 @@ $(BUILD)%.include.mk:   %.rst
 #	@$(info-text-stat)
 #	@$(ll) file_ok "$@" Done
 
-$(BUILD)%.xhtml:	     %.rst
-	@$(ll) file_target "$@" "to BUILD from" "$^"
-	@$(ll) file_target "$@" "to BUILD because" "$?"
+$B%.xhtml:	           $/%.rst
+	@$(log-target-because-from)
 	@$(rst-to-xhtml)
 	@$(info-text-stat)
 	@$(ll) file_ok "$@" Done
 
 
 %,du.xml:              %.rst
-	@$(ll) file_target "$@" because "$?"
+	@$(log-target-because-from)
 	@$(reset-target)
 	@T=$$(realpath $@);cd $(<D);$(rst-xml) $(<F) $$T
 	@$(info-text-stat)
 	@$(ll) file_ok "$@" Done
 
-$(BUILD)%,du.xml:      %.rst
-	@$(ll) file_target "$@" because "$?"
+$B%,du.xml:            $/%.rst
+	@$(log-target-because-from)
 	@$(reset-target)
 	@T=$$(realpath $@);cd $(<D);$(rst-xml) $(<F) $$T
 	@$(info-text-stat)
@@ -65,18 +66,20 @@ $(BUILD)%,du.xml:      %.rst
 #	@T=$$(realpath $@);cd $(<D);$(rst-newlatex) $(<F) $$T
 #	@$(ll) file_ok "$@" Done
 
-$(BUILD)%,du.latex:    %.rst
+$(BUILD)%,du.latex:    $/%.rst
+	@$(log-target-because-from)
 	@$(rst-to-latex)
 
-$(BUILD)%,du.odt:      %.rst
-	@$(ll) file_target "$@" because "$?"
+$(BUILD)%,du.odt:      $/%.rst
+	@$(log-target-because-from)
 	@$(reset-target)
 	@T=$$(realpath $@);cd $(<D);$(rst-odt) $(<F) $$T
 	@$(info-target-stats)
 	@$(ll) file_ok "$@" Done
 
 
-$(BUILD)%,du.pxml:     %.rst
+$B%,du.pxml:           $/%.rst
+	@$(log-target-because-from)
 	@$(rst-to-pseudoxml)
 
 
@@ -102,7 +105,7 @@ $(BUILD)%,du,s5.html:      %.rst
 # rst2gxl by S. Merten
 # XXX: it seems internal or local references are mapped to edges
 # not external links or includes
-$(BUILD)%,du.gxl:      %.rst
+$(BUILD)%,du.gxl:      $/%.rst
 	@$(ll) file_target "$@" because "$?"
 	@# XXX: wrong attr. name:
 	@rst2gxl.py $< | sed 's/name=\"name\"/name="label"/g' > $@
