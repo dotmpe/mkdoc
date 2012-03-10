@@ -75,8 +75,6 @@ endef
 
 # ready to use recipes
 define rst-to-latex
-	$(ll) file_target "$@" because "$?"
-	$(reset-target)
 	### Pre-processing
 	cp $< $<.src
 	chmod +rw $<.src
@@ -88,28 +86,20 @@ define rst-to-latex
 	fi;
 	T=$$(realpath $@);cd $(<D);$(rst-latex) $(<F).src $$T
 	rm $<.src
-	$(info-text-stat)
-	$(ll) file_ok "$@" Done
 endef
 
 define rst-to-pseudoxml
-	$(ll) file_target "$@" because "$?"
-	$(reset-target)
 	T=$$(realpath $@);cd $(<D);$(rst-pseudoxml) $(<F) $$T
-	$(info-text-stat)
-	$(ll) file_ok "$@" Done
 endef
 
-
 define rst-to-xhtml
-	$(ll) info "Du/XHTML" "Building from rST at " "$<"
-	$(reset-target)
 	### Pre-processing
 	cp $< $<.src
 	chmod +rw $<.src
 	# Rewrite KEYWORD tags (twice, one before, one after includes. need to have
 	# better included doc processing...)
 	$(if $(call is-file,$(shell $(kwds-file))),
+		$(ll) info "source tags" "Expanding keywords tags from " $$($(kwds-file));
 		$(ante-proc-tags))
 	# oldish ./opt/rst-preproc.py --alt-headers < $<.tmp > $<.src
 	# Add path list
@@ -119,9 +109,10 @@ define rst-to-xhtml
 		$(ll) info "source includes" "$$($(rst-pre-proc-include) $<.src $<.src2)"; \
 		mv $<.src2 $<.src;\
 	fi;
-	# Rewrite KEYWORD tags
-	$(if $(call is-file,$(shell $(kwds-file))),
-		$(ante-proc-tags))
+	# XXX: KEYWORDS only processed for main file if PRE_PROC_INCLUDES
+	#	$(if $(call is-file,$(shell $(kwds-file))),\
+	#		$(ll) info "source tags" "Expanding keywords tags (after includes) from " $$($(kwds-file));\
+	#		$(ante-proc-tags))\
 	# Rewrite PDF image/figure to PNG
 	$(ll) info "web types" "$$($(rst-pdf-figure-to-png) $<.src $<.src2)"
 	mv $<.src2 $<.src
@@ -170,14 +161,17 @@ define build-xhtml-refs
 	# allow docs to make absolute references to withing the project
 	# XXX: it appears that setting HTML base href is not enough for the browser
 	# to resolve link/script references?
-	BASE_URI=`echo "$(BASE_HREF)" | awk '{gsub("[~/:]", "\\\\\\\&");print}'`;\
+	#echo $@ $(BASE_HREF) `echo "$(BASE_HREF)" | awk '{gsub("[~/:]", "\\\\\\\&");print}'`;\
+	#BASE_URI=`echo "$(BASE_HREF)" | awk '{gsub("[~/:]", "\\\\\\\&");print}'`;\
+	#
 	ROOT=`echo "$(ROOT)" | awk '{gsub("[~/:]", "\\\\\\\&");print}'`;\
+	[ -z "$$ROOT" ] && echo error Empty var ROOT && exit 4;\
 	sed \
 		-e "s/src=\"$$ROOT\(.\+\)\"/src=\"\1\"/g" \
 		-e "s/href=\"$$ROOT\(.\+\)\"/href=\"\1\"/g" \
 		-e "s/href=\"\(.\+\)\.rst\"/href=\"\1\"/g" \
+		-e "s/<table/<table summary=\"Docutils table\"/g" \
 			$@.tmp1 > $@ 
-@#		-e "s/<table/<table summary=\"Docutils rSt table\"/g" \
 @#		-e "s/<\/head>/<base href=\"$$BASE_URI\" \/><\/head>/"\
 @#		-e "s/href=\"\//href=\"$$BASE_URI/g"\
 @#		-e "s/src=\"\//src=\"$$BASE_URI/g" 
