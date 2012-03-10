@@ -226,7 +226,8 @@ endef
 define ante-proc-tags
 	# Process all source files and expand tag references.
 	if test ! -f "$<.src"; then cp $< $<.src; fi
-	FILEMDATETIME=$$(date -r "$<" +"%Y-%m-%d %H:%M:%S %:z");\
+	mtime=$(stat -f %m "$<");\
+	FILEMDATETIME=$$(date -r "$$mtime" +"%Y-%m-%d %H:%M:%S %:z");\
 	 KWDF="$(shell $(kwds-file))";\
 	 KWD=$$(cat $$KWDF);\
 	 XTR=$$($(ee) \

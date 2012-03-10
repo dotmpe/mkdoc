@@ -145,12 +145,34 @@ lists::
 #src:: $(SRC) 
 
 dep:: $(SRC) $(DEP)
-	@$(call log,Done,$@,$(call count,$(DEP)) generated dependencies ready) 
+	@if test -n "$(strip $(DEP))"; then \
+		$(call log,Done,$@,$(call count,$(DEP)) generated dependencies ready); \
+	else \
+		$(ll) OK $@ "nothing to do"; \
+	fi
 
 dmk:: dep $(DMK)
-	@$(call log,Done,$@,$(call count,$(DMK)) generated makefiles ready) 
+	@if test -n "$(strip $(DMK))"; then \
+		$(call log,Done,$@,$(call count,$(DMK)) generated makefiles ready); \
+	else \
+		$(ll) OK $@ "nothing to do"; \
+	fi
 
 stat:: dmk
+	@if test -n "$(VERBOSE)"; then \
+		echo;\
+		$(call log,header1,$@,Target prereq. counts:);\
+		$(call log,header3,Sources,$(call count,$(SRC)));\
+		$(call log,header3,Dependencies,$(call count,$(DEP)));\
+		$(call log,header3,Dynamic makefiles,$(call count,$(DMK)));\
+		$(call log,header3,Cleanable,$(call count,$(CLN)));\
+		$(call log,header3,Builds,$(call count,$(DMK)));\
+		$(call log,header3,Tests,$(call count,$(TEST)));\
+		echo;\
+	fi
+	@if test -n "$(strip $(CLN))"; then \
+ 	   $(ll) Attention "Cleanable" "paths found:" '$(strip $(CLN))';\
+	 fi;
 	@OFFLINE=$(strip $(abspath $(OFFLINE)));\
 	 if test -n "$$OFFLINE"; then \
  	   $(ll) Warning "Offline" "directories unavailable:" "$$OFFLINE";\
