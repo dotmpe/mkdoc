@@ -2,6 +2,10 @@ MK               += $(MK_SHARE)/docutils/Main.mk
 $(call log-module,"docutils","Docutils Python document publisher")
 
 
+###    Docutils flags
+#      ------------ -- 
+
+
 # generic Du flags
 DU_GEN           := --language=en --traceback --no-generator \
 	--no-footnote-backlinks -i utf-8 -o utf-8 --date \
@@ -35,6 +39,9 @@ DU_XETEX         :=
 XHT_CSS          :=
 XHT_JS           :=
 
+
+###    Docutils commandline tools
+#      ------------ -- 
 
 include             $(MK_SHARE)/docutils/Main.bin.mk
 
@@ -190,3 +197,6 @@ define build-dir-index-rst
 	mv $<.tmp-index $@
 endef
 
+
+#      ------------ -- 
+#

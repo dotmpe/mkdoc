@@ -1,43 +1,37 @@
-ifneq ($(shell which rst2xml),)
-rst-html          = rst2html         $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_HTML)
-rst-latex         = rst2latex        $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_LATEX)
-rst-man           = rst2man          $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_MAN)
-#rst-newlatex      = rst2newlatex     $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_NLATEX)
-rst-odt           = rst2odt          $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_ODT)
-rst-pseudoxml     = rst2pseudoxml    $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_PXML)
-rst-s5            = rst2s5           $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_S5)
-rst-xetex         = rst2xetex        $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_XETEX)
-rst-xml           = rst2xml          $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_XML)
-else
-ifneq ($(shell which rst2xml-2.6.py),)
-# Py26 under Mac OS X (Darwin 10.6 with macports)
-rst-html          = rst2html-2.6.py      $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_HTML)
-rst-latex         = rst2latex-2.6.py     $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_LATEX)
-rst-man           = rst2man-2.6.py       $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_MAN)
-#rst-newlatex      = rst2newlatex-2.6.py  $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_NLATEX)
-rst-odt           = rst2odt-2.6.py       $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_ODT)
-rst-pseudoxml     = rst2pseudoxml-2.6.py $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_PXML)
-rst-s5            = rst2s5-2.6.py        $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_S5)
-rst-xetex         = rst2xetex-2.6.py     $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_XETEX)
-rst-xml           = rst2xml-2.6.py       $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_XML)
-else
-rst-html          = rst2html.py      $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_HTML)
-rst-latex         = rst2latex.py     $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_LATEX)
-rst-man           = rst2man.py       $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_MAN)
-#rst-newlatex      = rst2newlatex.py  $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_NLATEX)
-rst-odt           = rst2odt.py       $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_ODT)
-rst-pseudoxml     = rst2pseudoxml.py $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_PXML)
-rst-s5            = rst2s5.py        $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_S5)
-rst-xetex         = rst2xetex.py     $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_XETEX)
-rst-xml           = rst2xml.py       $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_XML)
-endif
-endif
-# FIXME: fail if any of the above do not exist..
+MK               += $(MK_SHARE)/docutils/Main.bin.mk
+#
+#      ------------ -- 
 
-ifeq ($(shell which $(rst-html)),)
-$(error Missing Docutils\' \$(rst-html): $(rst-html))
-endif
+# Set BIN for all tools, or set to echo & exit if not exists to avoid silend
+# failures later during build. For best handling build may want to call get-bin
+# by itself. 
 
+$(foreach DU_BIN,rst2html rst2latex rst2man rst2odt rst2pseudoxml rst2s5 rst2xetex rst2xml,\
+$(if $(shell which $(DU_BIN)),$(eval \
+BIN                 += $(DU_BIN)=$(shell which $(DU_BIN))), \
+$(if $(shell which $(DU_BIN).py),$(eval \
+BIN                 += $(DU_BIN)=$(shell which $(DU_BIN).py)), \
+$(if $(shell which $(DU_BIN)-$(PY_MM_VERSION).py),$(eval \
+BIN                 += $(DU_BIN)=$(shell which $(DU_BIN)-$(PY_MM_VERSION).py)),\
+$(eval $(info $(shell $(ll) warning "docutils" "no $(DU_BIN) available")))))))
+
+get-du-bin = $(call require-bin,$1) || echo '$$(ll) "error" "Docutils: Missing $1" && exit 1;'
+
+
+# Prepare cmdline snippets including flags
+rst-html          = $(shell $(call get-du-bin,rst2html))      $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_HTML)
+rst-latex         = $(shell $(call get-du-bin,rst2latex))     $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_LATEX)
+rst-man           = $(shell $(call get-du-bin,rst2man))       $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_MAN)
+rst-newlatex      = $(shell $(call get-du-bin,rst2newlatex))  $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_NLATEX)
+rst-odt           = $(shell $(call get-du-bin,rst2odt))       $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_ODT)
+rst-pseudoxml     = $(shell $(call get-du-bin,rst2pseudoxml)) $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_PXML)
+rst-s5            = $(shell $(call get-du-bin,rst2s5))        $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_S5)
+rst-xetex         = $(shell $(call get-du-bin,rst2xetex))     $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_XETEX)
+rst-xml           = $(shell $(call get-du-bin,rst2xml))       $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_XML)
+
+
+# Utility commandline snippets
+#
 list-references   = $(rst-xml) $1 | xsltproc --novalid $(MK_SHARE)docutils/refuri-dep.xslt -
 list-titles       =
 rst-doc-title     = $(rst-xml) $1 | xsltproc --novalid $(MK_SHARE)docutils/doc-title.xslt -
@@ -49,4 +43,14 @@ rst-pre-proc-include = $(MK_SHARE)/docutils/rst-includes.py
 rst-pdf-figure-to-png = $(MK_SHARE)/docutils/rst-pdf-figure-to-png.py
 
 
+test-docutils:
+	@echo "Test" > test.rst
+	@$(rst-xetex) test.rst
+	@$(rst-html) test.rst
+	@$(rst-xml) test.rst
+	@$(rst-latex) test.rst
+	@$(rst-newlatex) test.rst
+	@rm test.rst
 
+#      ------------ -- 
+#

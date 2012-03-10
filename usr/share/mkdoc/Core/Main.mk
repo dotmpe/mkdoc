@@ -1,6 +1,6 @@
 ### MkDocs Core Makefile
 # :Date: 2010-10-04
-# :Last Update: 2011-01-16
+# :Last Update: 2012-03-09
 # :Author: B. van Berkum  <dev@dotmpe.com>
 #
 # This is a non-recursive makefile,
@@ -10,64 +10,84 @@
 # Finally, include some standard rules or set these yourself. See:
 # $(MK_SHARE)Core/Rules.default.mk
 
-VPATH              := . /
-SHELL              := /bin/bash
+
+
+###    make configuration
+#      ------------ -- 
+VPATH               := . /
+SHELL               := /bin/bash
 
 .SUFFIXES:
-.SUFFIXES:         .rst .js .xhtml .mk .tex .pdf .list
+.SUFFIXES:             .rst .js .xhtml .mk .tex .pdf .list
 
-MK_ROOT            := ~/project/mkdoc/
-MK_SHARE           := $(MK_ROOT)usr/share/mkdoc/
 
-HOST               := $(shell hostname -s | tr 'A-Z' 'a-z')
+###    MkDoc globals
+#      ------------ -- 
+
+## Environment
+SRC_PATH            := /src/
+PROJ_PATH           := /srv/project-$(DOMAIN)/
+MK_ROOT             := $(PROJ_PATH)mkdoc/
+MK_SHARE            := $(MK_ROOT)usr/share/mkdoc/
+HOST                := $(shell hostname -s | tr 'A-Z' 'a-z')
 ifndef ROOT
-ROOT               := $(shell pwd)
+ROOT                := $(shell pwd)
 endif
-OS                 := $(shell uname)
+OS                  := $(shell uname)
+
+## Dict of installed cmd utils
+BIN                 := \
+	bash=$(shell which bash)
+
+## Path and file lists
+SRC                 :=
+DMK                 :=
+MK                  :=
+DEP                 :=
+CLN                 :=
+TEST                :=
+INSTALL             :=
+
+## Special and file build target lists (to build)
+TRGT                :=
+STRGT               :=
+
+## Non-informal target messages (after build)
+PENDING             :=
+MISSING             :=
+OFFLINE             :=
+
+# TODO: list domain/net paths
+RES                 :=
 
 
-# global path/file lists
-SRC                :=
-DMK                :=
-MK                 :=
-DEP                :=
-TRGT               :=
-STRGT              :=
-CLN                :=
-TEST               :=
-INSTALL            :=
-
-PENDING            :=
-MISSING            :=
-OFFLINE            :=
-
-RES :=
-
-
-### standard targets
+###    Standard targets
+#      ------------ -- 
 # (append to STRGT) see Rules.default.mk
-STDTRGT            := \
-					  all dep dmk test build install clean cleandep
-STDSTAT            := \
-					  help stat list lists info
-# descriptions of special targets for build
-DESCRIPTION        := all='build, test and install'
-DESCRIPTION        += dep='generate dependencies'
-DESCRIPTION        += dmk='generate dynamic makefiles'
-DESCRIPTION        += test='TODO: run tests'
-DESCRIPTION        += build='builds all targets'
-DESCRIPTION        += install='TODO (no-op)'
-DESCRIPTION        += clean='delete all targets'
-DESCRIPTION        += cleandep='delete all dynamic makefiles and dependencies'
+STDTRGT             := \
+					   all dep dmk test build install clean cleandep
+STDSTAT             := \
+					   help stat list lists info
 
-DESCRIPTION        += help='print this help'
-DESCRIPTION        += stat='assert sources, dynamic makefiles and other dependencies'
-DESCRIPTION        += list='print SRC and TRGT lists'
-DESCRIPTION        += lists='print all other lists'
-DESCRIPTION        += info='print other metadata'
+## Dict with special target descriptions 
+DESCRIPTION         := all='build, test and install'
+DESCRIPTION         += dep='generate dependencies'
+DESCRIPTION         += dmk='generate dynamic makefiles'
+DESCRIPTION         += test='TODO: run tests'
+DESCRIPTION         += build='builds all targets'
+DESCRIPTION         += install='TODO (no-op)'
+DESCRIPTION         += clean='delete all targets'
+DESCRIPTION         += cleandep='delete all dynamic makefiles and dependencies'
+
+DESCRIPTION         += help='print this help'
+DESCRIPTION         += stat='assert sources, dynamic makefiles and other dependencies'
+DESCRIPTION         += list='print SRC and TRGT lists'
+DESCRIPTION         += lists='print all other lists'
+DESCRIPTION         += info='print other metadata'
 
 
-### Various snippets
+###    Various snippets
+#      ------------ -- 
 
 ll                  = $(MK_SHARE)Core/log.sh
 
@@ -82,6 +102,7 @@ ee                  = /bin/echo
 else
 ee                  = /bin/echo -e
 endif
+
 sed-trim            = sed 's/^ *//g' | sed 's/ *$$//g'
 sed-escape          = awk '{gsub("[~/:.]", "\\\\&");print}'
 filter-paths        = grep -v ^\# | grep -v ^\s*$$
@@ -90,26 +111,34 @@ getpaths            = cat "$$F" | $(filter-paths)
 count-lines         = wc -l "$$F" | sed 's/^\ *\([0-9]*\).*$$/\1/g'
 
 
-### Functions
+###    Functions
+#      ------------ -- 
 
-log                 = $(ll) "$1" "$2" "$3" "$4"
-log_line            = $(ll) "$1" "$2" "$3" "$4"
+log                  = $(ll) "$1" "$2" "$3" "$4"
+log_line             = $(ll) "$1" "$2" "$3" "$4"
 # log:  1.LINETYPE  2.TARGETS  3.MESSAGE  4.SOURCES
-log-module          = # $1 $2
-ifneq ($(VERBOSE), )
-log-module          = $(info $(shell if test -n "$(VERBOSE)"; then \
+log-module           = # $1 $2
+ifneq ($(VERBOSE), ) 
+log-module           = $(info $(shell if test -n "$(VERBOSE)"; then \
 						$(ll) header2 $1 $2; fi))
 endif
-init-dir            = if test ! -d $1; then mkdir -p $1; fi
-init-file           = if test ! -f $1; then mkdir -p $$(dirname $1); touch $1; fi
-count               = $(shell if test -n "$1"; then\
-					    echo $1|wc -w|sed 's/ //g'; else echo 0; fi;)
-count-list          = $(shell if test -f "$1"; then\
-					    cat $1|wc -l; else echo 0; fi;)
-f-count-lines       = $(shell F=$1; $(count-lines))
-contains            = for Z in "$1"; do if test "$$Z" = "$2"; then \
-					    echo "$$Z"; fi; done;
-expand-path         = $(shell echo $1)
+
+require-bin              = ( V=$1; declare $(BIN); \
+	while [ -n "$${!V}" ] ; do V="$${!V}"; done; [ "$$V" != "$1" ] \
+	&& echo $$V || exit 1 )
+get-bin              = ( V=$1; declare $(BIN); \
+	while [ -n "$${!V}" ] ; do V="$${!V}"; done; [ "$$V" != "$1" ] && echo $$V )
+
+init-dir             = if test ! -d $1; then mkdir -p $1; fi
+init-file            = if test ! -f $1; then mkdir -p $$(dirname $1); touch $1; fi
+count                = $(shell if test -n "$1"; then\
+					     echo $1|wc -w|sed 's/ //g'; else echo 0; fi;)
+count-list           = $(shell if test -f "$1"; then\
+					     cat $1|wc -l; else echo 0; fi;)
+f-count-lines        = $(shell F=$1; $(count-lines))
+contains             = for Z in "$1"; do if test "$$Z" = "$2"; then \
+					     echo "$$Z"; fi; done;
+expand-path          = $(shell echo $1)
 #exists              = $(shell realpath "$1" 2> /dev/null)
 exists              = $(shell [ -e "$1" ] && echo "$1")
 is-path             = $(shell if test -e "$1";then echo $1; fi;)
@@ -176,7 +205,8 @@ zero_exit_test = \
 	fi
 
 
-### Canned
+###    Canned
+#      ------------ -- 
 init-target         = $(call init-file,$@)
 mk-target-dir       = if test ! -d $(@D); then mkdir -p $(@D); fi;
 kwds-file           = if test -f "$(KWDS_./$(<D))"; then \
@@ -348,5 +378,35 @@ log-target-because-from = \
 	$(ll) file_target "$@" because "$?";\
 	$(ll) file_target "$@" from "$^";
 
+
+#      ------------ -- 
+
+include                $(MK_SHARE)Core/Main.bin.mk
+
+#      ------------ -- 
+
 default:
 
+list-bin:
+	@\
+	echo $(BIN);\
+	if $(call require-bin,hg); then \
+		echo hg=$$$(call get-bin,hg); \
+	fi;\
+	if $(call require-bin,bzr); then \
+		echo bzr=$$$(call get-bin,bzr); \
+	fi;\
+	if $(call require-bin,svn); then \
+		echo svn=$$$(call get-bin,svn); \
+	fi;\
+	if $(call require-bin,git); then \
+		echo git=$$$(call get-bin,git); \
+	fi;\
+	if $(call require-bin,python); then \
+		echo python=$$$(call get-bin,python); \
+	fi
+
+
+
+#      ------------ -- 
+#

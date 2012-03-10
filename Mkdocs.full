@@ -2,32 +2,40 @@
 # Example of mkdoc usage, see git://github.org/dotmpe/mkdoc
 
 DOMAIN              := mpe
+BUILD               := htd
+# TODO: decide on build-dir strategy
+BUILD=.build
+DEFAULT_BUILD_DIR   := .build
+BUILD_DIRS          := 
+#PACKAGES            := $(wildcard $(MK_SHARE)*/Main.mk)
+#PACKAGE_RULES       := $(wildcard $(MK_SHARE)*/Rules.default.mk)
 
-BUILD               := .build/
+# The directory path of the Makefile currently loaded
+# see Main.dirstack{,-pop}.mk
 DIR                 := .
-
-SRC_PATH            := /src/
-PROJ_PATH           := /srv/project-$(DOMAIN)/
-MK_ROOT             := $(PROJ_PATH)mkdoc/
-MK_SHARE            := $(MK_ROOT)usr/share/mkdoc/
-
-ifneq ($(VERBOSE), )
-$(info mkdocs:DIR=$(DIR))
-$(info mkdocs:BUILD=$(BUILD))
-
-$(info mkdocs:MK_ROOT=$(MK_ROOT))
-$(info mkdocs:MK_SHARE=$(MK_SHARE))
-endif
 
 #      ------------ -- 
 
+# XXX: dynamically or static configured path?
+MK_SHARE            := /srv/project-$(DOMAIN)/mkdoc/usr/share/mkdoc/
 include                $(MK_SHARE)Core/Main.mk
+
 ifneq ($(VERBOSE), )
+$(info $(shell $(ll) header3 DIR "'$(DIR)'"))
+$(info $(shell $(ll) header3 BUILD $(BUILD)))
+
+$(info $(shell $(ll) header3 MK_ROOT "'$(MK_ROOT)'"))
+$(info $(shell $(ll) header3 MK_SHARE "'$(MK_SHARE)'"))
+
 $(info $(shell $(ll) header "mkdoc" "Core script loaded, reading shares" ))
 endif
 
+ifneq ($(call get-bin,python),)
+include                $(MK_SHARE)docutils/Main.mk 
+else
+$(info not loading docutils)
+endif
 include                \
-                       $(MK_SHARE)docutils/Main.mk \
                        $(MK_SHARE)bookmarklet/Main.mk \
                        $(MK_SHARE)vc/Main.mk \
                        $(MK_SHARE)tidy/Main.mk \
@@ -46,9 +54,14 @@ include                \
                        $(MK_SHARE)bookmarklet/Rules.default.mk \
                        $(MK_SHARE)graphviz/Rules.mk \
                        $(MK_SHARE)rubber/Rules.default.mk \
-                       $(MK_SHARE)docutils/Rules.default.mk \
                        $(MK_SHARE)plotutils/Rules.default.mk \
 #					   $(MK_SHARE)Core/Rules.archive.mk
+
+ifneq ($(call get-bin,rst2html),)
+include                $(MK_SHARE)docutils/Rules.default.mk 
+else
+$(info not loading docutils rules)
+endif
 
 #      ------------ -- 
 
