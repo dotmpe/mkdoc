@@ -208,12 +208,8 @@ endef
 info-target-type = $(ll) info "$@" "`file -bs $@`"
 info-target-chars = $(ll) info "$@" "`cat $@|wc -m` chars"
 info-target-lines = $(ll) info "$@" "`cat $@|wc -l` lines"
-target-stats         = \
-					$(info-target-lines);\
-					$(info-target-chars);\
-					$(info-target-type);
-info-text-stat = $(ll) info "$@" "`cat $@|wc -l` lines, `cat $@|wc -m` chars, `file -bs $@`"
-info-bin-stat = $(ll) info "$@" "`cat $@|wc -c` bytes, `file -bs $@`"
+info-text-stat = $(ll) info "$@" "`cat $@|wc -l` lines, `cat $@|wc -m` chars, `file -bs $@` formatted"
+info-bin-stat = $(ll) info "$@" "`cat $@|wc -c` bytes, `file -bs $@` format"
 
 define mk-include
 	$(reset-target)
@@ -229,7 +225,6 @@ endef
 
 define ante-proc-tags
 	# Process all source files and expand tag references.
-	$(ll) info "source tags" "Expanding keywords tags from " $$($(kwds-file))
 	if test ! -f "$<.src"; then cp $< $<.src; fi
 	FILEMDATETIME=$$(date -r "$<" +"%Y-%m-%d %H:%M:%S %:z");\
 	 KWDF="$(shell $(kwds-file))";\
@@ -239,6 +234,8 @@ define ante-proc-tags
 	 $(ee) "$$KWD\n$$XTR" | grep -v '^$$' | grep -v '^#'| \
 		while read l; do \
 			IFS="	";set -- $$l;\
+			[ -z "$$1" ] && echo Empty field 1 && exit 1;\
+			[ -z "$$2" ] && echo Empty field 2 $$1= && exit 1;\
 			tag=`echo "$$1" | awk '{gsub("[~/:.]", "\\\\\\\&");print}'`; \
 			value=`echo "$$2" | awk '{gsub("[~/:.]", "\\\\\\\&");print}'`; \
 			sed -e "s/@$$tag/$$value/g" $<.src > $<.tmp; \
@@ -255,6 +252,8 @@ define post-proc-tags
 	 cat $$KWDF | grep -v '^$$' | grep -v '^#'| \
 		while read l; do \
 			IFS="	";set -- $$l;\
+			[ -z "$$1" ] && echo Empty field 1 && exit 1;\
+			[ -z "$$2" ] && echo Empty field 2 $$1= && exit 1;\
 			tag=`echo "$$1" | awk '{gsub("[~/:]", "\\\\\\\&");print}'`; \
 			value=`echo "$$2" | awk '{gsub("[~/:]", "\\\\\\\&");print}'`; \
 			sed -e "s/@$$tag/$$value/g" $@.tmp > $@; \
@@ -313,6 +312,10 @@ test-python =\
 	 if test -n "$(shell which python)"; then \
 		$(ll) info "$$TEST_PY" "Testing Python sources.."; \
 		\
+		if test -n "$(shell which python-coverage)"; \
+		then \
+			RUN="python-coverage -x test/py/main.py "; \
+		fi; \
 		if test -n "$(shell which coverage)"; \
 		then \
 			RUN="coverage run "; \
@@ -320,7 +323,8 @@ test-python =\
 			then\
 				RUN=$$RUN" --source="$$TEST_LIB;\
 			fi;\
-		else \
+		fi; \
+		if test -z "$$RUN"; then \
 			$(call chatty,1,warning,$@,Coverage for python not available); \
 			RUN=python;\
 		fi; \
@@ -336,7 +340,7 @@ test-python =\
 		fi; \
 	else \
 		$(ll) error "$@" "Tests require Python interpreter. "; \
-	fi;
+	fi
 
 
 log-target-because-from = \
