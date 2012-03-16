@@ -170,7 +170,7 @@ stat:: dmk
 		$(call log,header3,Tests,$(call count,$(TEST)));\
 		echo;\
 	fi
-	@if test -n "$(strip $(CLN))"; then \
+	@if test -n "$(wildcard $(strip $(CLN)))"; then \
  	   $(ll) Attention "Cleanable" "paths found:" '$(strip $(CLN))';\
 	 fi;
 	@OFFLINE=$(strip $(abspath $(OFFLINE)));\
