@@ -55,7 +55,8 @@ include                \
                        $(MK_SHARE)graphviz/Rules.mk \
                        $(MK_SHARE)rubber/Rules.default.mk \
                        $(MK_SHARE)plotutils/Rules.default.mk \
-					   $(MK_SHARE)Core/Rules.archive.mk
+# TODO: salvage Rules.archive.mk
+#					   $(MK_SHARE)Core/Rules.archive.mk
 
 ifneq ($(call get-bin,rst2html),)
 include                $(MK_SHARE)docutils/Rules.default.mk 

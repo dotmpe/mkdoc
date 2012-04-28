@@ -1,6 +1,8 @@
 ## Dirstack
+ifneq ($(VERBOSE), )
 $(info $(shell $(ll) file_target "$/" "Archive make. " ))
 $(info ========================$(DIR)/Rules.archive.mk)
+endif
 SP                  := $(SP).x
 D_$(SP)             := $d
 d                   := $(DIR)
@@ -15,7 +17,12 @@ MK                  += $(MK_$d)
 SUB_$d           := $(abspath $(call filter-dir,$(call safe-paths,$d/)))
 #SUB_$d           := $(call filter-dir,$(call safe-paths,$d/))
 ILLEGAL          += $(call unsafe-paths,$d)
+ifneq($(ILLEGAL),)
+$(error Illegal Subdirs,$d,$(ILLEGAL$d))
+endif
+ifneq ($(VERBOSE), )
 $(info Subdirs,$d,$(SUB_$d))
+endif
 
 SUB_MK_$d        := $(SUB_$d:%=$d/.build/%/Rules.archive.mk)
 SUB_MK_NF_$d     := $(call complement,$(SUB_MK_$d),$(call filter-file,$(SUB_MK_$d)))
@@ -25,6 +32,7 @@ SUB_MK_NF_$d     := $(call complement,$(SUB_MK_$d),$(call filter-file,$(SUB_MK_$
 DMK_$d           := .build/$d/Rules.sub.mk
 #$(info Dmk,$(DMK_$d))
 
+# Generate Rules.sub.mk for each subdirectory
 $(DMK_$d): MK_FILES := $(SUB_MK_$d)
 $(DMK_$d): $(SUB_MK_NF_$d)
 	@$(reset-target)
