@@ -7,8 +7,8 @@
 
 
 # default python version
-PY_FULL_VERSION     := $(shell python -V 2>&1 | sed 's/^Python\ \([0-9\.]\+\)$$/\1/g')
-PY_MM_VERSION       := $(shell echo $(PY_FULL_VERSION) | sed 's/+//g' | sed 's/^\([0-9]\+\)\.\([0-9]\+\).*$$/\1.\2/')
+PY_FULL_VERSION     := $(shell python -V 2>&1 | sed 's/^Python\ \([0-9\.]\+\)+\?$$/\1/g')
+PY_MM_VERSION       := $(shell echo $(PY_FULL_VERSION) | sed 's/^\([0-9]\+\)\.\([0-9]\+\).*$$/\1.\2/')
 PY_MMID_VERSION      := $(shell echo $(PY_MM_VERSION) | sed 's/\.//g')
 $(info PY_FULL_VERSION=$(PY_FULL_VERSION))
 $(info PY_MMID_VERSION=$(PY_MMID_VERSION))
