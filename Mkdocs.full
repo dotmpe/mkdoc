@@ -35,11 +35,11 @@ include                $(MK_SHARE)docutils/Main.mk
 else
 $(info not loading docutils)
 endif
-include                \
-                       $(MK_SHARE)bookmarklet/Main.mk \
-                       $(MK_SHARE)vc/Main.mk \
-                       $(MK_SHARE)tidy/Main.mk \
-                       $(MK_SHARE)graphviz/Main.mk 
+#include                \
+#                       $(MK_SHARE)bookmarklet/Main.mk \
+#                       $(MK_SHARE)vc/Main.mk \
+#                       $(MK_SHARE)tidy/Main.mk \
+#                       $(MK_SHARE)graphviz/Main.mk 
 
 #      ------------ -- 
 
@@ -50,15 +50,15 @@ $(info $(shell $(ll) header "mkdoc" "Reading shared default rules" ))
 endif
 
 #
-include                \
-                       $(MK_SHARE)bookmarklet/Rules.default.mk \
-                       $(MK_SHARE)graphviz/Rules.mk \
-                       $(MK_SHARE)rubber/Rules.default.mk \
-                       $(MK_SHARE)plotutils/Rules.default.mk \
+#include                \
+#                       $(MK_SHARE)bookmarklet/Rules.default.mk \
+#                       $(MK_SHARE)graphviz/Rules.mk \
+#                       $(MK_SHARE)rubber/Rules.default.mk \
+#                       $(MK_SHARE)plotutils/Rules.default.mk \
 #					   $(MK_SHARE)Core/Rules.archive.mk
 
 ifneq ($(call get-bin,rst2html),)
-include                $(MK_SHARE)docutils/Rules.default.mk 
+#include                $(MK_SHARE)docutils/Rules.default.mk 
 else
 $(info not loading docutils rules)
 endif
@@ -81,7 +81,7 @@ endif
 
 # Now set some standard targets
 #
-include                $(MK_SHARE)Core/Rules.default.mk
+#include                $(MK_SHARE)Core/Rules.default.mk
 
 #      ------------ -- 
 
