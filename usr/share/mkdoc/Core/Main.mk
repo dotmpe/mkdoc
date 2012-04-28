@@ -381,9 +381,7 @@ log-target-because-from = \
 
 #      ------------ -- 
 
-$(info 1 $(BIN))
 include                $(MK_SHARE)Core/Main.bin.mk
-$(info 2 $(BIN))
 
 #      ------------ -- 
 
