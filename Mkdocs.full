@@ -72,6 +72,13 @@ endif
 
 # Include specific rules and set SRC, DEP, TRGT and CLN variables.
 #
+ifeq ($(call rules,$(DIR)/), )
+$(error No rules in '$(DIR)')
+else
+ifneq ($(VERBOSE), )
+$(info Including rules from: $(call rules,$(DIR)/))
+endif
+endif
 include                $(call rules,$(DIR)/) 
 
 #      ------------ -- 

@@ -35,6 +35,8 @@ ROOT                := $(shell pwd)
 endif
 OS                  := $(shell uname)
 
+VERBOSE             ?= $(V)
+
 ## Dict of installed cmd utils
 BIN                 := \
 	bash=$(shell which bash)
@@ -243,6 +245,7 @@ info-bin-stat = $(ll) info "$@" "`cat $@|wc -c` bytes, `file -bs $@` format"
 
 define mk-include
 	$(reset-target)
+	$(error)
 	for f in $(MK_FILES); do \
 		echo "ifeq (\$$(realpath $$f 2>/dev/null),)" >> $@; \
 		echo "MISSING += $$f" >> $@; \
