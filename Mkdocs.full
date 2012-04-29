@@ -66,20 +66,17 @@ endif
 
 #      ------------ -- 
 
-ifneq ($(VERBOSE), )
-$(info $(shell $(ll) header "mkdoc" "Reading local rules" ))
-endif
-
 # Include specific rules and set SRC, DEP, TRGT and CLN variables.
 #
 ifeq ($(call rules,$(DIR)/), )
 $(error No rules in '$(DIR)')
 else
 ifneq ($(VERBOSE), )
-$(info Including rules from: $(call rules,$(DIR)/))
+$(info $(shell $(ll) header "mkdoc" "Reading local rules from:"  \
+	"$(call rules,$(DIR))"))
 endif
 endif
-include                $(call rules,$(DIR)/) 
+include                $(call rules,$(DIR)) 
 
 #      ------------ -- 
 
