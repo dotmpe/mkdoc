@@ -27,7 +27,8 @@ BIN                 += python$(PY_MMID_VERSION)=$(shell which python)
 endif
 BIN                 += python=python$(PY_MMID_VERSION)
 endif
-$(eval $(if $(call get-bin,python),,$(info no Python available)))
+$(eval $(if $(call get-bin,python),,$(info $(shell \
+	$(ll) "warning" python "no Python available"))))
 
 
 ###    Mercurial (hg)
@@ -37,7 +38,8 @@ ifneq ($(shell which hg),)
 BIN                 += hg=$(shell which hg)
 endif
 
-$(if $(shell $(call get-bin,hg)),,$(info no Mercurial (hg) available))
+$(if $(shell $(call get-bin,hg)),,$(info $(shell \
+	$(ll) "warning" hg "no Mercurial (hg) available")))
 
 
 ###    Subversion (svn)
@@ -47,7 +49,8 @@ ifneq ($(shell which svn),)
 BIN                 += svn=$(shell which svn)
 endif
 
-$(if $(shell $(call get-bin,svn)),,$(info no Subversion (svn) available))
+$(if $(shell $(call get-bin,svn)),,$(info $(shell \
+	$(ll) "warning" svn "no Subversion (svn) available")))
 
 
 ###    GIT
@@ -57,7 +60,9 @@ ifneq ($(shell which git),)
 BIN                 += git=$(shell which git)
 endif
 
-$(if $(shell $(call get-bin,git)),,$(info no GIT available))
+$(if $(shell $(call get-bin,git)),,$(info $(shell \
+	$(ll) "warning" git "no GIT available")))
+
 
 
 #      ------------ -- 
