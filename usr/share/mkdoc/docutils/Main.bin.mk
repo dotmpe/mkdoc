@@ -30,6 +30,12 @@ rst-xetex         = $(shell $(call get-du-bin,rst2xetex))     $(DU_RST) $(DU_GEN
 rst-xml           = $(shell $(call get-du-bin,rst2xml))       $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_XML)
 
 
+ifneq ($(VERBOSE), )
+ifneq ($(VERBOSE),1)
+$(info rst-html=$(rst-html))
+endif
+endif
+
 # Utility commandline snippets
 #
 list-references   = $(rst-xml) $1 | xsltproc --novalid $(MK_SHARE)docutils/refuri-dep.xslt -
