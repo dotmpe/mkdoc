@@ -144,6 +144,20 @@ absolute paths?
 
 mkdocs Branches
 ---------------
+Generic branches:
+
+master
+    Main development.
+devel
+    Non stable in working stuff, but better than experimental.
+    Read branch docs.
+experimental
+    As it says. Temporary maybe, but read branch docs.
+
+Topic development branches:
+
+dev_packages
+    Trying to introduce sub packages of mkdocs.
 
 Other ToDo, ideas
 -----------------
