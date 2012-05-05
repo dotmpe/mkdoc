@@ -1,4 +1,4 @@
-$(call log-module,"HaXe","Main")
+$(call log-module,HaXe,Main)
 MK               += $(DIR)/haxe/Main.mk
 
 ### Flags

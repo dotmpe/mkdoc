@@ -1,4 +1,4 @@
-$(call log-module,"tidy","Tidy (X)HTML validator and formatter")
+$(call log-module,tidy,Tidy (X)HTML validator and formatter)
 MK               += $(MK_SHARE)/tidy/Main.mk
 
 

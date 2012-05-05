@@ -69,13 +69,9 @@ DESCRIPTION        += info='print other metadata'
 
 ### Various snippets
 
+# log-line:  1.LINETYPE  2.TARGETS  3.MESSAGE  4.SOURCES
 ll                  = $(MK_SHARE)Core/log.sh
-
-ifneq ($(VERBOSE), )
-$(info $(shell $(ll) "info" "OS" "on "$(OS)))
-$(info $(shell $(ll) "info" "HOST" "at '"$(HOST)"'"))
-$(info $(shell $(ll) "info" "ROOT" "from '"$(ROOT)"'"))
-endif
+# see functions
 
 ifeq ("$(OS)","Darwin")
 ee                  = /bin/echo
@@ -92,14 +88,12 @@ count-lines         = wc -l "$$F" | sed 's/^\ *\([0-9]*\).*$$/\1/g'
 
 ### Functions
 
-log                 = $(ll) "$1" "$2" "$3" "$4"
-log_line            = $(ll) "$1" "$2" "$3" "$4"
-# log:  1.LINETYPE  2.TARGETS  3.MESSAGE  4.SOURCES
-log-module          = # $1 $2
-ifneq ($(VERBOSE), )
-log-module          = $(info $(shell if test -n "$(VERBOSE)"; then \
-						$(ll) header2 $1 $2; fi))
-endif
+echo-if-true        = $(shell [ $1 ] && echo true)
+key                 = $(shell declare $($1); echo "$$$2")
+#key                 = $(shell declare $($1); [ -z "$$$2" ] && ( echo missing $2; exit 1) || (echo $$$2))
+define require-key
+$(if $(call key,$1,$2),,$(error $(shell $(ll) "error" mkdocs "Missing key $2 for $1")))
+endef
 init-dir            = if test ! -d $1; then mkdir -p $1; fi
 init-file           = if test ! -f $1; then mkdir -p $$(dirname $1); touch $1; fi
 count               = $(shell if test -n "$1"; then\
@@ -301,12 +295,52 @@ define build-res-index
 		$(ll) file_ok "$@" "New index"; fi
 endef
 
+# "chatter on tty"
 chatty =\
 		if test -z "$$VERBOSE"; then VERBOSE=1; fi;\
 		if test $$VERBOSE -ge $1;\
 		then \
 			$(ll) "$2" "$3" "$4" "$5"; \
 		fi
+
+LOG_LEVELS = \
+			 emerg=0 \
+			 alert=1 \
+			 crit=2 \
+			 err=3 \
+			 warn=4 \
+			 note=5 \
+			 info=6 \
+			 debug=7 \
+			 \
+			 error=3 \
+			 notice=5 \
+			 header=6 \
+			 header2=6 \
+			 OK=6
+
+define vtty
+$(call require-key,LOG_LEVELS,$1)
+$(eval $(if \
+	$(call echo-if-true,$(VERBOSE) -ge $(call key,LOG_LEVELS,$1)),\
+	$(info $(shell $(ll) "$1" "$2" "$3" "$4"))))
+endef
+chat                = $(eval $(call vtty,$1,$2,$3,$4))
+log                 = $(ll) $1 $2 $3 $4
+log-module          = $(eval $(call vtty,header2,$1,$2))
+
+#ifneq ($(VERBOSE), )
+#$(info $(shell $(ll) "info" "OS" "on "$(OS)))
+#$(info $(shell $(ll) "info" "HOST" "at '"$(HOST)"'"))
+#$(info $(shell $(ll) "info" "ROOT" "from '"$(ROOT)"'"))
+#endif
+
+# XXX: old log, deprecated:
+#log_line            = $(ll) "$1" "$2" "$3" "$4"
+#log-module          = # $1 $2
+#ifneq ($(VERBOSE),)
+#log-module          = $(info $(shell if test -n "$(VERBOSE)"; then \
+#						$(ll) header2 $1 $2; fi))
 
 
 test-python =\

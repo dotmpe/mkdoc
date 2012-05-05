@@ -1,2 +1,2 @@
-$(call log-module,"haxe","TODO ")
+$(call log-module,haxe,Rules TODO)
 # see dotmpe-com/Rules.mk

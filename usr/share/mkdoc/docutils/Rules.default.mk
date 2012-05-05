@@ -1,5 +1,5 @@
 MK                  += $(MK_SHARE)/docutils/Rules.default.mk
-$(call log-module,"docutils","Docutils default rules")
+$(call log-module,docutils,Docutils default rules)
 #
 #      ------------ -- 
 

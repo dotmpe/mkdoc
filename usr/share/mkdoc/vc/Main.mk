@@ -1,3 +1,5 @@
+$(call log-module,vc,Version Control)
+
 clean-checkout = \
 	d=$$(readlink -f $(DIR));\
 		for f in $(GIT_$(DIR));\
