@@ -31,6 +31,8 @@ include                \
                        $(MK_SHARE)bookmarklet/Main.mk \
                        $(MK_SHARE)vc/Main.mk \
                        $(MK_SHARE)tidy/Main.mk \
+                       $(MK_SHARE)haxe/Main.mk \
+                       $(MK_SHARE)plotutils/Main.mk \
                        $(MK_SHARE)graphviz/Main.mk 
 
 #      ------------ -- 
@@ -44,9 +46,10 @@ endif
 #
 include                \
                        $(MK_SHARE)bookmarklet/Rules.default.mk \
-                       $(MK_SHARE)graphviz/Rules.mk \
+                       $(MK_SHARE)graphviz/Rules.default.mk \
                        $(MK_SHARE)rubber/Rules.default.mk \
                        $(MK_SHARE)docutils/Rules.default.mk \
+                       $(MK_SHARE)haxe/Rules.default.mk \
                        $(MK_SHARE)plotutils/Rules.default.mk \
 #					   $(MK_SHARE)Core/Rules.archive.mk
 
