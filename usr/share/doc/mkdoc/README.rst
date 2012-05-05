@@ -1,7 +1,7 @@
 MkDoc
 =====
 :date: 2010-09-19
-:update: 2010-12-04
+:update: 2012-04-05
 :author: \B. van Berkum  <dev@dotmpe.com>
 :homepage: http://dotmpe.com/project/mkdoc
 :url: http://github.org/dotmpe/mkdoc/blob/master/usr/share/doc/mkdoc/README.rst
@@ -11,64 +11,103 @@ MkDoc
 
 A set of Makefiles:
 
-- non-recursive use of make [#]_
-- shared common recipes.
+- non-recursive use of make [#]_, ie. does not restart a Make session for every
+  directory encountered.
+- share common recipes.
 
 .. admonition:: Some kind of disclaimer
 
    It is useful in quick bootstrapping of make rules, but I think it is the ugliest
    code I have worked on. Nevertheless it is an nice exercise in Make+Bash scripting
-   but also leaves much to be desired (example: I just noted $(eval) may help in
-   streamlining current recipes and rules further). It probably is not getting more
-   legible though.
-
-   I use these myself whenever I need to grab to GNU/Make for automation.
+   though it leaves much to be desired. Legibility will be hard to improve upon.
+   
+   I use these myself whenever I need to grab GNU Make for automation.
    So there are quite some projects using this, I myself have found every day
    use for it.
 
+Objectives are primarily building of documents, and offering a Make/Bash toolkit.
 
-Objectives are primarily building of document contents, and offering a toolkit
-for various operations in Makefiles.
-There is a framework to define special targets in place, used by `Rules.default.mk`__.
-Also an external script does formatting and colored output.
+There is a framework to define special targets in place, implemented by 
+`Rules.default.mk`__.
+There is also formatting and colored output.
 
 .. __: usr/share/mkdoc/Core/Rules.default.mk
-
-I use this GNU/Make setup in individual software projects and in websites that 
-(among others) include these projects. Ideally, content has only one specific
-location. Pieces written for a website reside in a (project) directory for that
-website, while notes included in the website may be part of other project
-directires (symlinked).
-
-Since the data (SRC/TRGT/.. sets) are cross-linked and interdependent, 
-the paths that are worked upon are referred to as mkdoc trees. 
 
 .. [#] The non-recursive implementation is from `Implementing non-recursive make  <http://www.xs4all.nl/~evbergen/nonrecursive-make.html>`__, which tries to address the issues from `Recursive Make Considered Harmful  <http://miller.emu.id.au/pmiller/books/rmch/>`__. Obviously there are other solutions, possibly without boilerplate in sub-files. See e.g. `What is your experience with non-recursive make? <http://stackoverflow.com/questions/559216/what-is-your-experience-with-non-recursive-make>`__ or `Painless non-recursive Make <http://www.cmcrossroads.com/ask-mr-make/8133-painless-non-recursive-make>`__.
 
 Usage
 -----
 The files in the root directory of this package (Makefile and Rules.mk) are
-examples that bootstrap a project for use with mkdocs. Makefile can be
-symlinked completely, but Rules.mk only provides the boilerplate to start adding 
-build targets and their rules, prerequisites. Rules.mk should also include Makefiles
-for subdirectories. By convention, these sub-makefiles are named:
+examples that bootstrap a project for use with mkdocs. This Makefile can be
+symlinked completely, but the Rules.mk only provides the boilerplate for a new 
+project with mkdoc trees and you chould copy end edit it.
+
+Once I prepared my projects it looks a bit like this::
+
+  my-project/
+  ├── .Rules.mk
+  ├── Makefile -> /usr/share/mkdoc/Makefile
+  └── media
+      └── Rules.mk
+
+Ofcourse, mkdoc may be located elsewhere.
+
+Now `make` may be run from the main directory. If needed, you may write 
+your Rules.mk recipes such that you can also run `make` from any subdirectory. 
+Just make an extra symlink to Makefile to start. These directories are principal
+entry points and will be called **mkdocs (main) session directories**.
+They are the root point of the relative paths in the current build.
+
+The Rules.mk in Makefile directory will included automatically upon running
+make from that directory. Note that each directory has at most one such primary 
+Rules.mk that is auto-included. Not every directory in the project may need one. 
+
+By convention, these sub-makefiles are named:
 
 - Rules.mk
 - .Rules.mk
 - Rules.$(HOST).mk
 - .Rules.$(HOST).mk
 
-The default rules generally keep this and generated content outside of the source-tree to keep the file-tree tidy.
+This means the primary Rules can be switched when needed on a per-host basis.
+The convention is implemented in the GNU Make function 'rules', which you can
+call yourself. You *should* do this to include further (sub) directories. For 
+this do::
+
+  DIR = my/sub/dir
+  include $(call rules,$(DIR)/)
+
+Further note the pro- and epilogue of the Rules.mk, which keeps global stack
+variables, which you do not need to touch. It uses the stack to keep the 
+following make variables available in each Rules.mk:
+
+$d
+  The current directory, relative to the `mkdocs session directory`.
+  Without trailing slash.
+$/
+  As '$d', but with trailing slash.
+   
+The default rules generally keep generated content outside of the source-tree to keep the file-tree tidy. There are two options built-in to separate generated files:
+
+$B
+  The BUILD directory paired with the current directory, relative to the 
+  *mkdocs session directory*.
+$b
+  The BUILD directory relative to the *current* directory.
 
 .. admonition:: XXX
    
    The boostrap Makefile can be used from any (sub)directory. 
    But care should be taken so
    that dependences generated at this sub-level are usable at all levels up to
-   the root. See on paths and dependencies.
+   the root. mkdocs does not offer an off-the-shelve solution.
+   See `On paths and dependencies`_.
 
 The bootstrap Makefile has built-in special- or pseudo-targets to get started with
-mkdocs. See ``make help``.
+mkdocs. See ``make help`` to get started.
+
+Since the data (SRC/TRGT/.. sets) are cross-linked and interdependent, 
+the paths that are worked upon are referred to as mkdoc trees. 
 
 Required packages
 -----------------
@@ -102,6 +141,23 @@ recommended to keep dep paths absolute?
 
 XXX: By default the '/' root dir is also included. No sure if needed for
 absolute paths?
+
+mkdocs Branches
+---------------
+Generic branches:
+
+master
+    Main development.
+devel
+    Non stable in working stuff, but better than experimental.
+    Read branch docs.
+experimental
+    As it says. Temporary maybe, but read branch docs.
+
+Topic development branches:
+
+dev_packages
+    Trying to introduce sub packages of mkdocs.
 
 Other ToDo, ideas
 -----------------
