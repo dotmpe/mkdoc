@@ -326,7 +326,7 @@ $(eval $(if \
 	$(info $(shell $(ll) "$1" "$2" "$3" "$4"))))
 endef
 chat                = $(eval $(call vtty,$1,$2,$3,$4))
-log                 = $(ll) $1 $2 $3 $4
+log                 = $(ll) "$1" "$2" "$3" "$4"
 log-module          = $(eval $(call vtty,header2,$1,$2))
 
 #ifneq ($(VERBOSE), )
