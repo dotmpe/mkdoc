@@ -94,6 +94,16 @@ key                 = $(shell declare $($1); echo "$$$2")
 define require-key
 $(if $(call key,$1,$2),,$(error $(shell $(ll) "error" mkdocs "Missing key $2 for $1")))
 endef
+# complement: return items from $1 not in $2
+complement          = $(shell \
+					    for X in $1; do \
+					      if test -z "$$(for Z in $2; do if test "$$Z" = "$$X"; \
+					        then echo $$X; fi; done)"; then \
+					        echo "$$X"; fi; done; )
+has-duplicates      = $(filter $(words $1), $(words $(sort $1)))
+paths-exist         = $(filter $(wildcard $1),$1)
+not-exist           = $(call complement,$1,$(call paths-exist,$1))
+
 init-dir            = if test ! -d $1; then mkdir -p $1; fi
 init-file           = if test ! -f $1; then mkdir -p $$(dirname $1); touch $1; fi
 count               = $(shell if test -n "$1"; then\
@@ -113,6 +123,7 @@ filter-dir          = $(shell for D in $1; do if test -d "$$D"; then \
                         echo $$D; fi; done)
 filter-file         = $(shell for F in $1; do if test -f "$$F"; then \
                         echo $$F; fi; done)
+clean-plist         = $(sort $(strip $1))
 newer-than = $(shell for F in $2; do if test $$F -nt $1; then echo $$F newer than $1; fi; done; )
 f-sed-escape          = $(shell echo "$1" | $(sed-escape))
 remove-line         = if test -e "$1"; then LINE=$$(echo $2|$(sed-escape));mv "$1" "$1.tmp";cat "$1.tmp"|sed "s/$$LINE//">"$1";rm $1.tmp; else echo "Error: unknown file $1"; fi
@@ -154,12 +165,6 @@ def-rules           = $(shell for D in $1; do \
 						  echo $$D/Rules.mk; fi; fi; fi; fi; done )
 # sub-rules: return ./*/[.]Rules[.host].mk, ie. rules from subdirs
 sub-rules           = $(foreach V,$1,$(call rules,$V/*))
-# complement: return items from $1 not in $2
-complement          = $(shell \
-					    for X in $1; do \
-					      if test -z "$$(for Z in $2; do if test "$$Z" = "$$X"; \
-					        then echo $$X; fi; done)"; then \
-					        echo "$$X"; fi; done; )
 f_getpaths          = $(shell F="$1"; $(getpaths))
 zero_exit_test = \
 	if test $1 != 0; \
