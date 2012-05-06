@@ -166,7 +166,7 @@ stat:: dmk
 		$(call log,header3,Dependencies,$(call count,$(DEP)));\
 		$(call log,header3,Dynamic makefiles,$(call count,$(DMK)));\
 		$(call log,header3,Cleanable,$(call count,$(CLN)));\
-		$(call log,header3,Builds,$(call count,$(DMK)));\
+		$(call log,header3,Targets,$(call count,$(TRGT)));\
 		$(call log,header3,Tests,$(call count,$(TEST)));\
 		echo;\
 	fi
