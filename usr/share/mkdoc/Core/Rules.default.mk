@@ -125,7 +125,7 @@ lists::
 	 $(ll) header2 DEP 'Other Dependencies (none)';\
 	 fi
 	@if test -n "$(strip $(CLN))"; then \
-	 $(ll) header2 CLN 'Clean list'            '$(sort $(CLN)))';\
+	 $(ll) header2 CLN 'Clean list'            '$(sort $(CLN))';\
 	 else\
 	 $(ll) header2 CLN 'Clean list (none)'   ;\
 	 fi
