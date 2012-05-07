@@ -385,7 +385,7 @@ test-python =\
 
 log-target-because-from = \
 	$(ll) file_target "$@" because "$?";\
-	$(ll) file_target "$@" from "$^";
+	$(ll) file_target "$@" from "$^"
 
 default:
 
