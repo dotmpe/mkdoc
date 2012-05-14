@@ -73,7 +73,7 @@ examples::
 info::
 	@$(ll) header $@ "Package Info"
 	@$(ll) header2 Root     "" $(ROOT)
-	@$(ll) header2 MkDoc    "" $(MK_ROOT)
+	@$(ll) header2 MkDoc    "" $(MK_SHARE)
 	@$(ll) header2 Package  "" $(PACK)
 	@$(ll) header2 Homepage "" $(PACK_HREF)
 	@$(ll) header2 Revision "" $(PACK_REV)

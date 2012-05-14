@@ -69,6 +69,8 @@ define move-and-link
 	fi
 endef
 
+SRC_PATH            := /src/
+
 $(RS_MK_$d):           $(RS_LS_$d)
 	@$(log-target-because-from)
 	@$(reset-target)

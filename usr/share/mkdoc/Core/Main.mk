@@ -16,9 +16,6 @@ SHELL              := /bin/bash
 .SUFFIXES:
 .SUFFIXES:         .rst .js .xhtml .mk .tex .pdf .list
 
-MK_ROOT            := ~/project/mkdoc/
-MK_SHARE           := $(MK_ROOT)usr/share/mkdoc/
-
 HOST               := $(shell hostname -s | tr 'A-Z' 'a-z')
 ifndef ROOT
 ROOT               := $(shell pwd)

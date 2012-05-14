@@ -1,28 +1,28 @@
 # Non-recursive makefile
 # Example of mkdoc usage, see git://github.org/dotmpe/mkdoc
 
-# XXX: simple tag to distinguish one mkdoctree from another?
-DOMAIN              ?= mpe
-
 # Set level to warning and above
 VERBOSE             ?= 4
 ifneq ($(V), )
 VERBOSE             := $(V)
 endif
 
-BUILD               := .build/
-DIR                 := .
+MK_SHARE            := /usr/local/share/mkdoc/
+#MK_CONF             := /etc/mkdoc/ $(HOME)/.mkdoc/
+MK_BUILD            := /var/mkdoc/
 
-# XXX: how to find mkdocs, convention, PATH-search?
-SRC_PATH            := /src/
-PROJ_PATH           := /srv/project-$(DOMAIN)/
-MK_ROOT             := $(PROJ_PATH)mkdoc/
-MK_SHARE            := $(MK_ROOT)usr/share/mkdoc/
+DOMAIN              := mpe
+
+# fixme: rewrite to MK_BUILD
+BUILD               := .build/
+
+# Start keeping present directory
+DIR                 := .
 
 #      ------------ -- 
 
 # XXX: does not have complete path. Need to sperate script identities
-d := $(DIR)
+d                   := $(DIR)
 MK_$d               := Mkdocs.full
 
 #      ------------ -- 
@@ -36,8 +36,8 @@ $(call chat,header,mkdoc,Core script loaded)
 $(call chat,info,$(MK_$d),Chattiness set to $(VERBOSE))
 $(call chat,debug,$(MK_$d),DIR=$(DIR))
 $(call chat,debug,$(MK_$d),BUILD=$(BUILD))
-$(call chat,debug,$(MK_$d),MK_ROOT=$(MK_ROOT))
 $(call chat,debug,$(MK_$d),MK_SHARE=$(MK_SHARE))
+$(call chat,debug,$(MK_$d),MK_BUILD=$(MK_BUILD))
 
 #      ------------ -- 
 

@@ -151,6 +151,10 @@ master
 devel
     Non stable in working stuff, but better than experimental.
     Read branch docs.
+
+    mayflower
+      development branch started may 2012. 
+      
 experimental
     As it says. Temporary maybe, but read branch docs.
 
