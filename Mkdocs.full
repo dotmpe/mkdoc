@@ -1,6 +1,14 @@
 # Non-recursive makefile
 # Example of mkdoc usage, see git://github.org/dotmpe/mkdoc
 
+
+# CURDIR and MAKEFILE_LIST are GNU Make internals
+location             = $(CURDIR)/$(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))
+
+# Global list of all makefiles
+MK                  := $(location)
+#MK                  += $(DIR)/Makefile
+
 # Set level to warning and above
 VERBOSE             ?= 4
 ifneq ($(V), )
@@ -30,6 +38,10 @@ MK_$d               := Mkdocs.full
 include                $(MK_SHARE)Core/Main.mk
 $(call chat,header,mkdoc,Core script loaded)
 
+ifneq ($(shell [ -L "$(MK)" ] && basename $$(readlink $(MK))),$(MK_$d))
+$(call chat,warn,mkdoc,Do not link Makefile but rather $(MK_$d))
+endif
+
 #      ------------ -- 
 
 # log-line script is now available for pretty print, do some chatter now:
@@ -55,8 +67,6 @@ include                \
 $(call chat,debug,mkdoc,Done loading packages main file)
 
 #      ------------ -- 
-
-MK                  += $(DIR)/Makefile
 
 $(call chat,header,mkdoc,Reading default rules from packages)
 
