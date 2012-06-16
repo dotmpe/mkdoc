@@ -380,7 +380,11 @@ test-python =\
 	fi
 
 
-log-target-because-from = \
+log-special-target-because-from = \
+	$(ll) attention "$@" because "$?";\
+	$(ll) attention "$@" from "$^"
+
+log-file-target-because-from = \
 	$(ll) file_target "$@" because "$?";\
 	$(ll) file_target "$@" from "$^"
 
