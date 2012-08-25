@@ -370,7 +370,8 @@ test-python =\
 		if test -n "$(shell which coverage)"; \
 		then \
 			coverage html; \
-			$(call chatty,0,file_OK,htmlcov/,Generated test coverage report in HTML); \
+			[ -n "$$HTML_DIR" ] && rm -rf $$HTML_DIR && mv htmlcov $$HTML_DIR;\
+			$(call chatty,0,file_OK,$$HTML_DIR,Generated test coverage report in HTML); \
 		fi; \
 	else \
 		$(ll) error "$@" "Tests require Python interpreter. "; \
