@@ -132,7 +132,10 @@ define rst-to-xhtml
 	if test -n "$(VERBOSE)"; \
 	then echo $(rst-html) $<.src $@.tmp1; \
 		$(rst-html) --traceback $<.src $@.tmp1;\
-	else $(rst-html) $<.src $@.tmp1; fi
+	else \
+		$(rst-html) $<.src $@.tmp1 2> $*.err;\
+	fi
+	[ -s $*.err ] && $(ll) error $@ "Errors in source file" $*.err || rm $*.err
 	cp $<.src $@.src
 	rm $<.src
 	# Additional styles 'n scripts

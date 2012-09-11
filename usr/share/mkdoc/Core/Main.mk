@@ -256,11 +256,14 @@ define mk-include
 	done;
 endef
 
+#OBmtime=$$(stat --format="%y" "$<");\
+#	echo mtime=$$mtime;\
+#	FILEMDATETIME=$$(date -r "$$mtime" +"%Y-%m-%d %H:%M:%S %:z");\
+
 define ante-proc-tags
 	# Process all source files and expand tag references.
 	if test ! -f "$<.src"; then cp $< $<.src; fi
-	mtime=$(stat -f %m "$<");\
-	FILEMDATETIME=$$(date -r "$$mtime" +"%Y-%m-%d %H:%M:%S %:z");\
+	FILEMDATETIME=$$(date -r "$<" +"%Y-%m-%d %H:%M:%S %:z");\
 	 KWDF="$(shell $(kwds-file))";\
 	 KWD=$$(cat $$KWDF);\
 	 XTR=$$($(ee) \
@@ -355,7 +358,7 @@ test-python =\
 			RUN="coverage run "; \
 			if test -n "$$TEST_LIB";\
 			then\
-				RUN=$$RUN" --source="$$TEST_LIB;\
+				RUN="$$RUN --source=$$TEST_LIB";\
 			fi;\
 		fi; \
 		if test -z "$$RUN"; then \
@@ -363,7 +366,7 @@ test-python =\
 			RUN=python;\
 		fi; \
 		$(call chatty,2,attention,$$,$$RUN,$$TEST_PY);\
-		$$RUN $$TEST_PY; \
+		$$RUN $$TEST_PY $$ARGS; \
 		$(call chatty,2,header,exit-status,$$?);\
 		$(call zero_exit_test,$$?,$@,Python tested,Python testing failed); \
 		\
