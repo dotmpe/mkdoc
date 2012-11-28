@@ -116,6 +116,7 @@ count-lines         = wc -l "$$F" | sed 's/^\ *\([0-9]*\).*$$/\1/g'
 ###    Functions
 #      ------------ -- 
 
+key                 = $(shell declare $($1); echo "$$$2")
 log                  = $(ll) "$1" "$2" "$3" "$4"
 log_line             = $(ll) "$1" "$2" "$3" "$4"
 # log:  1.LINETYPE  2.TARGETS  3.MESSAGE  4.SOURCES
