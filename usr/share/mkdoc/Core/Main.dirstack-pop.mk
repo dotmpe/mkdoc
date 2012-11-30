@@ -1,8 +1,4 @@
-ifneq ($(MK_$d),)
-$(info $(shell $(ll) file_ok "$(MK_$d)" "Loaded"))
-else
-$(info $(shell $(ll) file_ok "$/" "Loaded"))
-endif
+$(call chat,info,"$/",Loaded,$(MK_$d))
 ## Pop from dirstack
 d 				:= $(D_$(SP))
 / 				:= $d/

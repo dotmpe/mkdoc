@@ -1,4 +1,4 @@
-$(call log-module,"graphviz","Graphviz graph rendering")
+$(call log-module,graphviz,Graphviz graph rendering)
 
 GRAPHVIZ_ENGINE     := dot
 #values: dot,twopi,circo,fdp,neato

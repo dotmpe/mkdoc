@@ -42,8 +42,8 @@ help::
 		$(ll) header $@     "Other special targets";\
 		for strgt in $(call complement,$(STRGT),$(STD));\
 		do\
-			V=$$strgt;\
-			$(ll) header2 $$strgt "$${!V}";\
+			strgt_id=$$(echo $$strgt|sed 's/[\/\.,;:_\+-]/_/g');\
+			$(ll) header2 $$strgt "$${!strgt_id}";\
 		done;\
 		$(ee);\
 	fi;
@@ -73,7 +73,7 @@ examples::
 info::
 	@$(ll) header $@ "Package Info"
 	@$(ll) header2 Root     "" $(ROOT)
-	@$(ll) header2 MkDoc    "" $(MK_ROOT)
+	@$(ll) header2 MkDoc    "" $(MK_SHARE)
 	@$(ll) header2 Package  "" $(PACK)
 	@$(ll) header2 Homepage "" $(PACK_HREF)
 	@$(ll) header2 Revision "" $(PACK_REV)
@@ -83,10 +83,10 @@ info::
 
 list::
 	@$(ee) 
-	@$(ll) header2 Sources                  "" "$(strip $(SRC))"
+	@$(ll) header2 Sources                  "" "$(sort $(SRC))"
 	@#$(ll) header2 Sources  "$(shell echo $(SRC)|sort -u)"
-	@$(ll) header2 "Build Targets"          "" '$(strip $(TRGT))'
-	@$(ll) header2 "Special Targets"        "" '$(strip $(STRGT))'
+	@$(ll) header2 "Build Targets"          "" '$(sort $(TRGT))'
+	@$(ll) header2 "Special Targets"        "" '$(sort $(STRGT))'
 
 # TODO use similar scheme as DESCRIPTION
 DESC_SRC  = Paths to build targets from  
@@ -101,44 +101,44 @@ DESC_RES  =
 lists::
 	@$(ll) header $@ "Printing all prerequisite lists."
 	@if test -n "$(strip $(SRC))"; then \
-	 $(ll) header2 SRC Sources                 '$(strip $(SRC))';\
+	 $(ll) header2 SRC Sources                 '$(sort $(SRC))';\
 	 else\
 	 $(ll) header2 SRC "Sources (none)";\
 	 fi;
 	@if test -n "$(strip $(TRGT))"; then \
-	 $(ll) header2 TRGT 'Build Targets'        '$(strip $(TRGT))';\
+	 $(ll) header2 TRGT 'Build Targets'        '$(sort $(TRGT))';\
 	 else\
 	 $(ll) header2 TRGT 'Build Targets (none)';\
 	 fi;
 	@if test -n "$(strip $(TEST))"; then \
-	 $(ll) header2 TEST 'Test Targets'         '$(strip $(TEST))';\
+	 $(ll) header2 TEST 'Test Targets'         '$(sort $(TEST))';\
 	 fi;
-	@$(ll) header2 MK 'Makefiles'  	           '$(strip $(MK))'
+	@$(ll) header2 MK 'Makefiles'  	           '$(sort $(MK))'
 	@if test -n "$(strip $(DMK))"; then \
-	 $(ll) header2 DMK 'Generated Makefiles'   '$(strip $(DMK))';\
+	 $(ll) header2 DMK 'Generated Makefiles'   '$(sort $(DMK))';\
 	 else\
 	 $(ll) header2 DMK 'Generated Makefiles (none)' ;\
 	 fi;
 	@if test -n "$(strip $(DEP))"; then \
-	 $(ll) header2 DEP 'Other Dependencies'    '$(strip $(DEP))';\
+	 $(ll) header2 DEP 'Other Dependencies'    '$(sort $(DEP))';\
 	 else\
 	 $(ll) header2 DEP 'Other Dependencies (none)';\
 	 fi
 	@if test -n "$(strip $(CLN))"; then \
-	 $(ll) header2 CLN 'Clean list'            '$(strip $(CLN))';\
+	 $(ll) header2 CLN 'Clean list'            '$(sort $(CLN))';\
 	 else\
 	 $(ll) header2 CLN 'Clean list (none)'   ;\
 	 fi
 	@if test -n "$(strip $(STRGT))"; then \
-	 $(ll) header2 STRGT 'Special Targets'     '$(strip $(STRGT))';\
+	 $(ll) header2 STRGT 'Special Targets'     '$(sort $(STRGT))';\
 	 else\
 	 $(ll) header2 STRGT 'Special Targets (none)';\
 	 fi;
 	@if test -n "$(strip $(RES))"; then \
-	 $(ll) header2 RES 'Resources '            '$(strip $(RES))';\
+	 $(ll) header2 RES 'Resources '            '$(sort $(RES))';\
 	 fi;
 	@if test -n "$(strip $(MISSING))"; then \
-	 $(ll) Error "Missing" "Paths not found " '$(strip $(MISSING))';\
+	 $(ll) Error "Missing" "Paths not found " '$(sort $(MISSING))';\
 	 fi;
 
 
@@ -166,24 +166,24 @@ stat:: dmk
 		$(call log,header3,Dependencies,$(call count,$(DEP)));\
 		$(call log,header3,Dynamic makefiles,$(call count,$(DMK)));\
 		$(call log,header3,Cleanable,$(call count,$(CLN)));\
-		$(call log,header3,Builds,$(call count,$(DMK)));\
+		$(call log,header3,Targets,$(call count,$(TRGT)));\
 		$(call log,header3,Tests,$(call count,$(TEST)));\
 		echo;\
 	fi
-	@if test -n "$(wildcard $(strip $(CLN)))"; then \
- 	   $(ll) Attention "Cleanable" "paths found:" '$(strip $(CLN))';\
+	@if test -n "$(wildcard $(sort $(CLN)))"; then \
+ 	   $(ll) Attention "Cleanable" "paths found:" '$(wildcard $(sort $(CLN)))';\
 	 fi;
-	@OFFLINE=$(strip $(abspath $(OFFLINE)));\
+	@OFFLINE=$(sort $(abspath $(OFFLINE)));\
 	 if test -n "$$OFFLINE"; then \
  	   $(ll) Warning "Offline" "directories unavailable:" "$$OFFLINE";\
 	 fi;
-	@if test -n "$(strip $(MISSING))"; then \
- 	   $(ll) Error "Missing" "paths not found:" '$(strip $(MISSING))';\
+	@if test -n "$(sort $(MISSING))"; then \
+ 	   $(ll) Error "Missing" "paths not found:" '$(sort $(MISSING))';\
 	 fi;
-	@if test -n "$(strip $(PENDING))"; then \
+	@if test -n "$(sort $(PENDING))"; then \
 	   $(ll) Done $@ \
 	 "counted $(call count,$(SRC)) sources, $(call count,$(TRGT)) targets"; \
- 	   $(ll) Attention "Pending" "Please rebuild [$@] because:" '$(strip $(PENDING))';\
+ 	   $(ll) Attention "Pending" "Please rebuild [$@] because:" '$(sort $(PENDING))';\
 	 else \
 	   $(ll) OK $@ \
 	 "counted $(call count,$(SRC)) sources, $(call count,$(TRGT)) targets"; fi

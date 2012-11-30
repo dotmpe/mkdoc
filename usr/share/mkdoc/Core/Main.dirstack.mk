@@ -5,8 +5,8 @@ d                   := $(DIR)
 /                   := $d/
 B                   := $(BUILD)$/
 #      ------------ -- 
-ifneq ($(VERBOSE), )
-$(info $(shell $(ll) file_target "$/" "Loading makefile.." ))
-endif
+$(call chat,info,"$/",Loading makefile)
+$(call chat,debug,"$/","BUILD=$B")
+$(call chat,debug,"$/","DIR=$d")
 #             ------------ -- 
 

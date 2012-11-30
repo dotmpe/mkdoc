@@ -1,4 +1,4 @@
-$(call log-module_"graphviz"_"Graphviz rules")
+$(call log-module,graphviz,Graphviz rules)
 GRAPHVIZ_SUFFIX     := -graph
 #
 #      ------------ -- 

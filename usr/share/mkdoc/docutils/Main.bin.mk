@@ -17,7 +17,6 @@ $(eval $(info $(shell $(ll) warning "docutils" "no $(DU_BIN) available")))))))
 
 get-du-bin = $(call require-bin,$1) || echo '$$(ll) "error" "Docutils: Missing $1" && exit 1;'
 
-
 # Prepare cmdline snippets including flags
 rst-html          = $(shell $(call get-du-bin,rst2html))      $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_HTML)
 rst-latex         = $(shell $(call get-du-bin,rst2latex))     $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_LATEX)
@@ -30,10 +29,10 @@ rst-xetex         = $(shell $(call get-du-bin,rst2xetex))     $(DU_RST) $(DU_GEN
 rst-xml           = $(shell $(call get-du-bin,rst2xml))       $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_XML)
 
 
-ifneq ($(VERBOSE), )
-ifneq ($(VERBOSE),1)
-$(info rst-html=$(rst-html))
-endif
+$(call chat,debug,rst-html=$(rst-html))
+
+ifeq ($(shell which $(rst-html)),)
+$(call chat,err,docutils,Missing Docutils)
 endif
 
 # Utility commandline snippets

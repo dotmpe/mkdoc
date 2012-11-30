@@ -1,5 +1,5 @@
 MK               += $(MK_SHARE)/docutils/Main.mk
-$(call log-module,"docutils","Docutils Python document publisher")
+$(call log-module,docutils,Docutils Python document publisher)
 
 
 ###    Docutils flags

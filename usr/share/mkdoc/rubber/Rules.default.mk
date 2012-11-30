@@ -1,4 +1,4 @@
-$(call log-module,"rubber","Rubber (LaTeX to PDF) default rules")
+$(call log-module,rubber,Rubber (LaTeX to PDF) default rules)
 
 %,rubber-latex.pdf:        %.latex
 	@$(ll) file_target "$@" because "$?"
