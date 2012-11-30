@@ -337,13 +337,6 @@ define build-res-index
 		$(ll) file_ok "$@" "New index"; fi
 endef
 
-# "chatter on tty"
-chatty =\
-		if test -z "$$VERBOSE"; then VERBOSE=1; fi;\
-		if test $$VERBOSE -ge $1;\
-		then \
-			$(ll) "$2" "$3" "$4" "$5"; \
-		fi
 
 LOG_LEVELS = \
 			 emerg=0 \
@@ -371,11 +364,9 @@ chat                = $(eval $(call vtty,$1,$2,$3,$4))
 log                 = $(ll) "$1" "$2" "$3" "$4"
 log-module          = $(eval $(call vtty,header2,$1,$2))
 
-#ifneq ($(VERBOSE), )
-#$(info $(shell $(ll) "info" "OS" "on "$(OS)))
-#$(info $(shell $(ll) "info" "HOST" "at '"$(HOST)"'"))
-#$(info $(shell $(ll) "info" "ROOT" "from '"$(ROOT)"'"))
-#endif
+$(call chat,info,OS, "on "$(OS))
+$(call chat,info,HOST, "at '"$(HOST)"'")
+$(call chat,info,ROOT, "from '"$(ROOT)"'")
 
 
 
@@ -396,19 +387,19 @@ test-python =\
 			fi;\
 		fi; \
 		if test -z "$$RUN"; then \
-			$(call chatty,1,warning,$@,Coverage for python not available); \
+			$(call chat,warning,$@,Coverage for python not available); \
 			RUN=python;\
 		fi; \
-		$(call chatty,2,attention,$$,$$RUN,$$TEST_PY);\
+		$(call chat,attention,$$,$$RUN,$$TEST_PY);\
 		$$RUN $$TEST_PY $$ARGS; \
-		$(call chatty,2,header,exit-status,$$?);\
+		$(call chat,header,exit-status,$$?);\
 		$(call zero_exit_test,$$?,$@,Python tested,Python testing failed); \
 		\
 		if test -n "$(shell which coverage)"; \
 		then \
 			coverage html; \
 			[ -n "$$HTML_DIR" ] && rm -rf $$HTML_DIR && mv htmlcov $$HTML_DIR;\
-			$(call chatty,0,file_OK,$$HTML_DIR,Generated test coverage report in HTML); \
+			$(call chat,notice,$$HTML_DIR,Generated test coverage report in HTML); \
 		fi; \
 	else \
 		$(ll) error "$@" "Tests require Python interpreter. "; \

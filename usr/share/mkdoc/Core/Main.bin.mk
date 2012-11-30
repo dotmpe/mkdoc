@@ -12,11 +12,9 @@ PY_FULL_VERSION     := $(shell python -V 2>&1 | sed 's/^Python\ \([0-9a-z\.]*\)[
 PY_MM_VERSION       := $(shell echo $(PY_FULL_VERSION) | sed 's/^\([0-9]\+\)\.\([0-9]\+\).*$$/\1.\2/')
 PY_MMID_VERSION      := $(shell echo $(PY_MM_VERSION) | sed 's/\.//g')
 
-ifneq ($(VERBOSE), )
-$(info PY_FULL_VERSION=$(PY_FULL_VERSION))
-$(info PY_MMID_VERSION=$(PY_MMID_VERSION))
-$(info PY_MM_VERSION=$(PY_MM_VERSION))
-endif
+$(call chat,debug,py,PY_FULL_VERSION=$(PY_FULL_VERSION))
+$(call chat,debug,py,PY_MMID_VERSION=$(PY_MMID_VERSION))
+$(call chat,debug,py,PY_MM_VERSION=$(PY_MM_VERSION))
 
 # add BIN python{version} keys
 $(foreach PY,2.4 2.5 2.6 2.7, \
@@ -31,8 +29,8 @@ BIN                 += python$(PY_MMID_VERSION)=$(shell which python)
 endif
 BIN                 += python=python$(PY_MMID_VERSION)
 endif
-$(eval $(if $(call get-bin,python),,$(info $(shell \
-	$(ll) "warning" python "no Python available"))))
+$(eval $(if $(call get-bin,python),,$(call chat,\
+	warn,python,no Python available)))
 
 
 ###    Mercurial (hg)
@@ -42,8 +40,8 @@ ifneq ($(shell which hg),)
 BIN                 += hg=$(shell which hg)
 endif
 
-$(if $(shell $(call get-bin,hg)),,$(info $(shell \
-	$(ll) "warning" hg "no Mercurial (hg) available")))
+$(if $(shell $(call get-bin,hg)),,$(call chat,\
+	warn,hg,no Mercurial (hg) available))
 
 
 ###    Subversion (svn)
@@ -53,8 +51,8 @@ ifneq ($(shell which svn),)
 BIN                 += svn=$(shell which svn)
 endif
 
-$(if $(shell $(call get-bin,svn)),,$(info $(shell \
-	$(ll) "warning" svn "no Subversion (svn) available")))
+$(if $(shell $(call get-bin,svn)),,$(call \
+		chat,warn,svn,no Subversion (svn) available))
 
 
 ###    GIT
@@ -64,8 +62,8 @@ ifneq ($(shell which git),)
 BIN                 += git=$(shell which git)
 endif
 
-$(if $(shell $(call get-bin,git)),,$(info $(shell \
-	$(ll) "warning" git "no GIT available")))
+$(if $(shell $(call get-bin,git)),,$(call chat,warn,git,\
+	no GIT available))
 
 
 

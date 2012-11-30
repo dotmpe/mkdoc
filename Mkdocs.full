@@ -118,10 +118,7 @@ $(call chat,header,mkdoc,Reading local rules)
 ifeq ($(call rules,$(DIR)/), )
 $(error No rules in '$(DIR)')
 else
-ifneq ($(VERBOSE), )
-$(info $(shell $(ll) header "mkdoc" "Reading local rules from:"  \
-	"$(call rules,$(DIR))"))
-endif
+$(call chat,info,mkdoc,Reading local rules from:,$(call rules,$(DIR)))
 endif
 include                $(call rules,$(DIR)) 
 

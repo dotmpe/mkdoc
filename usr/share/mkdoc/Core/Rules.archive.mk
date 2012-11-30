@@ -1,8 +1,6 @@
 ## Dirstack
-ifneq ($(VERBOSE), )
-$(info $(shell $(ll) file_target "$/" "Archive make. " ))
-$(info ========================$(DIR)/Rules.archive.mk)
-endif
+$(call chat,info,$/,"Archive make. " )
+$(call chat,debug,make,$(DIR)/Rules.archive.mk)
 SP                  := $(SP).x
 D_$(SP)             := $d
 d                   := $(DIR)
@@ -20,9 +18,7 @@ ILLEGAL          += $(call unsafe-paths,$d)
 ifneq($(ILLEGAL),)
 $(error Illegal Subdirs,$d,$(ILLEGAL$d))
 endif
-ifneq ($(VERBOSE), )
-$(info Subdirs,$d,$(SUB_$d))
-endif
+$(call chat,info,archive,Subdirs $d,$(SUB_$d))
 
 SUB_MK_$d        := $(SUB_$d:%=$d/.build/%/Rules.archive.mk)
 SUB_MK_NF_$d     := $(call complement,$(SUB_MK_$d),$(call filter-file,$(SUB_MK_$d)))
