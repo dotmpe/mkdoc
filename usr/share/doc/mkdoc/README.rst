@@ -151,10 +151,15 @@ master
 devel
     Non stable in working stuff, but better than experimental.
     Read branch docs.
+
+    mayflower
+      development branch (temporarily) started may 2012 (back to devel again in
+      autumn). 
+      
 experimental
     As it says. Temporary maybe, but read branch docs.
 
-Topic development branches:
+Topic branches:
 
 dev_packages
     Trying to introduce sub packages of mkdocs.
