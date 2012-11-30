@@ -153,12 +153,13 @@ devel
     Read branch docs.
 
     mayflower
-      development branch started may 2012. 
+      development branch (temporarily) started may 2012 (back to devel again in
+      autumn). 
       
 experimental
     As it says. Temporary maybe, but read branch docs.
 
-Topic development branches:
+Topic branches:
 
 dev_packages
     Trying to introduce sub packages of mkdocs.
