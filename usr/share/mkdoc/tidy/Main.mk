@@ -1,6 +1,8 @@
 $(call log-module,tidy,Tidy (X)HTML validator and formatter)
 MK               += $(MK_SHARE)/tidy/Main.mk
 
+$(if $(shell which gxl2gv),,$(info $(shell \
+	$(ll) "warning" tidy "X(HT)ML formatter not available")))
 
 tidy 			= tidy -m -q -wrap 0 -utf8 -i 
 tidy-xml 		= $(tidy) -xml

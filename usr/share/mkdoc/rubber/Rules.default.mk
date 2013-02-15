@@ -1,5 +1,9 @@
 $(call log-module,rubber,Rubber (LaTeX to PDF) default rules)
 
+$(if $(shell which rubber),,$(info $(shell \
+	$(ll) "warning" rubber "rubber convertor not available")))
+
+
 %,rubber-latex.pdf:        %.latex
 	@$(ll) file_target "$@" because "$?"
 	@if test -n "$(DIR)"; then D=$(@D);else D=$(DIR);fi;\
