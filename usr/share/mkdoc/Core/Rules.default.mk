@@ -15,7 +15,7 @@ help::
 	@$(ee) 
 	@# See STRGT and DESCRIPTION vars, STD (STDTARGT or STDSTAT) without DESCRIPTION is not printed
 	@declare $(DESCRIPTION);\
-	$(ll) header $@     "$$PROJECT project Makefile";\
+	$(ll) header $@     "$(PACKAGE) Makefile";\
 	$(ee) "" ;\
 	for strgt in $(STDTRGT);\
 	do\
@@ -74,7 +74,9 @@ info::
 	@$(ll) header $@ "Package Info"
 	@$(ll) header2 Root     "" $(ROOT)
 	@$(ll) header2 MkDoc    "" $(MK_SHARE)
-	@$(ll) header2 Package  "" $(PACK)
+	@$(ll) header2 Package  "" "$(PACKAGE)"
+	@$(ll) header2 Package  "" "$$PROJECT"
+	@$(ll) header2 Package  "" "$(PACK)"
 	@$(ll) header2 Homepage "" $(PACK_HREF)
 	@$(ll) header2 Revision "" $(PACK_REV)
 	@$(ll) header2 Version  "" $(PACK_V)
