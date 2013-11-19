@@ -1,1 +1,1 @@
-usr/share/doc/mkdoc/README.rst
+.. include:: usr/share/doc/mkdoc/README.rst

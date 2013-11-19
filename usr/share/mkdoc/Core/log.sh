@@ -55,6 +55,7 @@ mk_p_trgt_yellow_faint="$c3[$c7%s$c3]$c0"
 mk_p_trgt_green="$c21[$c7%s$c21]$c0"
 mk_trgt_green="$c21<$c7%s$c21>$c0"
 #mk_trgt_green_faint="$c2<$c7%s$c2>$c0"
+mk_trgt_red="$c1<$c7%s$c1>$c0"
 mk_p_trgt_red="$c1[$c7%s$c1]$c0"
 mk_updtd="$c4<$c7%s$c4>$c0"
 
@@ -100,6 +101,12 @@ __log ()
 		'file_ok' )
 			targets=$(printf "$mk_trgt_green" "$targets")
 			;;
+		'file_warning' )
+			targets=$(printf "$mk_trgt_yellow" "$targets")
+			;;
+		'file_error' )
+			targets=$(printf "$mk_trgt_red" "$targets")
+			;;
 		error* | 'fatal' | fail* ) # red
 			targets=$(printf "$mk_p_trgt_red" "$targets")
 			;;
@@ -108,7 +115,7 @@ __log ()
 			;;
 	esac
 	case "$linetype" in
-		'file_target'|'file_ok'|'header'|'header1'|'header2'|'header3'|'debug'|'info'|'attention'|'error'|'verbose')
+		'file_error'|'file_warning'| 'file_target'|'file_ok'|'header'|'header1'|'header2'|'header3'|'debug'|'info'|'attention'|'error'|'verbose')
 			;;
 		'fatal'|'ok'|'done'|* )
 			if [ -n "$msg" ]
