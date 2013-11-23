@@ -123,8 +123,7 @@ define rst-to-xhtml
 	#echo 'HTML ' $(DU_HTML)
 	#echo 'GEN ' $(DU_GEN)
 	if test -n "$(VERBOSE)"; \
-	then echo $(rst-html) $<.src $@.tmp1; \
-		$(rst-html) --traceback $<.src $@.tmp1;\
+	then $(rst-html) --traceback $<.src $@.tmp1;\
 	else $(rst-html) $<.src $@.tmp1; fi
 	cp $<.src $@.src
 	rm $<.src

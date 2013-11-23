@@ -203,10 +203,11 @@ push::
 test:: $(TEST)
 	$(call mk_ok_s,"tested")
 
+clean:: F := f
 clean::
 	@$(ll) warning $@ cleaning "$(CLN)"
-	@-rm -f $(CLN);\
-	 if test $$? -gt 0; then $(echo) ""; fi; # put xtra line if err-msgs
+	@-rm -$(F) $(CLN);\
+	 if test $$? -gt 0; then echo ""; fi; # put xtra line if err-msgs
 	@$(call log,Done,$@,$(call count,$(CLN)) targets)
 
 clean-dep:: cleandep
