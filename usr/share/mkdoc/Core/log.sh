@@ -74,47 +74,50 @@ __log ()
 		msg="$msg $sources"
 	fi
 	case "$linetype" in 
-		'header' | 'header1') # blue
+		header | header1) # blue
 			#targets=$(printf "$mk_title_blue" "$targets")
 			targets=$(printf "$mk_p_trgt_blue" "$targets")
 			;;
-		'header2' )
+		header2 )
 			targets=$(printf "$mk_title_blue" "$targets")
 			;;
-		'header3' )
+		header3 )
 			targets=$(printf "$mk_title_blue_faint" "$targets")
 			;;
-		'debug' )
+		debug )
 			targets="";
 			trgt_len=0
 				#$(printf "$mk_p_trgt_yellow_faint" "$targets")
 			;;
-		'verbose' | warn | warning )
+		verbose | warn*  )
 			targets=$(printf "$mk_p_trgt_yellow_faint" "$targets")
 			;;
-		attention | crit | critical )
+		attention | crit* )
 			targets=$(printf "$mk_p_trgt_yellow" "$targets")
 			;;
-		'file_target' )
+		file_target )
 			targets=$(printf "$mk_trgt_yellow" "$targets")
 			;;
-		'file_ok' )
+		file_ok )
 			targets=$(printf "$mk_trgt_green" "$targets")
+			;;
+		file_warn* )
+			targets=$(printf "$mk_trgt_yellow" "$targets")
 			;;
 		file_err* ) # red
 			targets=$(printf "$mk_trgt_red" "$targets")
 			;;
-		err* | 'fatal' | fail* | emerg* | file_err* ) # red
+		err* | fatal | fail* ) # red
 			targets=$(printf "$mk_p_trgt_red" "$targets")
 			;;
-		 ok | "done" | 'info'|*  )
+		 ok | "done" | info | *  )
 			targets=$(printf "$mk_p_trgt_green" "$targets")
 			;;
 	esac
 	case "$linetype" in
-		'file_target'|'file_ok'|'header'|'header1'|'header2'|'header3'|'debug'|'info'|'attention'|err*|file_err*|'verbose'|warn|emerg)
+		file_error|file_warning|file_target|file_ok|header|header1|header2|header3|debug|info|attention|error|verbose)
 			;;
-		'fatal'|'ok'|'done'|* )
+		fatal|ok|'done'|* )
 			if [ -n "$msg" ]
 			then msg="$c9$1$c0, $msg";
 			else msg="$c9$1$c0"; fi

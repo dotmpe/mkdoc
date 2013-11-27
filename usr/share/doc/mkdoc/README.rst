@@ -1,9 +1,8 @@
 MkDoc
 =====
 :date: 2010-09-19
-:update: 2012-04-05
+:update: 2013-11-19
 :author: \B. van Berkum  <dev@dotmpe.com>
-:homepage: http://dotmpe.com/project/mkdoc
 :url: http://github.org/dotmpe/mkdoc/blob/master/usr/share/doc/mkdoc/README.rst
 
 .. :url: http://github.org/dotmpe/mkdoc/blob/master/README.rst
@@ -27,6 +26,7 @@ A set of Makefiles:
 
 Objectives are primarily building of documents, and offering a Make/Bash toolkit.
 
+The f
 There is a framework to define special targets in place, implemented by 
 `Rules.default.mk`__.
 There is also formatting and colored output.
@@ -37,12 +37,21 @@ There is also formatting and colored output.
 
 Usage
 -----
-The files in the root directory of this package (Makefile and Rules.mk) are
-examples that bootstrap a project for use with mkdocs. This Makefile can be
-symlinked completely, but the Rules.mk only provides the boilerplate for a new 
-project with mkdoc trees and you chould copy end edit it.
+::
 
-Once I prepared my projects it looks a bit like this::
+  cd ~/myproject
+  /usr/share/mkdoc/invade
+  make
+
+Or do-it-yourself::
+
+  cd ~/myproject
+  ln -s /usr/share/mkdoc/Mkdocs.full
+  cp /usr/share/mkdoc/Rules.mk Rules.mk 
+
+Then edit ``Rules.*.mk``.
+
+Once prepared a projects may look like this::
 
   my-project/
   ├── .Rules.mk
@@ -50,17 +59,19 @@ Once I prepared my projects it looks a bit like this::
   └── media
       └── Rules.mk
 
-Ofcourse, mkdoc may be located elsewhere.
-
 Now `make` may be run from the main directory. If needed, you may write 
 your Rules.mk recipes such that you can also run `make` from any subdirectory. 
+
 Just make an extra symlink to Makefile to start. These directories are principal
-entry points and will be called **mkdocs (main) session directories**.
-They are the root point of the relative paths in the current build.
+entry points.
+They are the root point of the relative paths in the current build,
+this may affect your build results.
 
 The Rules.mk in Makefile directory will included automatically upon running
 make from that directory. Note that each directory has at most one such primary 
-Rules.mk that is auto-included. Not every directory in the project may need one. 
+Rules.mk that is auto-included. The one with hostname has preference.
+Not every directory in the project nees a Rule, as each Rules explicitly lists
+subdir includes.
 
 By convention, these sub-makefiles are named:
 
