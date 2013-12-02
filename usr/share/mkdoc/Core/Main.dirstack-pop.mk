@@ -1,6 +1,10 @@
-$(call chat,info,"$/",Loaded,$(MK_$d))
+ifeq ($(MAKECMDGOALS),info)
+$(info $(shell $(ll) info dirstack-pop Loaded $(MK_$d)))
+else
+$(call chat,info,"dirstack-pop",Loaded,$(MK_$d))
+endif
 ## Pop from dirstack
 d 				:= $(D_$(SP))
-/ 				:= $d/
+/				:= $d/
 SP				:= $(basename $(SP))
 # vim:noet:
