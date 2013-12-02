@@ -10,7 +10,7 @@ define plotutils-pic-to-svg
 	$(ll) file_target $@ "Rendering diagram $* because" "$?"
 	$(reset-target)
 	T=$$(realpath $@);cd $(<D);\
-	 pic2plot -Tsvg $(<F) \
+	 $(call get-bin,pic2plot) -Tsvg $(<F) \
 	 --page-size $(pic2plot_pagesize) \
 	 --font-size $(pic2plot_fontsize) \
 	 $(pic2plot_flags) \
@@ -23,7 +23,7 @@ define plotutils-pic-to-png
 	$(ll) file_target $@ "Rendering diagram $* because" "$?"
 	$(reset-target)
 	T=$$(realpath $@);cd $(<D);\
-	 pic2plot -Tpng $(<F) \
+	 $(call get-bin,pic2plot) -Tpng $(<F) \
 	 --page-size $(pic2plot_pagesize) \
 	 --font-size $(pic2plot_fontsize) \
 	 --bitmap-size $(pic2plot_bitmapsize) \
@@ -37,7 +37,7 @@ define plotutils-pic-to-ps
 	$(ll) file_target $@ "Rendering diagram $* because" "$?"
 	$(reset-target)
 	T=$$(realpath $@);cd $(<D);\
-	 pic2plot -Tps $(<F) \
+	 $(call get-bin,pic2plot) -Tps $(<F) \
 	 --page-size $(pic2plot_pagesize) \
 	 --font-size $(pic2plot_fontsize) \
 	 --bitmap-size $(pic2plot_bitmapsize) \

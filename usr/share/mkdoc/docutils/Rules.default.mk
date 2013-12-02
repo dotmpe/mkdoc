@@ -39,13 +39,13 @@ $(BUILD)%.include.mk:  $/%.rst
 #	@$(ll) file_ok "$@" Done
 
 # FIXME
-#$(BUILD)/%.xhtml:	           %.rst
-#	@$(log-target-because-from)
-#	@$(rst-to-xhtml)
-#	@$(info-text-stat)
-#	@$(ll) file_ok "$@" Done
+$(BUILD)%.xhtml:	           %.rst
+	@$(log-target-because-from)
+	@$(rst-to-xhtml)
+	@$(info-text-stat)
+	@$(ll) file_ok "$@" Done
 
-$(BUILD)/%,du.xhtml:	           %.rst
+$(BUILD)%,du.xhtml:	           %.rst
 	@$(log-target-because-from)
 	@$(reset-target)
 	@$(rst-to-xhtml)

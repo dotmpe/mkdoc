@@ -1,5 +1,11 @@
 $(call log-module,graphviz,Graphviz graph rendering)
 
+$(eval $(foreach FE,dot twopi circo fdp neato,\
+	$(if $(shell which $(FE)),,$(info $(shell \
+		$(ll) "warning" graphviz "Graphviz '$(FE)' frontend not available")))))
+$(if $(shell which gxl2gv),,$(info $(shell \
+	$(ll) "warning" graphviz "gxl2gv convertor not available")))
+
 GRAPHVIZ_ENGINE     := dot
 #values: dot,twopi,circo,fdp,neato
 GRAPHVIZ_FLAGS      := -Gsplines=true 

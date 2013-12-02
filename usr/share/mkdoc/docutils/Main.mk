@@ -96,6 +96,7 @@ define rst-to-xhtml
 	### Pre-processing
 	cp $< $<.src
 	chmod +rw $<.src
+	[ -e "$$(dirname $@)" ] || { mkdir -p $$(dirname $@); }
 	# Rewrite KEYWORD tags (twice, one before, one after includes. need to have
 	# better included doc processing...)
 	$(if $(call is-file,$(shell $(kwds-file))),
@@ -123,22 +124,25 @@ define rst-to-xhtml
 	#echo 'HTML ' $(DU_HTML)
 	#echo 'GEN ' $(DU_GEN)
 	if test -n "$(VERBOSE)"; \
-	then echo $(rst-html) $<.src $@.tmp1; \
-		$(rst-html) --traceback $<.src $@.tmp1;\
+	then $(rst-html) --traceback $<.src $@.tmp1;\
 	else $(rst-html) $<.src $@.tmp1; fi
 	cp $<.src $@.src
 	rm $<.src
 	# Additional styles 'n scripts
+	mkdocs_file=$$(dirname $<)/$$(basename $< .rst).mkdocs; \
+	[ -e "$$mkdocs_file" ] && source "$$mkdocs_file"; \
+	XHT_JS="$$(echo $$XHT_JS $(XHT_JS))"; \
 	if test -n "$(VERBOSE)"; \
-		then echo Adding scripts $(XHT_JS); fi
-	JS="$(call f-sed-escape,$(XHT_JS))"; \
+		then $(ll) info "$@" "Adding scripts" "$$XHT_JS"; fi; \
+	JS=$$(echo "$$XHT_JS" | $(sed-escape));\
 	   for js_ref in $${JS}; do \
 	   	sed -e "s/<\/head>/<script type=\"text\/javascript\" src=\"$$js_ref\"><\/script><\/head>/" $@.tmp1 > $@.tmp2; \
 	   	mv $@.tmp2 $@.tmp1; \
-	   done;
+	   done; \
+	XHT_CSS="$$(echo $$XHT_CSS $(XHT_CSS))"; \
 	if test -n "$(VERBOSE)"; \
-		then echo Adding styles $(XHT_CSS); fi
-	CSS="$(call f-sed-escape,$(XHT_CSS))"; \
+		then $(ll) info "$@" "Adding styles" "$$XHT_CSS"; fi; \
+	CSS=$$(echo "$$XHT_CSS" | $(sed-escape));\
 	   for css_ref in $${CSS}; do \
 	   	sed -e "s/<\/head>/<link rel=\"stylesheet\" type=\"text\/css\" href=\"$$css_ref\"\/><\/head>/" $@.tmp1 > $@.tmp2; \
 	   	mv $@.tmp2 $@.tmp1; \
