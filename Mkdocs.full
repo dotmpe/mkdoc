@@ -37,7 +37,14 @@ MK_$d               := Mkdocs.full
 
 #      ------------ -- 
 
+ifeq ($(MAKECMDGOALS),info)
+$(info Heads up, running 'make info V=$(VERBOSE)', use lower values for less info. )
+endif
+
 include                $(MK_SHARE)Core/Main.mk
+ifeq ($(MAKECMDGOALS),info)
+$(info $(shell $(ll) info info "OK loaded $(MK_SHARE)Core/Main.mk"))
+endif
 $(call chat,header,mkdoc,Core script loaded)
 
 ifneq ($(shell [ -L "$(MK)" ] && basename $$(readlink $(MK))),$(MK_$d))
