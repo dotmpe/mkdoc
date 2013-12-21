@@ -138,8 +138,7 @@ So it presents with some challenges, not all which can be overcome easily.
 Dependencies may only be known after some intial parsing, publishing, etc.
 This is why the PENDING list was introduced.
 
-But that should be overcome. 
-A proper interaction or SRC with DEP and DMK may eliminate this need?
+TODO: But that should be fixed. A proper interaction or SRC with DEP and DMK may eliminate the need for PENDING?
 
 This is the normal sequence:
 
