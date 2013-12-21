@@ -362,7 +362,7 @@ test-python =\
 			fi;\
 		fi; \
 		if test -z "$$RUN"; then \
-			$(call chatty,1,warning,$@,Coverage for python not available); \
+			$(call chatty,1,warn,$@,Coverage for python not available); \
 			RUN=python;\
 		fi; \
 		$(call chatty,2,attention,$$,$$RUN,$$TEST_PY);\
