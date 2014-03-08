@@ -1,1 +1,1 @@
-Mkdocs.full
+Mkdocs-full.mk

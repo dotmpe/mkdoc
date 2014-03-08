@@ -1,0 +1,32 @@
+./Rules.mk:$/TODO.list: $(S)
+./Rules.mk:$/TODO.list: S = $/etc $/usr $/var $(wildcard $/*.mk $/*.rst)
+./Rules.mk:$/TODO.list: T = TODO XXX FIXME
+./Rules.mk:$/TODO.list: X = TODO.list 
+./usr/share/doc/mkdoc/README.rst:TODO: But that should be fixed. A proper interaction or SRC with DEP and DMK may eliminate the need for PENDING?
+./usr/share/doc/mkdoc/README.rst:XXX: By default the '/' root dir is also included. No sure if needed for
+./usr/share/doc/mkdoc/README.rst:XXX: In non-recursive make where rules are defined per directory and included in one
+./usr/share/doc/mkdoc/README.rst:XXX: Make, especially in a non-recursive setting take a start up penalty depending on
+./usr/share/doc/mkdoc/README.rst:XXX: obviously only one ROOT variable can be set for a global make system.
+./usr/share/mkdoc/Core/Main.mk:# XXX: old log, deprecated:
+./usr/share/mkdoc/Core/Main.mk:DESCRIPTION        += install='TODO (no-op)'
+./usr/share/mkdoc/Core/Main.mk:DESCRIPTION        += test='TODO: run tests'
+./usr/share/mkdoc/Core/Rules.default.mk:# TODO use similar scheme as DESCRIPTION
+./usr/share/mkdoc/Core/Rules.default.mk:# TODO: add some scaffolding for pub/rsync/..?
+./usr/share/mkdoc/docutils/Main.bin.mk:# FIXME: fail if any of the above do not exist..
+./usr/share/mkdoc/docutils/Main.mk:	# --source-url="/$<.rst" XXX extension gets stripped
+./usr/share/mkdoc/docutils/Main.mk:	# FIXME: would be nice if this could exclude current target.
+./usr/share/mkdoc/docutils/Main.mk:	# XXX: KEYWORDS only processed for main file if PRE_PROC_INCLUDES
+./usr/share/mkdoc/docutils/Main.mk:	# XXX: it appears that setting HTML base href is not enough for the browser
+./usr/share/mkdoc/docutils/Main.mk:	# XXX: this is dep'ed on everything in the dir and gets regenerated every time..
+./usr/share/mkdoc/docutils/Main.mk:# XXX: not working in Du/0.7 --cloak-email-addresses 
+./usr/share/mkdoc/docutils/Rules.default.mk:	@# XXX: wrong attr. name:
+./usr/share/mkdoc/docutils/Rules.default.mk:# FIXME
+./usr/share/mkdoc/docutils/Rules.default.mk:# TODO: rename this to ,du
+./usr/share/mkdoc/docutils/Rules.default.mk:# TODO: step to .src instead
+./usr/share/mkdoc/docutils/Rules.default.mk:# XXX: it seems internal or local references are mapped to edges
+./usr/share/mkdoc/docutils/rst-dep.sh:		# XXX: are images processed by docutils publisher? no?
+./usr/share/mkdoc/docutils/rst-dep.sh:	# XXX: ignores raw-url, inline references
+./usr/share/mkdoc/docutils/rst-includes.py:	# FIXME: indent = match.group(1)
+./usr/share/mkdoc/docutils/rst-pdf-figure-to-png.py:# XXX:
+./usr/share/mkdoc/graphviz/Rules.default.mk:# XXX: non-graphviz svg -> png
+./usr/share/mkdoc/haxe/Rules.default.mk:$(call log-module,haxe,Rules TODO)

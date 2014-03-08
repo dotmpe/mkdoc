@@ -4,6 +4,18 @@ MK                  += $(MK_$d)
 #
 #      ------------ -- 
 
+include                $(MK_SHARE)Core/Rules.project.mk
+
+$/TODO.list: S = $/etc $/usr $/var $(wildcard $/*.mk $/*.rst)
+$/TODO.list: T = TODO XXX FIXME
+$/TODO.list: X = TODO.list 
+$/TODO.list: $(S)
+	@\
+	$(ll) file_target "$@" because "$?";\
+	$(tag_list);\
+	$(ll) file_OK $@
+
+
 #
 #DIR                 := $/mydir
 #include                $(call rules,$(DIR)/)
