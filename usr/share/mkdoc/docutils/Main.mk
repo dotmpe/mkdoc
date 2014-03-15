@@ -31,9 +31,10 @@ DU_PXML          :=
 DU_S5            :=
 DU_XETEX         :=
 
-
+# hack to append head elements without customized docutil publisher
 XHT_CSS          :=
 XHT_JS           :=
+XHT_HEAD         :=
 
 
 include             $(MK_SHARE)/docutils/Main.bin.mk
@@ -128,17 +129,10 @@ define rst-to-xhtml
 	else $(rst-html) $<.src $@.tmp1; fi
 	cp $<.src $@.src
 	rm $<.src
+	\
 	# Additional styles 'n scripts
 	mkdocs_file=$$(dirname $<)/$$(basename $< .rst).mkdocs; \
 	[ -e "$$mkdocs_file" ] && source "$$mkdocs_file"; \
-	XHT_JS="$$(echo $$XHT_JS $(XHT_JS))"; \
-	if test -n "$(VERBOSE)"; \
-		then $(ll) info "$@" "Adding scripts" "$$XHT_JS"; fi; \
-	JS=$$(echo "$$XHT_JS" | $(sed-escape));\
-	   for js_ref in $${JS}; do \
-	   	sed -e "s/<\/head>/<script type=\"text\/javascript\" src=\"$$js_ref\"><\/script><\/head>/" $@.tmp1 > $@.tmp2; \
-	   	mv $@.tmp2 $@.tmp1; \
-	   done; \
 	XHT_CSS="$$(echo $$XHT_CSS $(XHT_CSS))"; \
 	if test -n "$(VERBOSE)"; \
 		then $(ll) info "$@" "Adding styles" "$$XHT_CSS"; fi; \
@@ -146,7 +140,25 @@ define rst-to-xhtml
 	   for css_ref in $${CSS}; do \
 	   	sed -e "s/<\/head>/<link rel=\"stylesheet\" type=\"text\/css\" href=\"$$css_ref\"\/><\/head>/" $@.tmp1 > $@.tmp2; \
 	   	mv $@.tmp2 $@.tmp1; \
-	   done;
+	   done; \
+	\
+	XHT_JS="$$(echo $$XHT_JS $(XHT_JS))"; \
+	if test -n "$(VERBOSE)"; \
+		then $(ll) info "$@" "Adding scripts" "$$XHT_JS"; fi; \
+	JS=$$(echo "$$XHT_JS" | $(sed-escape));\
+		for js_ref in $${JS}; do \
+		sed -e "s/<\/head>/<script type=\"text\/javascript\" src=\"$$js_ref\"><\/script><\/head>/" $@.tmp1 > $@.tmp2; \
+		mv $@.tmp2 $@.tmp1; \
+	done;\
+	\
+	if test -n "$(VERBOSE)"; \
+		then $(ll) info "$@" "Adding HTML head elements" "$(XHT_HEAD)"; fi; \
+	for head_ref in $(XHT_HEAD); do \
+		ref=$$(echo $$head_ref | sed 's/([^a-zA-Z0-9])/\\1/g');\
+		sed -e "s#</head>#$$ref</head>#" $@.tmp1 > $@.tmp2; \
+		mv $@.tmp2 $@.tmp1; \
+	done; \
+	\
 	# Process references
 	$(build-xhtml-refs)
 	rm $@.tmp1

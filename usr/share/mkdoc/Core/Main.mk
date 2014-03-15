@@ -38,7 +38,7 @@ PENDING            :=
 MISSING            :=
 OFFLINE            :=
 
-RES :=
+RES                :=
 
 
 ### standard targets
@@ -58,10 +58,8 @@ DESCRIPTION        += clean='delete all targets'
 DESCRIPTION        += cleandep='delete all dynamic makefiles and dependencies'
 
 DESCRIPTION        += help='print this help'
-DESCRIPTION        += stat='assert sources, dynamic makefiles and other dependencies'
-DESCRIPTION        += list='print SRC and TRGT lists'
-DESCRIPTION        += lists='print all other lists'
-DESCRIPTION        += info='print other metadata'
+DESCRIPTION        += stat='assert sources, dynamic makefiles and other dependencies, use LIST to enumerate values for special targets'
+DESCRIPTION        += info='print shell, env data '
 
 
 ### Various snippets
@@ -76,6 +74,7 @@ else
 ee                  = /bin/echo -e
 endif
 sed-trim            = sed 's/^ *//g' | sed 's/ *$$//g'
+# really limited escape..
 sed-escape          = awk '{gsub("[~/:.]", "\\\\&");print}'
 filter-paths        = grep -v ^\# | grep -v ^\s*$$
 trim-paths          = sed 's/\/\//\//g' | sed 's/\.\///g'

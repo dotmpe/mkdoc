@@ -6,7 +6,7 @@ D_$(SP)             := $d
 d                   := $(DIR)
 
 MK_$d               += $d/Rules.archive.mk
-MK                  += $(MK_$d)
+include                $(MK_SHARE)Core/Main.makefiles.mk
 
 
 #

@@ -1,4 +1,5 @@
-MK                 += $(MK_SHARE)Core/Rules.default.mk
+MK_$d               += $(MK_SHARE)Core/Rules.default.mk
+include                $(MK_SHARE)Core/Main.makefiles.mk
 
 default:              stat
 
@@ -81,14 +82,13 @@ info::
 	@$(ll) header2 Revision "" $(PACK_REV)
 	@$(ll) header2 Version  "" $(PACK_V)
 	@$(ll) header2 Release  "" $(TAG)
+	@$(ll) header3 CS "$(CS)" "$(origin CS)"
+	@$(ll) header3 VPATH "$(VPATH)" "$(origin VPATH)"
+	@$(ll) header3 SHELL "$(SHELL)" "$(origin SHELL)"
+	@$(ll) header3 HOST "$(HOST)" "$(origin HOST)"
+	@$(ll) header3 OS "$(OS)" "$(origin OS)"
+	@$(ll) header3 VERBOSE "$(VERBOSE)" "$(origin VERBOSE)"
 	@$(ll) OK $@ 
-
-list::
-	@$(ee) 
-	@$(ll) header2 Sources                  "" "$(sort $(SRC))"
-	@#$(ll) header2 Sources  "$(shell echo $(SRC)|sort -u)"
-	@$(ll) header2 "Build Targets"          "" '$(sort $(TRGT))'
-	@$(ll) header2 "Special Targets"        "" '$(sort $(STRGT))'
 
 # TODO use similar scheme as DESCRIPTION
 DESC_SRC  = Paths to build targets from  
@@ -99,49 +99,6 @@ DESC_DMK  = List of (to be) generated Makefiles
 DESC_DEP  = Paths needed to build targets 
 DESC_CLN  = Paths that will be removed on next `make clean`  
 DESC_RES  =   
-
-lists::
-	@$(ll) header $@ "Printing all prerequisite lists."
-	@if test -n "$(strip $(SRC))"; then \
-	 $(ll) header2 SRC Sources                 '$(sort $(SRC))';\
-	 else\
-	 $(ll) header2 SRC "Sources (none)";\
-	 fi;
-	@if test -n "$(strip $(TRGT))"; then \
-	 $(ll) header2 TRGT 'Build Targets'        '$(sort $(TRGT))';\
-	 else\
-	 $(ll) header2 TRGT 'Build Targets (none)';\
-	 fi;
-	@if test -n "$(strip $(TEST))"; then \
-	 $(ll) header2 TEST 'Test Targets'         '$(sort $(TEST))';\
-	 fi;
-	@$(ll) header2 MK 'Makefiles'  	           '$(sort $(MK))'
-	@if test -n "$(strip $(DMK))"; then \
-	 $(ll) header2 DMK 'Generated Makefiles'   '$(sort $(DMK))';\
-	 else\
-	 $(ll) header2 DMK 'Generated Makefiles (none)' ;\
-	 fi;
-	@if test -n "$(strip $(DEP))"; then \
-	 $(ll) header2 DEP 'Other Dependencies'    '$(sort $(DEP))';\
-	 else\
-	 $(ll) header2 DEP 'Other Dependencies (none)';\
-	 fi
-	@if test -n "$(strip $(CLN))"; then \
-	 $(ll) header2 CLN 'Clean list'            '$(sort $(CLN))';\
-	 else\
-	 $(ll) header2 CLN 'Clean list (none)'   ;\
-	 fi
-	@if test -n "$(strip $(STRGT))"; then \
-	 $(ll) header2 STRGT 'Special Targets'     '$(sort $(STRGT))';\
-	 else\
-	 $(ll) header2 STRGT 'Special Targets (none)';\
-	 fi;
-	@if test -n "$(strip $(RES))"; then \
-	 $(ll) header2 RES 'Resources '            '$(sort $(RES))';\
-	 fi;
-	@if test -n "$(strip $(MISSING))"; then \
-	 $(ll) Error "Missing" "Paths not found " '$(sort $(MISSING))';\
-	 fi;
 
 
 #src:: $(SRC) 
@@ -160,6 +117,7 @@ dmk:: dep $(DMK)
 		$(ll) OK $@ "nothing to do"; \
 	fi
 
+stat:: LIST := 
 stat:: dmk
 	@if test -n "$(VERBOSE)"; then \
 		echo;\
@@ -169,23 +127,70 @@ stat:: dmk
 		$(call log,header3,Dynamic makefiles,$(call count,$(DMK)));\
 		$(call log,header3,Cleanable,$(call count,$(CLN)));\
 		$(call log,header3,Targets,$(call count,$(TRGT)));\
+		$(call log,header3,Special Targets,$(call count,$(STRGT)));\
 		$(call log,header3,Tests,$(call count,$(TEST)));\
+		$(call log,header3,Resources,$(call count,$(RES)));\
 		echo;\
 	fi
-	@if test -n "$(wildcard $(sort $(CLN)))"; then \
- 	   $(ll) Attention "Cleanable" "paths found:" '$(wildcard $(sort $(CLN)))';\
-	 fi;
+	@if [ "$(LIST)" = "build" ]; then \
+		if test -n "$(wildcard $(sort $(TRGT)))"; then \
+			$(ll) header2 TRGT 'Build Targets' '$(wildcard $(sort $(TRGT)))';\
+		else\
+			$(ll) header2 TRGT 'Build Targets (none)';\
+	 fi; fi;
+	@if [ "$(LIST)" = "clean" ]; then \
+		if test -n "$(wildcard $(sort $(CLN)))"; then \
+			$(ll) Attention "Cleanable" "paths found:" '$(wildcard $(sort $(CLN)))';\
+		else\
+			$(ll) header2 TRGT 'Cleanable Targets (none)';\
+	 fi; fi;
+	@if [ "$(LIST)" = "source" ]; then \
+		if test -n "$(wildcard $(sort $(SRC)))"; then \
+			$(ll) header2 SRC Sources '$(wildcard $(sort $(SRC)))';\
+		else\
+			$(ll) header2 SRC "Sources (none)";\
+	 fi; fi;
+	@if [ "$(LIST)" = "test" ]; then \
+		if test -n "$(wildcard $(sort $(TEST)))"; then \
+			$(ll) header2 TEST Tests '$(wildcard $(sort $(TEST)))';\
+		else\
+			$(ll) header2 TEST "Tests (none)";\
+	 fi; fi;
+	@if [ "$(LIST)" = "dmk" ]; then \
+		if test -n "$(wildcard $(sort $(DMK)))"; then \
+			$(ll) header2 'Generated Makefiles' '$(wildcard $(sort $(DMK)))';\
+		else\
+			$(ll) header2 'Generated Makefiles (none)';\
+	 fi; fi;
+	@if [ "$(LIST)" = "dep" ]; then \
+		if test -n "$(wildcard $(sort $(DEP)))"; then \
+			$(ll) header2 'Other Dependencies' '$(wildcard $(sort $(DEP)))';\
+		else\
+			$(ll) header2 'Other Dependencies (none)';\
+	 fi; fi;
+	@if [ "$(LIST)" = "strgt" ]; then \
+		if test -n "$(wildcard $(sort $(STRGT)))"; then \
+			$(ll) header2 'Special Targets' '$(wildcard $(sort $(STRGT)))';\
+		else\
+			$(ll) header2 'Special Targets (none)';\
+	 fi; fi;
+	@if [ "$(LIST)" = "res" ]; then \
+		if test -n "$(wildcard $(sort $(RES)))"; then \
+			$(ll) header2 'Resources' '$(wildcard $(sort $(RES)))';\
+		else\
+			$(ll) header2 'Resources (none)';\
+	 fi; fi;
 	@OFFLINE=$(sort $(abspath $(OFFLINE)));\
 	 if test -n "$$OFFLINE"; then \
- 	   $(ll) Warning "Offline" "directories unavailable:" "$$OFFLINE";\
+		$(ll) Warning "Offline" "directories unavailable:" "$$OFFLINE";\
 	 fi;
 	@if test -n "$(sort $(MISSING))"; then \
- 	   $(ll) Error "Missing" "paths not found:" '$(sort $(MISSING))';\
+	   $(ll) Error "Missing" "paths not found:" '$(sort $(MISSING))';\
 	 fi;
 	@if test -n "$(sort $(PENDING))"; then \
 	   $(ll) Done $@ \
 	 "counted $(call count,$(SRC)) sources, $(call count,$(TRGT)) targets"; \
- 	   $(ll) Attention "Pending" "Please rebuild [$@] because:" '$(sort $(PENDING))';\
+	   $(ll) Attention "Pending" "Please rebuild [$@] because:" '$(sort $(PENDING))';\
 	 else \
 	   $(ll) OK $@ \
 	 "counted $(call count,$(SRC)) sources, $(call count,$(TRGT)) targets"; fi

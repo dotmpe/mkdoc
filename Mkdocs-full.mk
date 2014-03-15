@@ -32,7 +32,7 @@ DIR                 := .
 #      ------------ -- 
 
 d                   := $(DIR)
-MK_$d               := Mkdocs.full
+MK_$d               := Mkdocs-full
 
 #      ------------ -- 
 
@@ -46,7 +46,8 @@ $(info $(shell $(ll) info info "OK loaded $(MK_SHARE)Core/Main.mk"))
 endif
 $(call chat,header,mkdoc,Core script loaded)
 
-ifneq ($(shell [ -L "$(MK)" ] && basename $$(readlink $(MK))),$(MK_$d))
+# Check wether this filename (target of the Makefile symlink) corresponds to MK_$d
+ifneq ($(shell [ -L "$(MK)" ] && basename $$(readlink $(MK)) .mk),$(MK_$d))
 $(call chat,warn,mkdoc,Do not link Makefile but rather $(MK_$d))
 endif
 

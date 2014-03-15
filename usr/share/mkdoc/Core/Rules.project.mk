@@ -1,4 +1,5 @@
-MK                 += $(MK_SHARE)Core/Rules.project.mk
+MK_$d               += $(MK_SHARE)Core/Rules.project.mk
+include                $(MK_SHARE)Core/Main.makefiles.mk
 
 
 define tag_list

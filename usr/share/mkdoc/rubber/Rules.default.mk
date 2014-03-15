@@ -1,4 +1,10 @@
-$(call log-module,rubber,Rubber (LaTeX to PDF) default rules)
+## 
+MK_$d               += $(MK_SHARE)/rubber/Rules.default.mk
+include                $(MK_SHARE)Core/Main.makefiles.mk
+#
+#      ------------ -- 
+
+#$(call log-module,rubber,Rubber (LaTeX to PDF) default rules)
 
 $(if $(shell which rubber),,$(info $(shell \
 	$(ll) "warning" rubber "rubber convertor not available")))

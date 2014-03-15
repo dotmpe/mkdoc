@@ -1,4 +1,10 @@
-$(call log-module,vc,Version Control)
+## 
+MK_$d               := $(MK_SHARE)/mkdoc/vc/Main.mk
+include                $(MK_SHARE)Core/Main.makefiles.mk
+#
+#      ------------ -- 
+
+#$(call log-module,vc,Version Control)
 
 clean-checkout = \
 	d=$$(readlink -f $(DIR));\

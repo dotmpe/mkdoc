@@ -1,5 +1,10 @@
-$(call log-module,tidy,Tidy (X)HTML validator and formatter)
-MK               += $(MK_SHARE)/tidy/Main.mk
+## 
+MK_$d               += $(MK_SHARE)/tidy/Main.mk
+include                $(MK_SHARE)Core/Main.makefiles.mk
+#
+#      ------------ -- 
+
+#$(call log-module,tidy,Tidy (X)HTML validator and formatter)
 
 $(if $(shell which gxl2gv),,$(info $(shell \
 	$(ll) "warning" tidy "X(HT)ML formatter not available")))
