@@ -1,4 +1,8 @@
-$(call log-module,graphviz,Graphviz rules)
+$(eval $(call module-header,graphviz,$(MK_SHARE)graphviz/Rules.default.mk,"Graphviz rules"))
+#
+#      ------------ -- 
+
+
 GRAPHVIZ_SUFFIX     := -graph
 #
 #      ------------ -- 

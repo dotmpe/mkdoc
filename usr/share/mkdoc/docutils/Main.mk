@@ -1,5 +1,7 @@
-MK               += $(MK_SHARE)/docutils/Main.mk
-$(call log-module,docutils,Docutils Python document publisher)
+$(eval $(call module-header,docutils,$(MK_SHARE)docutils/Main.mk,"Docutils Python document publisher"))
+#
+#      ------------ -- 
+
 
 
 # generic Du flags

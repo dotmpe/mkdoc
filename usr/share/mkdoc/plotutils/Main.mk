@@ -1,10 +1,7 @@
-## 
-MK_$d               += $(MK_SHARE)/plotutils/Main.mk
-include                $(MK_SHARE)Core/Main.makefiles.mk
+$(eval $(call module-header,plotutils,$(MK_SHARE)plotutils/Main.mk,"GNU/plotutils"))
 #
 #      ------------ -- 
 
-#$(call log-module,plotutils,)
 
 BIN              += pic2plot=$(shell which pic2plot)
 

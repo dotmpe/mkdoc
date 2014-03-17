@@ -1,5 +1,7 @@
-$(call log-module,HaXe,Main)
-MK               += $(DIR)/haxe/Main.mk
+$(eval $(call module-header,haxe,$(MK_SHARE)haxe/Main.mk,"HaXe cross-platform compiler"))
+#
+#      ------------ -- 
+
 
 $(if $(shell which haxe),,$(info $(shell \
 	$(ll) "warning" haxe "HaXe is not available")))

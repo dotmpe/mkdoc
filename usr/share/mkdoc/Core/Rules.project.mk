@@ -1,5 +1,7 @@
-MK_$d               += $(MK_SHARE)Core/Rules.project.mk
-include                $(MK_SHARE)Core/Main.makefiles.mk
+$(eval $(call module-header,Core,$(MK_SHARE)Core/Rules.project.mk,""))
+#
+#      ------------ -- 
+
 
 
 define tag_list

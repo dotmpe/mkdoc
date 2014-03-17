@@ -1,10 +1,7 @@
-## 
-MK_$d               += $(MK_SHARE)/plotutils/Rules.default.mk
-include                $(MK_SHARE)Core/Main.makefiles.mk
+$(eval $(call module-header,plotutils,$(MK_SHARE)plotutils/Rules.default.mk,"GNU/plotutils default rules"))
 #
 #      ------------ -- 
 
-#$(call log-module,plotutils,GNU/plotutils default rules)
 
 pic2plot_fontsize := 0.0175
 pic2plot_bitmapsize := 570x570

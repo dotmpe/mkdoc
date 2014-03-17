@@ -1,3 +1,9 @@
+$(eval $(call module-header,Core,$(MK_SHARE)/Core/Rules.movelink.mk,""))
+#
+#      ------------ -- 
+
+
+
 # Set defaults (set to own values before include)
 RS_LS_$d            ?= $/resources.list
 RS_SRC_DIR_$d       ?= /Resources

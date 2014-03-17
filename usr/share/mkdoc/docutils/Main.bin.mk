@@ -1,3 +1,8 @@
+$(eval $(call module-header,plotutils,$(MK_SHARE)plotutils/Main.bin.mk,"GNU/plotutils binaries"))
+#
+#      ------------ -- 
+
+
 ifneq ($(shell which rst2xml),)
 rst-html          = rst2html         $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_HTML)
 rst-latex         = rst2latex        $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_LATEX)

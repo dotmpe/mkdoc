@@ -1,5 +1,4 @@
-MK                  += $(MK_SHARE)/bookmarklet/Main.mk
-$(call log-module,"bookmarklet","Javascript bookmarklets")
+$(eval $(call module-header,bookmarklet,$(MK_SHARE)bookmarklet/Main.mk,"Javascript bookmarklets"))
 #
 #      ------------ -- 
 

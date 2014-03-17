@@ -330,6 +330,21 @@ chat                = $(eval $(call vtty,$1,$2,$3,$4))
 log                 = $(ll) "$1" "$2" "$3" "$4"
 log-module          = $(eval $(call vtty,header2,$1,$2))
 
+define module-header
+MK += $2
+ifeq ($(MAKECMDGOALS),info)
+$(info $(shell $(ll) info Core/Main Loading $(2)))
+else
+$(call log-module,$1,$3)
+endif
+endef
+
+define dir-header
+include                $(MK_SHARE)Core/Main.dirstack.mk
+MK_$d               := $2
+$(module-header,$1,$/$2,$3)
+endef
+
 #ifneq ($(VERBOSE), )
 #$(info $(shell $(ll) "info" "OS" "on "$(OS)))
 #$(info $(shell $(ll) "info" "HOST" "at '"$(HOST)"'"))

@@ -1,5 +1,6 @@
-MK               += $(MK_SHARE)/bookmarklet/Rules.default.mk
-$(call log-module,"bookmarklet","Javascript bookmarklet default rules")
+$(eval $(call module-header,bookmarklet,$(MK_SHARE)bookmarklet/Rules.default.mk,"Javascript bookmarklet default rules"))
+#
+#      ------------ -- 
 
 
 %.bm.uriref: %.js

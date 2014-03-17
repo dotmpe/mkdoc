@@ -1,4 +1,7 @@
-$(call log-module,graphviz,Graphviz graph rendering)
+$(eval $(call module-header,graphviz,$(MK_SHARE)graphviz/Rules.default.mk,"Graphviz graph rendering"))
+#
+#      ------------ -- 
+
 
 $(eval $(foreach FE,dot twopi circo fdp neato,\
 	$(if $(shell which $(FE)),,$(info $(shell \

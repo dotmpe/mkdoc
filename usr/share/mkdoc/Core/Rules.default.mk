@@ -1,5 +1,7 @@
-MK_$d               += $(MK_SHARE)Core/Rules.default.mk
-include                $(MK_SHARE)Core/Main.makefiles.mk
+$(eval $(call module-header,Core,$(MK_SHARE)Core/Rules.default.mk,Default rules))
+#
+#      ------------ -- 
+
 
 default:              stat
 
@@ -155,6 +157,12 @@ stat:: dmk
 			$(ll) header2 TEST Tests '$(wildcard $(sort $(TEST)))';\
 		else\
 			$(ll) header2 TEST "Tests (none)";\
+	 fi; fi;
+	@if [ "$(LIST)" = "mk" ]; then \
+		if test -n "$(wildcard $(sort $(MK)))"; then \
+			$(ll) header2 'Makefiles' '$(wildcard $(sort $(MK)))';\
+		else\
+			$(ll) header2 'Makefiles (none)';\
 	 fi; fi;
 	@if [ "$(LIST)" = "dmk" ]; then \
 		if test -n "$(wildcard $(sort $(DMK)))"; then \
