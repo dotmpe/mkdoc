@@ -65,6 +65,7 @@ $(call chat,debug,$(MK_$d),MK_BUILD=$(MK_BUILD))
 $(call chat,debug,mkdoc,Reading package main include files)
 
 include                \
+                       $(MK_SHARE)markdown/Main.mk \
                        $(MK_SHARE)docutils/Main.mk \
                        $(MK_SHARE)bookmarklet/Main.mk \
                        $(MK_SHARE)vc/Main.mk \
@@ -84,6 +85,7 @@ include                \
                        $(MK_SHARE)bookmarklet/Rules.default.mk \
                        $(MK_SHARE)graphviz/Rules.default.mk \
                        $(MK_SHARE)rubber/Rules.default.mk \
+                       $(MK_SHARE)markdown/Rules.default.mk \
                        $(MK_SHARE)docutils/Rules.default.mk \
                        $(MK_SHARE)haxe/Rules.default.mk \
                        $(MK_SHARE)plotutils/Rules.default.mk \

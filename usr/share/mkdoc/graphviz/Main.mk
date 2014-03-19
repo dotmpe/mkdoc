@@ -2,7 +2,12 @@ $(eval $(call module-header,graphviz,$(MK_SHARE)graphviz/Rules.default.mk,"Graph
 #
 #      ------------ -- 
 
+ifneq ($(shell which dot),)
+gv-dot = dot $(DOT)
+GV_VERSION = $(gv-dot) --version
+endif
 
+ifneq ($(GV_VERSION),)
 $(eval $(foreach FE,dot twopi circo fdp neato,\
 	$(if $(shell which $(FE)),,$(info $(shell \
 		$(ll) "warning" graphviz "Graphviz '$(FE)' frontend not available")))))
@@ -28,4 +33,4 @@ define gv-to-graph
 	$(ll) file_ok "$@" "<--($(GRAPHVIZ_ENGINE))-" "$^"
 endef
 
-
+endif # /if GV_VERSION
