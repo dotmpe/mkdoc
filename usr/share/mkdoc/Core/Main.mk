@@ -332,11 +332,7 @@ log-module          = $(eval $(call vtty,header2,$1,$2))
 
 define module-header
 MK += $2
-ifeq ($(MAKECMDGOALS),info)
-$(info $(shell $(ll) info Core/Main Loading $(2)))
-else
 $(call log-module,$1,$3)
-endif
 endef
 
 define dir-header
