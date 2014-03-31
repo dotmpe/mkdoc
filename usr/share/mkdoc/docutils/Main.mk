@@ -113,10 +113,6 @@ define rst-to-xhtml
 		$(ll) info "source includes" "$$($(rst-pre-proc-include) $<.src $<.src2)"; \
 		mv $<.src2 $<.src;\
 	fi;
-	# XXX: KEYWORDS only processed for main file if PRE_PROC_INCLUDES
-	#	$(if $(call is-file,$(shell $(kwds-file))),\
-	#		$(ll) info "source tags" "Expanding keywords tags (after includes) from " $$($(kwds-file));\
-	#		$(ante-proc-tags))\
 	# Rewrite PDF image/figure to PNG
 	$(ll) info "web types" "$$($(rst-pdf-figure-to-png) $<.src $<.src2)"
 	mv $<.src2 $<.src
