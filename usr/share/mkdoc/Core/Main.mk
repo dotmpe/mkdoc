@@ -334,7 +334,6 @@ last                = $(word $(words $(1)),$(1))
 
 define module-header
 MK += $2
-#ifeq ($(MAKECMDGOALS),info)
 $(call log-module,$1,$3 = $(call last,$(MK)))
 endef
 

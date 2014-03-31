@@ -50,7 +50,7 @@ help::
 		done;\
 		$(ee);\
 	fi;
-	@$(ll) OK $@ 
+	@$(ee);$(ll) info $@ End
 
 examples::
 	@$(ee)
@@ -130,6 +130,7 @@ stat:: dmk
 		$(call log,header3,Cleanable,$(call count,$(CLN)));\
 		$(call log,header3,Targets,$(call count,$(TRGT)));\
 		$(call log,header3,Special Targets,$(call count,$(STRGT)));\
+		$(call log,header3,Special Targets,$(STRGT));\
 		$(call log,header3,Tests,$(call count,$(TEST)));\
 		$(call log,header3,Resources,$(call count,$(RES)));\
 		echo;\
@@ -177,8 +178,8 @@ stat:: dmk
 			$(ll) header2 'Other Dependencies (none)';\
 	 fi; fi;
 	@if [ "$(LIST)" = "strgt" ]; then \
-		if test -n "$(wildcard $(sort $(STRGT)))"; then \
-			$(ll) header2 'Special Targets' '$(wildcard $(sort $(STRGT)))';\
+		if test -n "$(sort $(STRGT))"; then \
+			$(ll) header2 'Special Targets' '$(sort $(STRGT))';\
 		else\
 			$(ll) header2 'Special Targets (none)';\
 	 fi; fi;
