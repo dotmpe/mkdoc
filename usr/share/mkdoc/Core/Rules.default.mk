@@ -78,8 +78,8 @@ info::
 	@$(ll) header2 Root     "" $(ROOT)
 	@$(ll) header2 MkDoc    "" $(MK_SHARE)
 	@$(ll) header2 Package  "" "$(PACKAGE)"
-	@$(ll) header2 Package  "" "$$PROJECT"
-	@$(ll) header2 Package  "" "$(PACK)"
+	@$(ll) header2 Project  "" "$$PROJECT"
+	@$(ll) header2 Pack     "" "$(PACK)"
 	@$(ll) header2 Homepage "" $(PACK_HREF)
 	@$(ll) header2 Revision "" $(PACK_REV)
 	@$(ll) header2 Version  "" $(PACK_V)

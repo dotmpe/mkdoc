@@ -1,7 +1,6 @@
-$(eval $(call module-header,plotutils,$(MK_SHARE)plotutils/Main.bin.mk,"GNU/plotutils binaries"))
+$(eval $(call module-header,docutils,$(MK_SHARE)docutils/Main.bin.mk,"GNU/docutils binaries"))
 #
 #      ------------ -- 
-
 
 ifneq ($(shell which rst2xml),)
 rst-html          = rst2html         $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_HTML)
@@ -42,6 +41,8 @@ endif
 ifeq ($(shell which $(rst-html)),)
 $(call chat,warn,docutils,Missing Docutils)
 endif
+
+DU_VERSION=$(shell $(rst-xml) --version)
 
 list-references   = $(rst-xml) $1 | xsltproc --novalid $(MK_SHARE)docutils/refuri-dep.xslt -
 list-titles       =

@@ -6,7 +6,6 @@ d                   := $(DIR)
 B                   := $(BUILD)$/
 #      ------------ -- 
 $(call chat,info,"$/",Loading makefile)
-$(call chat,debug,"$/","BUILD=$B")
-$(call chat,debug,"$/","DIR=$d")
+$(call chat,debug,"$/","\'BUILD=$B\'")
 #             ------------ -- 
 

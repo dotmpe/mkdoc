@@ -8,6 +8,7 @@ GRAPHVIZ_SUFFIX     := -graph
 #      ------------ -- 
 
 
+ifneq ($(GV_VERSION),)
 
 ### DOT png
 %$(GRAPHVIZ_SUFFIX).png:           %.gv
@@ -115,6 +116,7 @@ $B%_gv.gxl: %.gv
 	@gxl2gv -g -o$@ $< 
 	@$(ll) file_ok "$@" Done
 
+endif
 
 #      ------------ -- 
 #

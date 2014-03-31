@@ -65,6 +65,7 @@ $(call chat,debug,$(MK_$d),MK_BUILD=$(MK_BUILD))
 $(call chat,debug,mkdoc,Reading package main include files)
 
 include                \
+                       $(MK_SHARE)markdown/Main.mk \
                        $(MK_SHARE)docutils/Main.mk \
                        $(MK_SHARE)bookmarklet/Main.mk \
                        $(MK_SHARE)vc/Main.mk \
@@ -74,6 +75,7 @@ include                \
                        $(MK_SHARE)graphviz/Main.mk 
 
 $(call chat,debug,mkdoc,Done loading packages main file)
+$(call chat,debug,mkdoc)
 
 #      ------------ -- 
 
@@ -84,12 +86,14 @@ include                \
                        $(MK_SHARE)bookmarklet/Rules.default.mk \
                        $(MK_SHARE)graphviz/Rules.default.mk \
                        $(MK_SHARE)rubber/Rules.default.mk \
+                       $(MK_SHARE)markdown/Rules.default.mk \
                        $(MK_SHARE)docutils/Rules.default.mk \
                        $(MK_SHARE)haxe/Rules.default.mk \
                        $(MK_SHARE)plotutils/Rules.default.mk \
 #					   $(MK_SHARE)Core/Rules.archive.mk
 
 $(call chat,debug,mkdoc,Done loading packages rules files)
+$(call chat,debug,mkdoc)
 
 #      ------------ -- 
 
@@ -109,6 +113,8 @@ include                $(MK_SHARE)Core/Rules.default.mk
 
 #      ------------ -- 
 
+$(call chat,debug,mkdoc)
 $(call chat,OK,mkdoc,starting 'make $(MAKECMDGOALS)')
+$(call chat,debug,mkdoc)
 
 # vim:ft=make:

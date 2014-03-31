@@ -91,10 +91,10 @@ $(RS_MK_$d):           $(RS_LS_$d)
 			&& continue;\
 		if test ! -e "$D$$sub"; then\
 			echo "$D$$sub:: $$res" >> $@;\
-			echo -e "\t@\$$(log-target-because-from)" >> $@;\
-			echo -e "\t@\$$(ll) file_target \$$@ from \$$^ " >> $@;\
-			echo -e "\t@\$$(move-and-link)" >> $@;\
-			echo -e "\t@\$$(ll) file_ok \$$@ done" >> $@;\
+			$(ee) "\t@\$$(log-target-because-from)" >> $@;\
+			$(ee) "\t@\$$(ll) file_target \$$@ from \$$^ " >> $@;\
+			$(ee) "\t@\$$(move-and-link)" >> $@;\
+			$(ee) "\t@\$$(ll) file_ok \$$@ done" >> $@;\
 			echo "SRC += $D$$sub" >> $@;\
 		else if test -f "$D$$sub"; then \
 			[ -d $$(dirname $$res) ] || mkdir -p $$(dirname $$res);\
