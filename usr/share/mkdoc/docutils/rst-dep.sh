@@ -37,7 +37,7 @@ while ($whole_file =~ m#.. raw::\ *[^\n]+\n\s+:(file|url):\s*([^\n]+)\n#sgi) {
 
 ### Main
 docs=.rst-docs
-echo $1 > $docs
+echo $* > $docs
 
 while test -s $docs; do
 

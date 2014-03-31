@@ -68,8 +68,8 @@ DESCRIPTION        += info='print shell, env data '
 ll                  = $(MK_SHARE)Core/log.sh
 # see functions
 
-ifeq ("$(OS)","Darwin")
-ee                  = /bin/echo
+ifeq ($(OS),Darwin)
+ee                  = echo -e
 else
 ee                  = /bin/echo -e
 endif
@@ -174,6 +174,8 @@ zero_exit_test = \
 ### Canned
 init-target         = $(call init-file,$@)
 mk-target-dir       = if test ! -d $(@D); then mkdir -p $(@D); fi;
+#XXX: this looks at far to many places, overriding others and forcing duplication?
+# but content is generated per definition anyway
 kwds-file           = if test -f "$(KWDS_./$(<D))"; then \
 						  echo $(KWDS_./$(<D)); \
 						else if test -f "$(KWDS_./$(@D))"; then \
@@ -225,8 +227,7 @@ define ante-proc-tags
 	FILEMDATETIME=$$(date -r "$$mtime" +"%Y-%m-%d %H:%M:%S %:z");\
 	 KWDF="$(shell $(kwds-file))";\
 	 KWD=$$(cat $$KWDF);\
-	 XTR=$$($(ee) \
-	"dotmpe.project.mkdoc:filemdatetime\t$$FILEMDATETIME");\
+	 XTR=$$($(ee) "dotmpe.project.mkdoc:filemdatetime\t$$FILEMDATETIME");\
 	 $(ee) "$$KWD\n$$XTR" | grep -v '^$$' | grep -v '^#'| \
 		while read l; do \
 			IFS="	";set -- $$l;\
@@ -329,19 +330,17 @@ endef
 chat                = $(eval $(call vtty,$1,$2,$3,$4))
 log                 = $(ll) "$1" "$2" "$3" "$4"
 log-module          = $(eval $(call vtty,header2,$1,$2))
+last                = $(word $(words $(1)),$(1))
 
 define module-header
 MK += $2
-ifeq ($(MAKECMDGOALS),info)
-$(info $(shell $(ll) info Core/Main Loading $(2)))
-else
-$(call log-module,$1,$3)
-endif
+#ifeq ($(MAKECMDGOALS),info)
+$(call log-module,$1,$3 = $(call last,$(MK)))
 endef
 
 define dir-header
 include                $(MK_SHARE)Core/Main.dirstack.mk
-MK_$d               := $2
+MK_$d               := $1/$2
 $(module-header,$1,$/$2,$3)
 endef
 

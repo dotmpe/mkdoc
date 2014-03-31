@@ -75,6 +75,7 @@ include                \
                        $(MK_SHARE)graphviz/Main.mk 
 
 $(call chat,debug,mkdoc,Done loading packages main file)
+$(call chat,debug,mkdoc)
 
 #      ------------ -- 
 
@@ -92,6 +93,7 @@ include                \
 #					   $(MK_SHARE)Core/Rules.archive.mk
 
 $(call chat,debug,mkdoc,Done loading packages rules files)
+$(call chat,debug,mkdoc)
 
 #      ------------ -- 
 
@@ -111,6 +113,8 @@ include                $(MK_SHARE)Core/Rules.default.mk
 
 #      ------------ -- 
 
+$(call chat,debug,mkdoc)
 $(call chat,OK,mkdoc,starting 'make $(MAKECMDGOALS)')
+$(call chat,debug,mkdoc)
 
 # vim:ft=make:
