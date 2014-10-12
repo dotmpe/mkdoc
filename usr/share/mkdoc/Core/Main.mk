@@ -220,10 +220,16 @@ define mk-include
 	done;
 endef
 
+ifeq ($(OS),Darwin)
+CMD_STATC := stat -f
+else
+CMD_STATC := stat -c 
+endif
+
 define ante-proc-tags
 	# Process all source files and expand tag references.
 	if test ! -f "$<.src"; then cp $< $<.src; fi
-	mtime=$$(stat -c %m "$<");\
+	mtime=$$($(CMD_STATC) %m "$<");\
 	FILEMDATETIME=$$(date -r "$$mtime" +"%Y-%m-%d %H:%M:%S %:z");\
 	 KWDF="$(shell $(kwds-file))";\
 	 KWD=$$(cat $$KWDF);\
