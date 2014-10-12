@@ -187,9 +187,7 @@ kwds-file           = if test -f "$(KWDS_./$(<D))"; then \
 						else if test -f "$(KWDS_$(DIR))"; then \
 						  echo $(KWDS_$(DIR)); \
 						else if test -f "$(KWDS_.)"; then \
-						  echo $(KWDS_.); \
-						else if test -f "$(KWDS)"; then \
-						  echo $(KWDS); fi; fi; fi; fi; fi; fi; fi;
+						  echo $(KWDS_.); fi; fi; fi; fi; fi; fi;
 
 define mk-target
 	$(mk-target-dir)
