@@ -37,14 +37,13 @@ $(BUILD)%.include.mk:  $/%.rst
 #	@$(info-text-stat)
 #	@$(ll) file_ok "$@" Done
 
-# FIXME
 $(BUILD)%.xhtml:	           %.rst
 	@$(log-file-target-because-from)
 	@$(rst-to-xhtml)
 	@$(info-text-stat)
 	@$(ll) file_ok "$@" Done
 
-$(BUILD)%,du.xhtml:	           %.rst
+$(BUILD)%.du.xhtml:	           %.rst
 	@$(log-file-target-because-from)
 	@$(reset-target)
 	@$(rst-to-xhtml)
@@ -59,7 +58,7 @@ $(BUILD)%,du.xhtml:	           %.rst
 	@$(info-text-stat)
 	@$(ll) file_ok "$@" Done
 
-$B%,du.xml:            $/%.rst
+$(BUILD)%.du.xml:	           %.rst
 	@$(log-file-target-because-from)
 	@$(reset-target)
 	@T=$$(realpath $@);cd $(<D);$(rst-xml) $(<F) $$T
@@ -87,6 +86,12 @@ $(BUILD)%,du.odt:      $/%.rst
 	@$(info-bin-stat)
 	@$(ll) file_ok "$@" Done
 
+$(BUILD)%.du.pxml:	           %.rst
+	@$(log-file-target-because-from)
+	@$(reset-target)
+	@$(rst-to-pseudoxml)
+	@$(info-text-stat)
+	@$(ll) file_ok "$@" Done
 
 $B%,du.pxml:           $/%.rst
 	@$(ll) file_target "$@" because "$?"
