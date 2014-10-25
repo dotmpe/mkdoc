@@ -9,6 +9,6 @@ md-html = markdown $(MD_GEN)
 endif
 
 ifeq ($(md-html),)
-$(call chat,warning,markdown,Missing Markdown convertor)
+$(call chat,warn,markdown,Missing Markdown convertor)
 endif
 
