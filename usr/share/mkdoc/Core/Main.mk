@@ -333,18 +333,22 @@ $(eval $(if \
 endef
 chat                = $(eval $(call vtty,$1,$2,$3,$4))
 log                 = $(ll) "$1" "$2" "$3" "$4"
-log-module          = $(eval $(call vtty,header2,$1,$2))
+log-module          = $(eval $(call vtty,header2,$1,$2,$3))
 last                = $(word $(words $(1)),$(1))
 
+# Output a header upon loading include
+# Args: headername, filename, description
 define module-header
 MK += $2
 $(call log-module,$1,$3 = $(call last,$(MK)))
 endef
 
+# Like module-header but before header increment dirstack too
+# Args: fromdir, subdir, description
 define dir-header
 include                $(MK_SHARE)Core/Main.dirstack.mk
 MK_$d               := $1/$2
-$(module-header,$1,$/$2,$3)
+$(eval $(call module-header,,$/$2,$3))
 endef
 
 #ifneq ($(VERBOSE), )
