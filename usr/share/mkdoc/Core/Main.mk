@@ -86,6 +86,7 @@ count-lines         = wc -l "$$F" | sed 's/^\ *\([0-9]*\).*$$/\1/g'
 
 echo-if-true        = $(shell [ $1 ] && echo true)
 key                 = $(shell declare $($1); echo "$$$2")
+get-bin             = $(call key,BIN,$1)
 #key                 = $(shell declare $($1); [ -z "$$$2" ] && ( echo missing $2; exit 1) || (echo $$$2))
 define require-key
 $(if $(call key,$1,$2),,$(error $(shell $(ll) "error" mkdocs "Missing key $2 for $1")))
@@ -107,8 +108,9 @@ count               = $(shell if test -n "$1"; then\
 count-list          = $(shell if test -f "$1"; then\
 					    cat $1|wc -l; else echo 0; fi;)
 f-count-lines       = $(shell F=$1; $(count-lines))
-contains            = for Z in "$1"; do if test "$$Z" = "$2"; then \
+contains-sh         = for Z in $1; do if test "$$Z" = "$2"; then \
 					    echo "$$Z"; fi; done;
+contains            = $(shell $(call contains-sh,$1,$2))
 expand-path         = $(shell echo $1)
 #exists              = $(shell realpath "$1" 2> /dev/null)
 exists              = $(shell [ -e "$1" ] && echo "$1")
@@ -135,31 +137,10 @@ unsafe-paths        = $(shell D="$(call f-sed-escape,$1)";ls "$1"|grep -v '^[\/a
 # mkid: rewrite filename/path to Make/Bash safe variable ID
 mkid                = $(shell echo $1|sed 's/[\/\.,;:_\+-]/_/g')
 # rules: return Rules files for each directory in $1
-rules               = $(shell for D in $1; do \
-                        if test -f "$$(echo $$D/Rules.mk)"; then \
-                          echo $$D/Rules.mk; else \
-                        if test -f "$$(echo $$D/.Rules.mk)"; then \
-						  echo $$D/.Rules.mk; else \
-                        if test -f "$$(echo $$D/Rules.$(HOST).mk)"; then \
-                          echo $$D/Rules.$(HOST).mk; else \
-                        if test -f "$$(echo $$D/.Rules.$(HOST).mk)"; then \
-						  echo $$D/.Rules.$(HOST).mk; fi; fi; fi; fi; done )
-shared-rules        = $(shell for D in $1; do \
-                        if test -f "$$(echo $$D/Rules.shared.mk)"; then \
-                          echo $$D/Rules.shared.mk; else \
-                        if test -f "$$(echo $$D/.Rules.shared.mk)"; then \
-						  echo $$D/.Rules.shared.mk; fi; fi; done )
-def-rules           = $(shell for D in $1; do \
-                        if test -f "$$(echo $$D/Rules.mk)"; then \
-                          echo $$D/Rules.mk; else \
-                        if test -f "$$(echo $$D/.Rules.mk)"; then \
-						  echo $$D/.Rules.mk; else \
-                        if test -f "$$(echo $$D/Rules.$(HOST).mk)"; then \
-                          echo $$D/Rules.$(HOST).mk; else \
-                        if test -f "$$(echo $$D/.Rules.$(HOST).mk)"; then \
-						  echo $$D/.Rules.$(HOST).mk; else \
-						  echo $$D/Rules.mk; fi; fi; fi; fi; done )
-# sub-rules: return ./*/[.]Rules[.host].mk, ie. rules from subdirs
+rules = $(foreach D,$1,\
+	$(wildcard $DRules.mk $D.Rules.mk $DRules.$(HOST).mk $D.Rules.$(HOST).mk))
+shared-rules = $(foreach D,$1,\
+	$(wildcard $DRules.shared.mk $D.Rules.shared.mk))
 sub-rules           = $(foreach V,$1,$(call rules,$V/*))
 f_getpaths          = $(shell F="$1"; $(getpaths))
 zero_exit_test = \

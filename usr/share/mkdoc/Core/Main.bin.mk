@@ -38,7 +38,7 @@ ifneq ($(shell which hg),)
 BIN                 += hg=$(shell which hg)
 endif
 
-$(if $(shell $(call get-bin,hg)),,$(info $(shell \
+$(if $(call get-bin,hg),,$(info $(shell \
 	$(ll) "warning" hg "no Mercurial (hg) available")))
 
 
@@ -49,7 +49,7 @@ ifneq ($(shell which svn),)
 BIN                 += svn=$(shell which svn)
 endif
 
-$(if $(shell $(call get-bin,svn)),,$(info $(shell \
+$(if $(call get-bin,svn),,$(info $(shell \
 	$(ll) "warning" svn "no Subversion (svn) available")))
 
 
@@ -60,7 +60,7 @@ ifneq ($(shell which git),)
 BIN                 += git=$(shell which git)
 endif
 
-$(if $(shell $(call get-bin,git)),,$(info $(shell \
+$(if $(call get-bin,git),,$(info $(shell \
 	$(ll) "warning" git "no GIT available")))
 
 
