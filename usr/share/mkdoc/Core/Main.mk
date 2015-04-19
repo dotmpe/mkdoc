@@ -339,7 +339,7 @@ endef
 #endif
 
 # XXX: old log, deprecated:
-#log_line            = $(ll) "$1" "$2" "$3" "$4"
+log_line            = $(ll) "$1" "$2" "$3" "$4"
 #log-module          = # $1 $2
 #ifneq ($(VERBOSE),)
 #log-module          = $(info $(shell if test -n "$(VERBOSE)"; then \
