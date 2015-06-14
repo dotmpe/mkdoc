@@ -3,6 +3,7 @@ $(eval $(call module-header,Core,$(MK_SHARE)/Core/Rules.movelink.mk,""))
 #      ------------ -- 
 
 
+SRC_PATH            ?= /src/
 
 # Set defaults (set to own values before include)
 RS_LS_$d            ?= $/resources.list
@@ -31,7 +32,7 @@ $(RS_DIR_LS_$d):       $(MK_$d)
 $(RS_DIR_LS_$d): XTR := $(RS_FIND_$d) -type f
 
 $(RS_LS_$d):           $(RS_DIR_LS_$d) $(RS_SRC_LS_$d)
-	@$(log-target-because-from)
+	@$(log-file-target-because-from)
 	@TRGT_E=$$(echo $T | $(sed-escape));\
 		SRC_E=$$(echo $S | $(sed-escape));\
 		cat $L | sed "s/^$$TRGT_E/$$SRC_E/g" | $(filter-paths) | sort -u > $@
@@ -78,7 +79,7 @@ endef
 SRC_PATH            := /src/
 
 $(RS_MK_$d):           $(RS_LS_$d)
-	@$(log-target-because-from)
+	@$(log-file-target-because-from)
 	@$(reset-target)
 	@resources=$$(cat $< | $(filter-paths));\
 	SRCPATH="$(SRC_PATH)/";rl="$${#SRCPATH}";\
@@ -91,7 +92,7 @@ $(RS_MK_$d):           $(RS_LS_$d)
 			&& continue;\
 		if test ! -e "$D$$sub"; then\
 			echo "$D$$sub:: $$res" >> $@;\
-			$(ee) "\t@\$$(log-target-because-from)" >> $@;\
+			$(ee) "\t@\$$(log-file-target-because-from)" >> $@;\
 			$(ee) "\t@\$$(ll) file_target \$$@ from \$$^ " >> $@;\
 			$(ee) "\t@\$$(move-and-link)" >> $@;\
 			$(ee) "\t@\$$(ll) file_ok \$$@ done" >> $@;\

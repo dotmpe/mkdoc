@@ -1,5 +1,5 @@
 # Non-recursive makefile
-# Example of mkdoc usage, see git://github.org/dotmpe/mkdoc
+
 
 
 # CURDIR and MAKEFILE_LIST are GNU Make internals
@@ -15,7 +15,8 @@ ifneq ($(V), )
 VERBOSE             := $(V)
 endif
 
-MK_SHARE            ?= /usr/local/share/mkdoc/
+PREFIX              ?= /usr/local
+MK_SHARE            ?= $(PREFIX)/share/mkdoc/
 #MK_CONF             := /etc/mkdoc/ $(HOME)/.mkdoc/
 MK_BUILD            ?= /var/mkdoc/
 
@@ -27,6 +28,7 @@ BUILD               ?= .build/
 
 # Start keeping present directory
 DIR                 := .
+#DIR                 := $(CURDIR)
 
 #      ------------ -- 
 
@@ -40,6 +42,7 @@ $(info Heads up, running 'make info V=$(VERBOSE)', use lower values for less inf
 endif
 
 include                $(MK_SHARE)Core/Main.mk
+
 ifeq ($(MAKECMDGOALS),info)
 $(info $(shell $(ll) info info "OK loaded $(MK_SHARE)Core/Main.mk"))
 endif

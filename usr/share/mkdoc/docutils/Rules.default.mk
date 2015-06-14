@@ -1,4 +1,4 @@
-$(eval $(call module-header,docutils,$(MK_SHARE)docutils/Rules.default.mk,Docutils default rules))
+$(eval $(call module-header,docutils,$(MK_SHARE)docutils/Rules.default.mk,"Docutils default rules"))
 #
 #      ------------ -- 
 

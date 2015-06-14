@@ -1,4 +1,4 @@
-script: make
+script: make install && make -f Makefile.mkdoc
 
 branches:
   only:

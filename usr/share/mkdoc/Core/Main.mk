@@ -10,140 +10,177 @@
 # Finally, include some standard rules or set these yourself. See:
 # $(MK_SHARE)Core/Rules.default.mk
 
-VPATH              := . /
-SHELL              := /bin/bash
+VPATH               := . /
+SHELL               := /bin/bash
 
 .SUFFIXES:
-.SUFFIXES:         .rst .js .xhtml .mk .tex .pdf .list
+.SUFFIXES:          .rst .js .xhtml .mk .tex .pdf .list
 
-HOST               := $(shell hostname -s | tr 'A-Z' 'a-z')
+PREFIX              ?= /usr/local
+MK_SHARE            ?= $(PREFIX)/share/mkdoc/
+
+HOST                := $(shell hostname -s | tr 'A-Z' 'a-z' | tr '.' '-')
 ifndef ROOT
-ROOT               := $(shell pwd)
+ROOT                := $(shell pwd)
 endif
-OS                 := $(shell uname)
+OS                  := $(shell uname)
 
 
 # global path/file lists
-SRC                :=
-DMK                :=
+SRC                 :=
+DMK                 :=
 #already setMK                 :=
-DEP                :=
-TRGT               :=
-STRGT              :=
-CLN                :=
-TEST               :=
-INSTALL            :=
+DEP                 :=
+TRGT                :=
+STRGT               :=
+CLN                 :=
+TEST                :=
+INSTALL             :=
 
-PENDING            :=
-MISSING            :=
-OFFLINE            :=
+PENDING             :=
+MISSING             :=
+OFFLINE             :=
 
-RES                :=
+RES                 :=
+
+#      ------------ --
 
 
 ### standard targets
 # (append to STRGT) see Rules.default.mk
-STDTRGT            := \
+STDTRGT             := \
 					  all dep dmk test build install clean cleandep
-STDSTAT            := \
+STDSTAT             := \
 					  help stat list lists info
 # descriptions of special targets for build
-DESCRIPTION        := all='build, test and install'
-DESCRIPTION        += dep='generate dependencies'
-DESCRIPTION        += dmk='generate dynamic makefiles'
-DESCRIPTION        += test='TODO: run tests'
-DESCRIPTION        += build='builds all targets'
-DESCRIPTION        += install='TODO (no-op)'
-DESCRIPTION        += clean='delete all targets'
-DESCRIPTION        += cleandep='delete all dynamic makefiles and dependencies'
+DESCRIPTION         := all='build, test and install'
+DESCRIPTION         += dep='generate dependencies'
+DESCRIPTION         += dmk='generate dynamic makefiles'
+DESCRIPTION         += test='TODO: run tests'
+DESCRIPTION         += build='builds all targets'
+DESCRIPTION         += install='TODO (no-op)'
+DESCRIPTION         += clean='delete all targets'
+DESCRIPTION         += cleandep='delete all dynamic makefiles and dependencies'
 
-DESCRIPTION        += help='print this help'
-DESCRIPTION        += stat='assert sources, dynamic makefiles and other dependencies, use LIST to enumerate values for special targets'
-DESCRIPTION        += info='print shell, env data '
+DESCRIPTION         += help='print this help'
+DESCRIPTION         += stat='assert sources, dynamic makefiles and other dependencies'
+DESCRIPTION         += list='print SRC and TRGT lists'
+DESCRIPTION         += lists='print all other lists'
+DESCRIPTION         += info='print other metadata'
 
 
-### Various snippets
 
-# log-line:  1.LINETYPE  2.TARGETS  3.MESSAGE  4.SOURCES
-ll                  = $(MK_SHARE)Core/log.sh
-# see functions
 
-ifeq ($(OS),Darwin)
-ee                  = echo -e
+### Various shellscript snippets
+
+ifeq ("$(OS)","Darwin")
+ee                   = /bin/echo
 else
-ee                  = /bin/echo -e
+ee                   = /bin/echo -e
 endif
-sed-trim            = sed 's/^ *//g' | sed 's/ *$$//g'
+sed-trim             = sed 's/^ *//g' | sed 's/ *$$//g'
 # really limited escape..
-sed-escape          = awk '{gsub("[~/:.]", "\\\\&");print}'
-filter-paths        = grep -v ^\# | grep -v ^\s*$$
-trim-paths          = sed 's/\/\//\//g' | sed 's/\.\///g'
-getpaths            = cat "$$F" | $(filter-paths)
-count-lines         = wc -l "$$F" | sed 's/^\ *\([0-9]*\).*$$/\1/g'
+sed-escape           = awk '{gsub("[~/:.]", "\\\\&");print}'
+filter-paths         = grep -v ^\# | grep -v ^\s*$$
+trim-paths           = sed 's/\/\//\//g' | sed 's/\.\///g'
+getpaths             = cat "$$F" | $(filter-paths)
+
 
 
 ### Functions
 
-echo-if-true        = $(shell [ $1 ] && echo true)
-key                 = $(shell declare $($1); echo "$$$2")
-get-bin             = $(call key,BIN,$1)
-#key                 = $(shell declare $($1); [ -z "$$$2" ] && ( echo missing $2; exit 1) || (echo $$$2))
+echo-if-true         = $(shell [ $1 ] && echo true)
+key                  = $(shell declare $($1); echo "$$$2")
+get-bin              = $(call key,BIN,$1)
+#key                  = $(shell declare $($1); [ -z "$$$2" ] && ( echo missing $2; exit 1) || (echo $$$2))
 define require-key
 $(if $(call key,$1,$2),,$(error $(shell $(ll) "error" mkdocs "Missing key $2 for $1")))
 endef
+last                 = $(word $(words $(1)),$(1))
 # complement: return items from $1 not in $2
-complement          = $(shell \
-					    for X in $1; do \
-					      if test -z "$$(for Z in $2; do if test "$$Z" = "$$X"; \
-					        then echo $$X; fi; done)"; then \
-					        echo "$$X"; fi; done; )
-has-duplicates      = $(filter $(words $1), $(words $(sort $1)))
-paths-exist         = $(filter $(wildcard $1),$1)
-not-exist           = $(call complement,$1,$(call paths-exist,$1))
+complement           = $(shell \
+                         for X in $1; do \
+                           if test -z "$$(for Z in $2; do if test "$$Z" = "$$X"; \
+                             then echo $$X; fi; done)"; then \
+                             echo "$$X"; fi; done; )
+has-duplicates       = $(filter $(words $1), $(words $(sort $1)))
+paths-exist          = $(filter $(wildcard $1),$1)
+not-exist            = $(call complement,$1,$(call paths-exist,$1))
 
-init-dir            = if test ! -d $1; then mkdir -p $1; fi
-init-file           = if test ! -f $1; then mkdir -p $$(dirname $1); touch $1; fi
-count               = $(shell if test -n "$1"; then\
-					    echo $1|wc -w|sed 's/ //g'; else echo 0; fi;)
-count-list          = $(shell if test -f "$1"; then\
-					    cat $1|wc -l; else echo 0; fi;)
-f-count-lines       = $(shell F=$1; $(count-lines))
-contains-sh         = for Z in $1; do if test "$$Z" = "$2"; then \
-					    echo "$$Z"; fi; done;
-contains            = $(shell $(call contains-sh,$1,$2))
-expand-path         = $(shell echo $1)
-#exists              = $(shell realpath "$1" 2> /dev/null)
-exists              = $(shell [ -e "$1" ] && echo "$1")
-is-path             = $(shell if test -e "$1";then echo $1; fi;)
-is-file             = $(shell if test -f "$1";then echo $1; fi;)
-is-dir              = $(shell if test -d "$1";then echo $1; fi;)
-filter-dir          = $(shell for D in $1; do if test -d "$$D"; then \
-                        echo $$D; fi; done)
-filter-file         = $(shell for F in $1; do if test -f "$$F"; then \
-                        echo $$F; fi; done)
-clean-plist         = $(sort $(strip $1))
-newer-than = $(shell for F in $2; do if test $$F -nt $1; then echo $$F newer than $1; fi; done; )
-f-sed-escape          = $(shell echo "$1" | $(sed-escape))
-remove-line         = if test -e "$1"; then LINE=$$(echo $2|$(sed-escape));mv "$1" "$1.tmp";cat "$1.tmp"|sed "s/$$LINE//">"$1";rm $1.tmp; else echo "Error: unknown file $1"; fi
-assert-line         = if test -z "$$(cat $1|grep $2)";then echo "$2" >> $1; fi;
-#parents             = $()
-filter-mount        = $(foreach M,$1,$(if $(shell mount|grep $M),$(shell echo $M)))
-sub-dirs            = $(abspath $(realpath $(shell \
-						for sub in $1/*; do \
-						  if test -d "$$sub"; then \
-						    echo "$$sub"; fi; done)))
-safe-paths          = $(shell D="$(call f-sed-escape,$1)";ls "$1"|grep '^[\/a-zA-Z0-9\+\.,_-]\+$$'|sed "s/^/$$D/g")
-unsafe-paths        = $(shell D="$(call f-sed-escape,$1)";ls "$1"|grep -v '^[\/a-zA-Z0-9\+\.,_-]\+$$'|sed "s/^/$$D/g")
+init-dir             = if test ! -d $1; then mkdir -p $1; fi
+init-file            = if test ! -f $1; then mkdir -p $$(dirname $1); touch $1; fi
+count                = $(shell if test -n "$1"; then\
+                         echo $1|wc -w|sed 's/ //g'; else echo 0; fi;)
+count-list           = $(shell if test -f "$1"; then\
+                         cat $1|wc -l; else echo 0; fi;)
+count-lines          = wc -l "$$F" | sed 's/^\ *\([0-9]*\).*$$/\1/g'
+f-count-lines        = $(shell F=$1; $(count-lines))
+contains-sh          = for Z in "$1"; do if test "$$Z" = "$2"; then \
+                         echo "$$Z"; fi; done;
+contains             = $(shell $(call contains-sh,$1,$2))
+expand-path          = $(shell echo $1)
+#exists               = $(shell realpath "$1" 2> /dev/null)
+exists               = $(shell [ -e "$1" ] && echo "$1")
+is-path              = $(shell if test -e "$1";then echo $1; fi;)
+is-file              = $(shell if test -f "$1";then echo $1; fi;)
+is-dir               = $(shell if test -d "$1";then echo $1; fi;)
+filter-dir           = $(shell for D in $1; do if test -d "$$D"; then \
+                         echo $$D; fi; done)
+filter-file          = $(shell for F in $1; do if test -f "$$F"; then \
+                         echo $$F; fi; done)
+clean-plist          = $(sort $(strip $1))
+newer-than           = $(shell for F in $2; do if test $$F -nt $1; then echo $$F newer than $1; fi; done; )
+f-sed-escape         = $(shell echo "$1" | $(sed-escape))
+remove-line          = if test -e "$1"; then LINE=$$(echo $2|$(sed-escape));mv "$1" "$1.tmp";cat "$1.tmp"|sed "s/$$LINE//">"$1";rm $1.tmp; else echo "Error: unknown file $1"; fi
+assert-line          = if test -z "$$(cat $1|grep $2)";then echo "$2" >> $1; fi;
+filter-mount         = $(foreach M,$1,$(if $(shell mount|grep $M),$(shell echo $M)))
+sub-dirs             = $(abspath $(realpath $(shell \
+                         for sub in $1/*; do \
+                           if test -d "$$sub"; then \
+                             echo "$$sub"; fi; done)))
+safe-paths           = $(shell D="$(call f-sed-escape,$1)";\
+                         ls "$1"|grep '^[\/a-zA-Z0-9\+\.,_-]\+$$'|sed "s/^/$$D/g")
+unsafe-paths         = $(shell D="$(call f-sed-escape,$1)";\
+                         ls "$1"|grep -v '^[\/a-zA-Z0-9\+\.,_-]\+$$'|sed "s/^/$$D/g")
 # mkid: rewrite filename/path to Make/Bash safe variable ID
-mkid                = $(shell echo $1|sed 's/[\/\.,;:_\+-]/_/g')
+mkid                 = $(shell echo $1|sed 's/[\/\.,;:_\+]/_/g')
 # rules: return Rules files for each directory in $1
 rules = $(foreach D,$1,\
 	$(wildcard $DRules.mk $D.Rules.mk $DRules.$(HOST).mk $D.Rules.$(HOST).mk))
 shared-rules = $(foreach D,$1,\
 	$(wildcard $DRules.shared.mk $D.Rules.shared.mk))
-sub-rules           = $(foreach V,$1,$(call rules,$V/*))
-f_getpaths          = $(shell F="$1"; $(getpaths))
-zero_exit_test = \
+sub-rules            = $(foreach V,$1,$(call rules,$V/*))
+f_getpaths           = $(shell F="$1"; $(getpaths))
+
+#parents              = $()
+# rules: return Rules files for each directory in $1
+rules                = $(shell for D in $1; do \
+                         if test -f "$$(echo $$D/Rules.mk)"; then \
+                           echo $$D/Rules.mk; else \
+                         if test -f "$$(echo $$D/.Rules.mk)"; then \
+                           echo $$D/.Rules.mk; else \
+                         if test -f "$$(echo $$D/Rules.$(HOST).mk)"; then \
+                           echo $$D/Rules.$(HOST).mk; else \
+                         if test -f "$$(echo $$D/.Rules.$(HOST).mk)"; then \
+                           echo $$D/.Rules.$(HOST).mk; fi; fi; fi; fi; done )
+shared-rules         = $(shell for D in $1; do \
+                         if test -f "$$(echo $$D/Rules.shared.mk)"; then \
+                           echo $$D/Rules.shared.mk; else \
+                         if test -f "$$(echo $$D/.Rules.shared.mk)"; then \
+                           echo $$D/.Rules.shared.mk; fi; fi; done )
+def-rules            = $(shell for D in $1; do \
+                         if test -f "$$(echo $$D/Rules.mk)"; then \
+                           echo $$D/Rules.mk; else \
+                         if test -f "$$(echo $$D/.Rules.mk)"; then \
+                           echo $$D/.Rules.mk; else \
+                         if test -f "$$(echo $$D/Rules.$(HOST).mk)"; then \
+                           echo $$D/Rules.$(HOST).mk; else \
+                         if test -f "$$(echo $$D/.Rules.$(HOST).mk)"; then \
+                           echo $$D/.Rules.$(HOST).mk; else \
+                           echo $$D/Rules.mk; fi; fi; fi; fi; done )
+# sub-rules: return ./*/[.]Rules[.host].mk, ie. rules from subdirs
+sub-rules            = $(foreach V,$1,$(call rules,$V/*))
+zero_exit_test       = \
 	if test $1 != 0; \
 	then \
 		$(ll) error "$2" "$4"; \
@@ -152,12 +189,78 @@ zero_exit_test = \
 	fi
 
 
+
+# Output, verbosity, ... log?
+
+ll                   = $(MK_SHARE)Core/log.sh
+# log-line:          1.LINETYPE  2.TARGETS  3.MESSAGE  4.SOURCES
+log                  = $(ll) "$1" "$2" "$3" "$4"
+log-module           = # $1 $2
+#log-module           = $(eval $(call vtty,header2,$1,$2,$3))
+#ifneq ($(VERBOSE), )
+log-module           = $(info $(shell if test -n "$(VERBOSE)"; then \
+                         $(ll) header2 $1 $2 $3; fi))
+#endif
+#log-module          = $(info $(shell if test -n "$(VERBOSE)"; then \
+#						$(ll) header2 $1 $2; fi))
+
+# "chatter on tty"
+chatty               =\
+		if test -z "$$VERBOSE"; then VERBOSE=1; fi;\
+		if test $$VERBOSE -ge $1;\
+		then \
+			$(ll) "$2" "$3" "$4" "$5"; \
+		fi
+
+LOG_LEVELS = \
+			 emerg=0 \
+			 alert=1 \
+			 crit=2 \
+			 err=3 \
+			 warn=4 \
+			 note=5 \
+			 info=6 \
+			 debug=7 \
+			 \
+			 error=3 \
+			 notice=5 \
+			 header=6 \
+			 header2=6 \
+			 OK=6
+
+define vtty
+$(call require-key,LOG_LEVELS,$1)
+$(eval $(if \
+	$(call echo-if-true,$(VERBOSE) -ge $(call key,LOG_LEVELS,$1)),\
+	$(info $(shell $(ll) "$1" "$2" "$3" "$4"))))
+endef
+
+chat                = $(eval $(call vtty,$1,$2,$3,$4))
+
+
+# Output a header upon loading include
+# Args: headername, filename, description
+define module-header
+MK += $2
+$(call log-module,$1,$3,$2)
+endef
+
+# Like module-header but before header increment dirstack too
+# Args: fromdir, subdir, description
+define dir-header
+include                $(MK_SHARE)Core/Main.dirstack.mk
+MK_$d               := $1/$2
+$(eval $(call module-header,,$/$2,$3))
+endef
+
+
+
 ### Canned
-init-target         = $(call init-file,$@)
-mk-target-dir       = if test ! -d $(@D); then mkdir -p $(@D); fi;
+init-target          = $(call init-file,$@)
+mk-target-dir        = if test ! -d $(@D); then mkdir -p $(@D); fi;
 #XXX: this looks at far to many places, overriding others and forcing duplication?
 # but content is generated per definition anyway
-kwds-file           = if test -f "$(KWDS_./$(<D))"; then \
+kwds-file            = if test -f "$(KWDS_./$(<D))"; then \
 						  echo $(KWDS_./$(<D)); \
 						else if test -f "$(KWDS_./$(@D))"; then \
 						  echo $(KWDS_./$(@D)); \
@@ -181,11 +284,12 @@ define reset-target
 	touch $@;
 endef
 
-info-target-type = $(ll) info "$@" "`file -bs $@`"
-info-target-chars = $(ll) info "$@" "`cat $@|wc -m` chars"
-info-target-lines = $(ll) info "$@" "`cat $@|wc -l` lines"
-info-text-stat = $(ll) info "$@" "`cat $@|wc -l` lines, `cat $@|wc -m` chars, `file -bs $@` formatted"
-info-bin-stat = $(ll) info "$@" "`cat $@|wc -c` bytes, `file -bs $@` format"
+
+info-target-type     = $(ll) info "$@" "`file -bs $@`"
+info-target-chars    = $(ll) info "$@" "`cat $@|wc -m` chars"
+info-target-lines    = $(ll) info "$@" "`cat $@|wc -l` lines"
+info-text-stat       = $(ll) info "$@" "`cat $@|wc -l` lines, `cat $@|wc -m` chars, `file -bs $@` formatted"
+info-bin-stat        = $(ll) info "$@" "`cat $@|wc -c` bytes, `file -bs $@` format"
 
 define mk-include
 	$(reset-target)
@@ -282,55 +386,7 @@ define build-res-index
 		$(ll) file_ok "$@" "New index"; fi
 endef
 
-# "chatter on tty"
-chatty =\
-		if test -z "$$VERBOSE"; then VERBOSE=1; fi;\
-		if test $$VERBOSE -ge $1;\
-		then \
-			$(ll) "$2" "$3" "$4" "$5"; \
-		fi
 
-LOG_LEVELS = \
-			 emerg=0 \
-			 alert=1 \
-			 crit=2 \
-			 err=3 \
-			 warn=4 \
-			 note=5 \
-			 info=6 \
-			 debug=7 \
-			 \
-			 error=3 \
-			 notice=5 \
-			 header=6 \
-			 header2=6 \
-			 OK=6
-
-define vtty
-$(call require-key,LOG_LEVELS,$1)
-$(eval $(if \
-	$(call echo-if-true,$(VERBOSE) -ge $(call key,LOG_LEVELS,$1)),\
-	$(info $(shell $(ll) "$1" "$2" "$3" "$4"))))
-endef
-chat                = $(eval $(call vtty,$1,$2,$3,$4))
-log                 = $(ll) "$1" "$2" "$3" "$4"
-log-module          = $(eval $(call vtty,header2,$1,$2,$3))
-last                = $(word $(words $(1)),$(1))
-
-# Output a header upon loading include
-# Args: headername, filename, description
-define module-header
-MK += $2
-$(call log-module,$1,$3 = $(call last,$(MK)))
-endef
-
-# Like module-header but before header increment dirstack too
-# Args: fromdir, subdir, description
-define dir-header
-include                $(MK_SHARE)Core/Main.dirstack.mk
-MK_$d               := $1/$2
-$(eval $(call module-header,,$/$2,$3))
-endef
 
 #ifneq ($(VERBOSE), )
 #$(info $(shell $(ll) "info" "OS" "on "$(OS)))
@@ -338,15 +394,10 @@ endef
 #$(info $(shell $(ll) "info" "ROOT" "from '"$(ROOT)"'"))
 #endif
 
-# XXX: old log, deprecated:
-log_line            = $(ll) "$1" "$2" "$3" "$4"
-#log-module          = # $1 $2
-#ifneq ($(VERBOSE),)
-#log-module          = $(info $(shell if test -n "$(VERBOSE)"; then \
-#						$(ll) header2 $1 $2; fi))
 
 
-test-python =\
+
+test-python          =\
 	 if test -n "$(shell which python)"; then \
 		$(ll) info "$$TEST_PY" "Testing Python sources.."; \
 		\
