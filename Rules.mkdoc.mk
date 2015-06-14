@@ -30,12 +30,12 @@ MK_SHARE            := /usr/local/share/mkdoc/
 INSTALL             += $(MK_SHARE)
 
 $(MK_SHARE):
-	cp -r usr/share/mkdoc/ $@
+	sudo cp -r usr/share/mkdoc/ $@
 
 
 # Provide uninstall too
 
 STRGT += uninstall
 uninstall::
-	rm -rf $(MK_SHARE)
+	sudo rm -rf $(MK_SHARE)
 
