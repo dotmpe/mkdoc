@@ -305,6 +305,7 @@ define build-res-index
 		$(ll) file_ok "$@" "New index"; fi
 endef
 
+# "chatter on tty"
 chatty               =\
 		if test -z "$$VERBOSE"; then VERBOSE=1; fi;\
 		if test $$VERBOSE -ge $1;\
@@ -312,6 +313,29 @@ chatty               =\
 			$(ll) "$2" "$3" "$4" "$5"; \
 		fi
 
+LOG_LEVELS = \
+			 emerg=0 \
+			 alert=1 \
+			 crit=2 \
+			 err=3 \
+			 warn=4 \
+			 note=5 \
+			 info=6 \
+			 debug=7 \
+			 \
+			 error=3 \
+			 notice=5 \
+			 header=6 \
+			 header2=6 \
+			 OK=6
+
+define vtty
+$(call require-key,LOG_LEVELS,$1)
+$(eval $(if \
+	$(call echo-if-true,$(VERBOSE) -ge $(call key,LOG_LEVELS,$1)),\
+	$(info $(shell $(ll) "$1" "$2" "$3" "$4"))))
+endef
+chat                = $(eval $(call vtty,$1,$2,$3,$4))
 
 test-python          =\
 	 if test -n "$(shell which python)"; then \
@@ -330,7 +354,7 @@ test-python          =\
 			fi;\
 		fi; \
 		if test -z "$$RUN"; then \
-			$(call chatty,1,warning,$@,Coverage for python not available); \
+			$(call chatty,1,warn,$@,Coverage for python not available); \
 			RUN=python;\
 		fi; \
 		$(call chatty,2,attention,$$,$$RUN,$$TEST_PY);\
@@ -348,9 +372,13 @@ test-python          =\
 	fi
 
 
+log-special-target-because-from = \
+	$(ll) attention "$@" because "$?";\
+	$(ll) attention "$@" from "$^"
+
 log-target-because-from = \
 	$(ll) file_target "$@" because "$?";\
-	$(ll) file_target "$@" from "$^";
+	$(ll) file_target "$@" from "$^"
 
 default:
 

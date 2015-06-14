@@ -35,7 +35,8 @@ endif
 # FIXME: fail if any of the above do not exist..
 
 ifeq ($(shell which $(rst-html)),)
-$(error Missing Docutils\' \$(rst-html): $(rst-html))
+#$(error Missing Docutils\' \$(rst-html): $(rst-html))
+$(info Warning: Missing Docutils\' \$(rst-html): $(rst-html))
 endif
 
 list-references   = $(rst-xml) $1 | xsltproc --novalid $(MK_SHARE)docutils/refuri-dep.xslt -
