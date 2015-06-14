@@ -133,8 +133,9 @@ sub-dirs             = $(abspath $(realpath $(shell \
                              echo "$$sub"; fi; done)))
 safe-paths           = $(shell D="$(call f-sed-escape,$1)";\
                          ls "$1"|grep '^[\/a-zA-Z0-9\+\.,_-]\+$$'|sed "s/^/$$D/g")
-unsafe-paths         = $(shell D="$(call f-sed-escape,$1)";
+unsafe-paths         = $(shell D="$(call f-sed-escape,$1)";\
                          ls "$1"|grep -v '^[\/a-zA-Z0-9\+\.,_-]\+$$'|sed "s/^/$$D/g")
+
 # mkid: rewrite filename/path to Make/Bash safe variable ID
 mkid                 = $(shell echo $1|sed 's/[\/\.,;:_\+]/_/g')
 # rules: return Rules files for each directory in $1
