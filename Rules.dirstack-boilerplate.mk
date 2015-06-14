@@ -14,6 +14,11 @@ MK                  += $(MK_$d)
 # CLN += $/tmpfile
 # TEST += $/testtarget
 
+
+STRGT += example
+example::
+	@$(log-file-target-because-from)
+
 #      ------------ -- 
 #
 include                $(MK_SHARE)Core/Main.dirstack-pop.mk

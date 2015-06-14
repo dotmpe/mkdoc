@@ -2,7 +2,7 @@
 
 
 BUILD               := .build/
-DIR                 := $(CURDIR)
+DIR                 := .
 
 
 # CURDIR and MAKEFILE_LIST are GNU Make internals
@@ -12,10 +12,16 @@ location             = $(CURDIR)/$(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIS
 MK                  := $(location)
 #MK                  += $(DIR)/Makefile
 
-PREFIX             ?= /usr/local
+# Set level to warning and above
+VERBOSE             ?= 4
+ifneq ($(V), )
+VERBOSE             := $(V)
+endif
+
+PREFIX             ?= $(CURDIR)/usr/
 MK_SHARE           ?= $(PREFIX)/share/mkdoc/
 
-ifneq ($(VERBOSE), )
+ifneq ($(DEBUG), )
 $(info mkdocs:DIR=$(DIR))
 $(info mkdocs:BUILD=$(BUILD))
 $(info mkdocs:MK_SHARE=$(MK_SHARE))
@@ -25,7 +31,10 @@ endif
 
 include                $(MK_SHARE)Core/Main.mk
 
-$(call chat,header,mkdoc,Core script loaded, reading shares)
+$(call chat,header2,mkdoc,BUILD=$(BUILD))
+
+
+$(call chat,header,mkdoc,"Core script loaded, reading shares")
 
 include                \
                        $(MK_SHARE)docutils/Main.mk \
@@ -50,9 +59,7 @@ include                \
 
 #      ------------ -- 
 
-ifneq ($(VERBOSE), )
-$(info $(shell $(ll) header "mkdoc" "Reading local rules" ))
-endif
+$(call chat,header,mkdoc,Reading local rules)
 
 # Include specific rules and set SRC, DEP, TRGT and CLN variables.
 #

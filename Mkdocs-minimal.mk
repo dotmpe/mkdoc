@@ -2,12 +2,18 @@
 
 
 BUILD               := .build/
-DIR                 := $(CURDIR)
+DIR                 := .
 
-PREFIX             ?= /usr/local
+# Set level to warning and above
+VERBOSE             ?= 4
+ifneq ($(V), )
+VERBOSE             := $(V)
+endif
+
+PREFIX             ?= $(CURDIR)/usr/
 MK_SHARE           ?= $(PREFIX)/share/mkdoc/
 
-ifneq ($(VERBOSE), )
+ifneq ($(DEBUG), )
 $(info mkdocs:DIR=$(DIR))
 $(info mkdocs:BUILD=$(BUILD))
 $(info mkdocs:MK_SHARE=$(MK_SHARE))
@@ -17,9 +23,7 @@ endif
 
 include                $(MK_SHARE)Core/Main.mk
 
-$(call chat,header,mkdoc,Core script loaded)
-
-#      ------------ -- 
+$(call chat,header,mkdoc,"Core script loaded, reading shares")
 
 #include                \
                        $(MK_SHARE)<package_name>/Main.mk \

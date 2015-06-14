@@ -35,8 +35,10 @@ $(MK_SHARE):
 
 # Provide uninstall too
 
-STRGT += uninstall
+STRGT += uninstall reinstall
 uninstall::
 	P=$$(dirname $(MK_SHARE))/$$(basename $(MK_SHARE)); \
 	[ "$P" != "/" ] && sudo rm -rfv $$P
+
+reinstall:: uninstall install
 

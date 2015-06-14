@@ -1,4 +1,7 @@
-MK                 += $(MK_SHARE)Core/Rules.default.mk
+$(eval $(call module-header,Core,$(MK_SHARE)Core/Rules.default.mk,"Default rules"))
+#
+#      ------------ -- 
+
 
 default:              stat
 
@@ -15,7 +18,7 @@ help::
 	@$(ee) 
 	@# See STRGT and DESCRIPTION vars, STD (STDTARGT or STDSTAT) without DESCRIPTION is not printed
 	@declare $(DESCRIPTION);\
-	$(ll) header $@     "$$PROJECT project Makefile";\
+	$(ll) header $@     "$(PROJECT) Makefile";\
 	$(ee) "" ;\
 	for strgt in $(STDTRGT);\
 	do\
@@ -42,12 +45,12 @@ help::
 		$(ll) header $@     "Other special targets";\
 		for strgt in $(call complement,$(STRGT),$(STD));\
 		do\
-			V=$$strgt;\
-			$(ll) header2 $$strgt "$${!V}";\
+			strgt_id=$$(echo $$strgt|sed 's/[\/\.,;:_\+-]/_/g');\
+			$(ll) header2 $$strgt "$${!strgt_id}";\
 		done;\
 		$(ee);\
 	fi;
-	@$(ll) OK $@ 
+	@$(ee);$(ll) info $@ End
 
 examples::
 	@$(ee)
@@ -72,31 +75,34 @@ examples::
 
 info::
 	@$(ll) header $@ "Package Info"
-	@$(ll) header2 Root     "" $(ROOT)
-	@$(ll) header2 MkDoc    "" $(MK_ROOT)
-	@$(ll) header2 Package  "" $(PACK)
-	@$(ll) header2 Homepage "" $(PACK_HREF)
-	@$(ll) header2 Revision "" $(PACK_REV)
-	@$(ll) header2 Version  "" $(PACK_V)
-	@$(ll) header2 Release  "" $(TAG)
+	@$(ll) header2 Root     "$(ROOT)" "$(origin ROOT)"
+	@$(ll) header2 MkDoc    "$(MK_ROOT)" "$(origin MK_ROOT)"
+	@$(ll) header2 Project  "$(PROJECT)" "$(origin PROJECT)"
+	@$(ll) header2 Release  "$(TAG)" "$(origin TAG)"
+	@$(ll) header3 CS "$(CS)" "$(origin CS)"
+	@$(ll) header3 VPATH "$(VPATH)" "$(origin VPATH)"
+	@$(ll) header3 SHELL "$(SHELL)" "$(origin SHELL)"
+	@$(ll) header3 HOST "$(HOST)" "$(origin HOST)"
+	@$(ll) header3 OS "$(OS)" "$(origin OS)"
+	@$(ll) header3 VERBOSE "$(VERBOSE)" "$(origin VERBOSE)"
 	@$(ll) OK $@ 
 
 list::
-	@$(ee) 
+	@$(ee)
 	@$(ll) header2 Sources                  "" "$(strip $(SRC))"
 	@#$(ll) header2 Sources  "$(shell echo $(SRC)|sort -u)"
 	@$(ll) header2 "Build Targets"          "" '$(strip $(TRGT))'
 	@$(ll) header2 "Special Targets"        "" '$(strip $(STRGT))'
 
 # TODO use similar scheme as DESCRIPTION
-DESC_SRC  = Paths to build targets from  
-DESC_TRGT = Paths to build from source 
-DESC_TEST =  
+DESC_SRC  = Paths to build targets from
+DESC_TRGT = Paths to build from source
+DESC_TEST =
 DESC_MK   = List of loaded Makefiles
 DESC_DMK  = List of (to be) generated Makefiles
-DESC_DEP  = Paths needed to build targets 
-DESC_CLN  = Paths that will be removed on next `make clean`  
-DESC_RES  =   
+DESC_DEP  = Paths needed to build targets
+DESC_CLN  = Paths that will be removed on next `make clean`
+DESC_RES  =
 
 lists::
 	@$(ll) header $@ "Printing all prerequisite lists."
@@ -166,8 +172,11 @@ stat:: dmk
 		$(call log,header3,Dependencies,$(call count,$(DEP)));\
 		$(call log,header3,Dynamic makefiles,$(call count,$(DMK)));\
 		$(call log,header3,Cleanable,$(call count,$(CLN)));\
-		$(call log,header3,Builds,$(call count,$(DMK)));\
+		$(call log,header3,Targets,$(call count,$(TRGT)));\
+		$(call log,header3,Special Targets,$(call count,$(STRGT)));\
+		$(call log,header3,Special Targets,$(STRGT));\
 		$(call log,header3,Tests,$(call count,$(TEST)));\
+		$(call log,header3,Resources,$(call count,$(RES)));\
 		echo;\
 	fi
 	@if test -n "$(wildcard $(strip $(CLN)))"; then \
@@ -201,9 +210,10 @@ push::
 test:: $(TEST)
 	$(call mk_ok_s,"tested")
 
+clean:: F := v
 clean::
 	@$(ll) warning $@ cleaning "$(CLN)"
-	@-rm -f $(CLN);\
+	@-rm -$(F) $(CLN);\
 	 if test $$? -gt 0; then $(echo) ""; fi; # put xtra line if err-msgs
 	@$(call log,Done,$@,$(call count,$(CLN)) targets)
 

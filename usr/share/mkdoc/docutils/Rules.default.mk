@@ -40,13 +40,13 @@ $(BUILD)%.include.mk:  $/%.rst
 
 # FIXME
 #$(BUILD)/%.xhtml:	           %.rst
-#	@$(log-target-because-from)
+#	@$(log-file-target-because-from)
 #	@$(rst-to-xhtml)
 #	@$(info-text-stat)
 #	@$(ll) file_ok "$@" Done
 
 $(BUILD)/%,du.xhtml:	           %.rst
-	@$(log-target-because-from)
+	@$(log-file-target-because-from)
 	@$(reset-target)
 	@$(rst-to-xhtml)
 	@$(info-text-stat)
@@ -54,14 +54,14 @@ $(BUILD)/%,du.xhtml:	           %.rst
 
 
 %,du.xml:              %.rst
-	@$(log-target-because-from)
+	@$(log-file-target-because-from)
 	@$(reset-target)
 	@T=$$(realpath $@);cd $(<D);$(rst-xml) $(<F) $$T
 	@$(info-text-stat)
 	@$(ll) file_ok "$@" Done
 
 $B%,du.xml:            $/%.rst
-	@$(log-target-because-from)
+	@$(log-file-target-because-from)
 	@$(reset-target)
 	@T=$$(realpath $@);cd $(<D);$(rst-xml) $(<F) $$T
 	@$(info-text-stat)
@@ -75,14 +75,14 @@ $B%,du.xml:            $/%.rst
 #	@$(ll) file_ok "$@" Done
 
 $(BUILD)%,du.latex:    $/%.rst
-	@$(log-target-because-from)
+	@$(log-file-target-because-from)
 	@$(reset-target)
 	@$(rst-to-latex)
 	@$(info-text-stat)
 	@$(ll) file_ok "$@" Done
 
 $(BUILD)%,du.odt:      $/%.rst
-	@$(log-target-because-from)
+	@$(log-file-target-because-from)
 	@$(reset-target)
 	@T=$$(realpath $@);cd $(<D);$(rst-odt) $(<F) $$T
 	@$(info-bin-stat)
@@ -92,7 +92,7 @@ $(BUILD)%,du.odt:      $/%.rst
 $B%,du.pxml:           $/%.rst
 	@$(ll) file_target "$@" because "$?"
 	@$(reset-target)
-	@$(log-target-because-from)
+	@$(log-file-target-because-from)
 	@$(rst-to-pseudoxml)
 	@$(info-text-stat)
 	@$(ll) file_ok "$@" Done

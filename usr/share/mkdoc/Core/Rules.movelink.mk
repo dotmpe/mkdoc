@@ -27,7 +27,7 @@ $(RS_DIR_LS_$d):       $(MK_$d)
 $(RS_DIR_LS_$d): XTR := $(RS_FIND_$d) -type f
 
 $(RS_LS_$d):           $(RS_DIR_LS_$d) $(RS_SRC_LS_$d)
-	@$(log-target-because-from)
+	@$(log-file-target-because-from)
 	@TRGT_E=$$(echo $T | $(sed-escape));\
 		SRC_E=$$(echo $S | $(sed-escape));\
 		cat $L | sed "s/^$$TRGT_E/$$SRC_E/g" | $(filter-paths) | sort -u > $@
@@ -72,7 +72,7 @@ define move-and-link
 endef
 
 $(RS_MK_$d):           $(RS_LS_$d)
-	@$(log-target-because-from)
+	@$(log-file-target-because-from)
 	@$(reset-target)
 	@resources=$$(cat $< | $(filter-paths));\
 	SRCPATH="$(SRC_PATH)/";rl="$${#SRCPATH}";\
@@ -85,7 +85,7 @@ $(RS_MK_$d):           $(RS_LS_$d)
 			&& continue;\
 		if test ! -e "$D$$sub"; then\
 			echo "$D$$sub:: $$res" >> $@;\
-			echo -e "\t@\$$(log-target-because-from)" >> $@;\
+			echo -e "\t@\$$(log-file-target-because-from)" >> $@;\
 			echo -e "\t@\$$(ll) file_target \$$@ from \$$^ " >> $@;\
 			echo -e "\t@\$$(move-and-link)" >> $@;\
 			echo -e "\t@\$$(ll) file_ok \$$@ done" >> $@;\
