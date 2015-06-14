@@ -24,9 +24,8 @@ endif
 #      ------------ -- 
 
 include                $(MK_SHARE)Core/Main.mk
-ifneq ($(VERBOSE), )
-$(info $(shell $(ll) header "mkdoc" "Core script loaded, reading shares" ))
-endif
+
+$(call chat,header,mkdoc,Core script loaded, reading shares)
 
 include                \
                        $(MK_SHARE)docutils/Main.mk \
@@ -39,11 +38,8 @@ include                \
 
 MK                  += $(DIR)/Makefile
 
-ifneq ($(VERBOSE), )
-$(info $(shell $(ll) header "mkdoc" "Reading shared default rules" ))
-endif
+$(call chat,header,mkdoc,Reading default rules from packages)
 
-#
 include                \
                        $(MK_SHARE)bookmarklet/Rules.default.mk \
                        $(MK_SHARE)graphviz/Rules.mk \
@@ -64,9 +60,7 @@ include                $(call rules,$(DIR)/)
 
 #      ------------ -- 
 
-ifneq ($(VERBOSE), )
-$(info $(shell $(ll) header "mkdoc" "Reading standard rules" ))
-endif
+$(call chat,header,mkdoc,Reading standard rules)
 
 # Now set some standard targets
 #
@@ -74,5 +68,8 @@ include                $(MK_SHARE)Core/Rules.default.mk
 
 #      ------------ -- 
 
-$(info $(shell $(ll) OK "mkdoc" "starting 'make $(MAKECMDGOALS)'.." ))
+$(call chat,debug,mkdoc)
+$(call chat,OK,mkdoc,starting 'make $(MAKECMDGOALS)')
+$(call chat,debug,mkdoc)
+
 # vim:ft=make:

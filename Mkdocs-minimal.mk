@@ -16,9 +16,10 @@ endif
 #      ------------ -- 
 
 include                $(MK_SHARE)Core/Main.mk
-ifneq ($(VERBOSE), )
-$(info $(shell $(ll) header "mkdoc" "Core script loaded, reading shares" ))
-endif
+
+$(call chat,header,mkdoc,Core script loaded)
+
+#      ------------ -- 
 
 #include                \
                        $(MK_SHARE)<package_name>/Main.mk \
@@ -27,18 +28,17 @@ endif
 
 MK                  += $(DIR)/Makefile
 
-ifneq ($(VERBOSE), )
-$(info $(shell $(ll) header "mkdoc" "Reading shared default rules" ))
-endif
+$(call chat,header,mkdoc,Reading default rules from packages)
 
 #include                \
                        $(MK_SHARE)<package_name>/Rules.default.mk \
 
+$(call chat,debug,mkdoc,Done loading packages rules files)
+$(call chat,debug,mkdoc)
+
 #      ------------ -- 
 
-ifneq ($(VERBOSE), )
-$(info $(shell $(ll) header "mkdoc" "Reading local rules" ))
-endif
+$(call chat,header,mkdoc,Reading local rules)
 
 # Include specific rules and set SRC, DEP, TRGT and CLN variables.
 #
@@ -46,9 +46,7 @@ include                $(call rules,$(DIR)/)
 
 #      ------------ -- 
 
-ifneq ($(VERBOSE), )
-$(info $(shell $(ll) header "mkdoc" "Reading standard rules" ))
-endif
+$(call chat,header,mkdoc,Reading standard rules)
 
 # Now set some standard targets
 #
@@ -56,5 +54,8 @@ include                $(MK_SHARE)Core/Rules.default.mk
 
 #      ------------ -- 
 
-$(info $(shell $(ll) OK "mkdoc" "starting 'make $(MAKECMDGOALS)'.." ))
+$(call chat,debug,mkdoc)
+$(call chat,OK,mkdoc,starting 'make $(MAKECMDGOALS)')
+$(call chat,debug,mkdoc)
+
 # vim:ft=make:
