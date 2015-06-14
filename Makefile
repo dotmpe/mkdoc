@@ -1,14 +1,25 @@
+
 BUILD               := .build/
 DIR                 := $(CURDIR)
-BASE                := $(shell cd $(DIR);pwd)
 
-HOST                := $(shell hostname|tr '.' '-')
+HOST                := $(shell hostname -s | tr 'A-Z' 'a-z' | tr '.' '-')
 ENV                 ?= development
 
 #ID                  := mkdoc/0.0.1-master
 PROJECT             := mkdoc
 VERSION             := 0.0.1-master# mkdoc
 
+
+# CURDIR and MAKEFILE_LIST are GNU Make internals
+location             = $(CURDIR)/$(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))
+
+# Global list of all makefiles
+MK                  := $(location)
+#MK                  += $(DIR)/Makefile
+
+BASE                := $(shell cd $(DIR);pwd)
+relative = $(patsubst $(BASE)%,$(PROJECT):%,$1)
+where-am-i = $(call relative,$(lastword $(MAKEFILE_LIST)))
 
 # BSD weirdness
 echo = /bin/echo
@@ -50,8 +61,6 @@ CLN                :=
 TEST               :=
 INSTALL            :=
 
-relative = $(patsubst $(BASE)%,$(PROJECT):%,$1)
-where-am-i = $(call relative,$(lastword $(MAKEFILE_LIST)))
 
 # rules: return Rules files for each directory in $1
 rules = $(foreach D,$1,\

@@ -1,10 +1,8 @@
 # Non-recursive makefile
-# Example of mkdoc usage, see git://github.org/dotmpe/mkdoc
 
-DOMAIN              := mpe
 
 BUILD               := .build/
-DIR                 := .
+DIR                 := $(CURDIR)
 
 PREFIX             ?= /usr/local
 MK_SHARE           ?= $(PREFIX)/share/mkdoc/
@@ -46,12 +44,17 @@ endif
 #
 include                $(call rules,$(DIR)/) 
 
-# Now at last set standard targets and prerequisites
+#      ------------ -- 
+
+ifneq ($(VERBOSE), )
+$(info $(shell $(ll) header "mkdoc" "Reading standard rules" ))
+endif
+
+# Now set some standard targets
 #
 include                $(MK_SHARE)Core/Rules.default.mk
 
 #      ------------ -- 
 
 $(info $(shell $(ll) OK "mkdoc" "starting 'make $(MAKECMDGOALS)'.." ))
-
 # vim:ft=make:

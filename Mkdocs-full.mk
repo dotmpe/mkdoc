@@ -1,10 +1,16 @@
 # Non-recursive makefile
-# Example of mkdoc usage, see git://github.org/dotmpe/mkdoc
 
-DOMAIN              := mpe
 
 BUILD               := .build/
-DIR                 := .
+DIR                 := $(CURDIR)
+
+
+# CURDIR and MAKEFILE_LIST are GNU Make internals
+location             = $(CURDIR)/$(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))
+
+# Global list of all makefiles
+MK                  := $(location)
+#MK                  += $(DIR)/Makefile
 
 PREFIX             ?= /usr/local
 MK_SHARE           ?= $(PREFIX)/share/mkdoc/
