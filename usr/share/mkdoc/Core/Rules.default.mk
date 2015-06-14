@@ -18,7 +18,7 @@ help::
 	@$(ee) 
 	@# See STRGT and DESCRIPTION vars, STD (STDTARGT or STDSTAT) without DESCRIPTION is not printed
 	@declare $(DESCRIPTION);\
-	$(ll) header $@     "$(PACKAGE) Makefile";\
+	$(ll) header $@     "$(PROJECT) Makefile";\
 	$(ee) "" ;\
 	for strgt in $(STDTRGT);\
 	do\
@@ -77,12 +77,7 @@ info::
 	@$(ll) header $@ "Package Info"
 	@$(ll) header2 Root     "" $(ROOT)
 	@$(ll) header2 MkDoc    "" $(MK_SHARE)
-	@$(ll) header2 Package  "" "$(PACKAGE)"
-	@$(ll) header2 Project  "" "$$PROJECT"
-	@$(ll) header2 Pack     "" "$(PACK)"
-	@$(ll) header2 Homepage "" $(PACK_HREF)
-	@$(ll) header2 Revision "" $(PACK_REV)
-	@$(ll) header2 Version  "" $(PACK_V)
+	@$(ll) header2 Project  "" "$(PROJECT)"
 	@$(ll) header2 Release  "" $(TAG)
 	@$(ll) header3 CS "$(CS)" "$(origin CS)"
 	@$(ll) header3 VPATH "$(VPATH)" "$(origin VPATH)"
@@ -236,6 +231,6 @@ cleandep::
 #	@$(echo) -e " $(mk_ok)  $(c2)nothing to install.$(c0)"
 
 all:: build test install
-	$(call log,Done,$@,"built, tested and installed")
+	@$(ll) Done $@ 'built, tested and installed'
 
 

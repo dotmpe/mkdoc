@@ -15,16 +15,15 @@ ifneq ($(V), )
 VERBOSE             := $(V)
 endif
 
-MK_SHARE            := /usr/local/share/mkdoc/
+MK_SHARE            ?= /usr/local/share/mkdoc/
 #MK_CONF             := /etc/mkdoc/ $(HOME)/.mkdoc/
-MK_BUILD            := /var/mkdoc/
+MK_BUILD            ?= /var/mkdoc/
 
-PACK                := mkdocs.full
-
-DOMAIN              := mpe
+PROJECT             := mkdoc
+DOMAIN              ?= mpe
 
 # fixme: rewrite to MK_BUILD
-BUILD               := .build/
+BUILD               ?= .build/
 
 # Start keeping present directory
 DIR                 := .
