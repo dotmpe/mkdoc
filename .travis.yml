@@ -1,4 +1,4 @@
-script: make install && make -f Makefile.mkdoc
+script: make install && CS=dark PREFIX=/usr/local make -f Makefile.mkdoc
 
 branches:
   only:
