@@ -15,7 +15,7 @@ ifneq ($(V), )
 VERBOSE             := $(V)
 endif
 
-PREFIX              ?= /usr/local
+PREFIX              ?= $(CURDIR)/usr/
 MK_SHARE            ?= $(PREFIX)/share/mkdoc/
 #MK_CONF             := /etc/mkdoc/ $(HOME)/.mkdoc/
 MK_BUILD            ?= /var/mkdoc/
