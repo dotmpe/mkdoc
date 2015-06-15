@@ -1,5 +1,5 @@
 
-# Id: mkdoc/0.0.1-master Makefile
+# Id: mkdoc/0.0.1 Makefile
 
 BUILD               := .build/
 DIR                 := $(CURDIR)
@@ -9,7 +9,7 @@ ENV                 ?= $(shell [ -n "$$ENV" ] && echo $$ENV || echo development)
 
 #ID                  := mkdoc/0.0.1-master
 PROJECT             := mkdoc
-VERSION             := 0.0.1-master# mkdoc
+VERSION             := 0.0.1# mkdoc
 
 
 # CURDIR and MAKEFILE_LIST are GNU Make internals
@@ -68,6 +68,7 @@ INSTALL            :=
 rules = $(foreach D,$1,\
 	$(wildcard \
 		$DRules.mk $D.Rules.mk \
+		$DRules.*.shared.mk \
 		$DRules.$(PROJECT).mk $D.Rules.$(PROJECT).mk \
 		$DRules.$(HOST).mk $D.Rules.$(HOST).mk))
 

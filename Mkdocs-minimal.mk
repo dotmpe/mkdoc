@@ -1,6 +1,6 @@
 # Non-recursive makefile
 
-# Id: mkdoc/0.0.1-master Mkdocs-minimal.mk
+# Id: mkdoc/0.0.1 Mkdocs-minimal.mk
 
 
 # CURDIR and MAKEFILE_LIST are GNU Make internals
