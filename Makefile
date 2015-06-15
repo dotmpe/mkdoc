@@ -1,9 +1,11 @@
 
+# Id: mkdoc/0.0.1-master Makefile
+
 BUILD               := .build/
 DIR                 := $(CURDIR)
 
 HOST                := $(shell hostname -s | tr 'A-Z' 'a-z' | tr '.' '-')
-ENV                 ?= development
+ENV                 ?= $(shell [ -n "$$ENV" ] && echo $$ENV || echo development)
 
 #ID                  := mkdoc/0.0.1-master
 PROJECT             := mkdoc

@@ -1,5 +1,7 @@
 # Non-recursive makefile
 
+# Id: mkdoc/0.0.1-master Mkdocs-minimal.mk
+
 
 # CURDIR and MAKEFILE_LIST are GNU Make internals
 location             = $(CURDIR)/$(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))

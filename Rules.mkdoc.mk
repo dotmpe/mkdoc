@@ -37,6 +37,8 @@ $(MK_SHARE):
 
 STRGT += uninstall
 uninstall::
+	test -n "$(MK_SHARE)"
+	test -e "$(MK_SHARE)"
 	P=$$(dirname $(MK_SHARE))/$$(basename $(MK_SHARE)); \
 	[ "$P" != "/" ] && sudo rm -rfv $$P
 

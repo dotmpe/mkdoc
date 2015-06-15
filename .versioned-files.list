@@ -1,0 +1,7 @@
+README.rst
+Makefile
+Mkdocs-full.mk
+Mkdocs-minimal.mk
+Rules.dirstack-boilerplate.mk
+Rules.mkdoc.mk
+Rules.mkdoc.shared.mk

@@ -1,5 +1,6 @@
 
 ifeq ($(MAKECMDGOALS),)
+# Set default target for CI environments:
 ifeq ($(ENV),development)
 DEFAULT ?= 
 endif
@@ -9,17 +10,5 @@ endif
 ifeq ($(ENV),production)
 DEFAULT ?= 
 endif
-endif
-
-ifeq ($(MAKECMDGOALS),test)
-ifeq ($(ENV),development)
-#DEFAULT ?= test
-endif
-ifeq ($(ENV),testing)
-#DEFAULT ?= test install check
-endif
-#ifeq ($(ENV),production)
-#DEFAULT ?= test install check
-#endif
 endif
 

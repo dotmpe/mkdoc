@@ -1,4 +1,6 @@
-
+MkDoc
+=====
+:version: 0.0.1-master
 :project:
 
   .. image:: https://secure.travis-ci.org/dotmpe/mkdoc.png

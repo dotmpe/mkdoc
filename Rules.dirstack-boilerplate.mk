@@ -1,8 +1,10 @@
+# Id: mkdoc/0.0.1-master Rules.dirstack-boilerplate.mk
 include                $(MK_SHARE)Core/Main.dirstack.mk
 MK_$d               := $/Rules.mk
 MK                  += $(MK_$d)
 #
 #      ------------ -- 
+
 
 include                $(MK_SHARE)Core/Rules.project.mk
 
