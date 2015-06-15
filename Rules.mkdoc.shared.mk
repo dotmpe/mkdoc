@@ -1,2 +1,2 @@
-# Id: mkdoc/0.0.1 Rules.mkdoc.shared.mk
+# Id: mkdoc/0.0.1-devel Rules.mkdoc.shared.mk
 

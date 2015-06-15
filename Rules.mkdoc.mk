@@ -1,4 +1,4 @@
-# Id: mkdoc/0.0.1 Rules.mkdoc.mk
+# Id: mkdoc/0.0.1-devel Rules.mkdoc.mk
 
 
 # Rules available to other projects?

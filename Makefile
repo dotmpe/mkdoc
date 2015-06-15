@@ -1,5 +1,5 @@
 
-# Id: mkdoc/0.0.1 Makefile
+# Id: mkdoc/0.0.1-devel Makefile
 
 BUILD               := .build/
 DIR                 := $(CURDIR)
@@ -9,7 +9,7 @@ ENV                 ?= $(shell [ -n "$$ENV" ] && echo $$ENV || echo development)
 
 #ID                  := mkdoc/0.0.1-master
 PROJECT             := mkdoc
-VERSION             := 0.0.1# mkdoc
+VERSION             := 0.0.1-devel# mkdoc
 
 
 # CURDIR and MAKEFILE_LIST are GNU Make internals
