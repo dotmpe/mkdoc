@@ -16,7 +16,7 @@ function install()
 {
   test -n "$MK_SHARE"
   test ! -e "$MK_SHARE"
-  mkdir -p $MK_SHARE/
+  mkdir -p $(dirname $MK_SHARE)
   cp -vr usr/share/mkdoc/ $MK_SHARE
   cp -vr Mkdocs-*.mk Rules.*boilerplate.mk $MK_SHARE
 }
