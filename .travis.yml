@@ -1,5 +1,5 @@
 #script: ./configure && make && sudo ENV=$ENV make install && make test
-script: ./configure.sh && ./install.sh && CS=dark PREFIX=/usr/local make -f Makefile.mkdoc
+script: ./configure && ./install.sh && CS=dark PREFIX=/usr/local make -f Makefile.mkdoc
 
 branches:
 
