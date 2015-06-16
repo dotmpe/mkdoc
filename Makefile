@@ -2,7 +2,9 @@
 # Id: mkdoc/0.0.1-devel Makefile
 
 BUILD               := .build/
-DIR                 := $(CURDIR)
+# some variants on CURDIR:
+DIR                 := .
+BASE                := $(shell cd $(DIR);pwd)
 
 HOST                := $(shell hostname -s | tr 'A-Z' 'a-z' | tr '.' '-')
 ENV                 ?= $(shell [ -n "$$ENV" ] && echo $$ENV || echo development)

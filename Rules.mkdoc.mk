@@ -24,21 +24,12 @@ sync-file-ids:
 	./bin/cli-version.sh update
 
 
-# Install: simply copy files to MK_SHARE 
+# Install: simply copy files to MK_SHARE
 MK_SHARE            := /usr/local/share/mkdoc/
 
 INSTALL             += $(MK_SHARE)
 
 $(MK_SHARE):
-	sudo cp -vr usr/share/mkdoc/ $@
+	@./install.sh
 
-
-# Provide uninstall too
-
-STRGT += uninstall
-uninstall::
-	test -n "$(MK_SHARE)"
-	test -e "$(MK_SHARE)"
-	P=$$(dirname $(MK_SHARE))/$$(basename $(MK_SHARE)); \
-	[ "$P" != "/" ] && sudo rm -rfv $$P
 

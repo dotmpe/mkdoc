@@ -1,0 +1,21 @@
+#!/bin/bash
+
+source lib.sh
+
+[ -n "$PREFIX" ] || {
+	[ "$ENV" == "development" ] && {
+		PREFIX='$(CURDIR)/usr/'
+	} || {
+		PREFIX=/usr/local
+	}
+}
+
+function rewrite_prefix()
+{
+	P=$(echo $PREFIX | sed 's/\//\\\//g')
+  sed_rewrite_tag 's/^PREFIX\(.*[:?]\)=.*/PREFIX\1= '$P'/' $1
+}
+
+rewrite_prefix Mkdocs-full.mk
+rewrite_prefix Mkdocs-minimal.mk
+
