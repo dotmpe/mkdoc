@@ -1,4 +1,4 @@
-$(eval $(call module-header,vc,$(MK_SHARE)vc/Main.mk,"Version Control"))
+$(eval $(call module-header,vc,$(MK_SHARE)vc/Main.mk,Version Control))
 #
 #      ------------ -- 
 

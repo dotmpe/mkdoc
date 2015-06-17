@@ -1,4 +1,4 @@
-$(eval $(call module-header,markdown,$(MK_SHARE)markdown/Main.bin.mk,"GNU/markdown binaries"))
+$(eval $(call module-header,markdown,$(MK_SHARE)markdown/Main.bin.mk,GNU/markdown binaries))
 #
 #      ------------ -- 
 

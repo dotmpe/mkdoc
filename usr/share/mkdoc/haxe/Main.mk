@@ -1,4 +1,4 @@
-$(eval $(call module-header,haxe,$(MK_SHARE)haxe/Main.mk,"HaXe cross-platform compiler"))
+$(eval $(call module-header,haxe,$(MK_SHARE)haxe/Main.mk,HaXe cross-platform compiler))
 #
 #      ------------ -- 
 

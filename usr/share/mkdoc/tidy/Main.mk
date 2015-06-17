@@ -1,4 +1,4 @@
-$(eval $(call module-header,tidy,$(MK_SHARE)tidy/Main.mk,"Tidy (X)HTML validator and formatter"))
+$(eval $(call module-header,tidy,$(MK_SHARE)tidy/Main.mk,Tidy (X)HTML validator and formatter))
 #
 #      ------------ -- 
 

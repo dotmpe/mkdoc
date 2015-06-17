@@ -1,4 +1,4 @@
-$(eval $(call module-header,markdown,$(MK_SHARE)markdown/Main.mk,"Markdown formatted docs"))
+$(eval $(call module-header,markdown,$(MK_SHARE)markdown/Main.mk,Markdown formatted docs))
 #
 #      ------------ -- 
 

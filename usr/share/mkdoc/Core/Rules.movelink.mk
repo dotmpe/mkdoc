@@ -1,4 +1,4 @@
-$(eval $(call module-header,Core,$(MK_SHARE)/Core/Rules.movelink.mk,""))
+$(eval $(call module-header,Core,$(MK_SHARE)/Core/Rules.movelink.mk,Movelink))
 #
 #      ------------ -- 
 

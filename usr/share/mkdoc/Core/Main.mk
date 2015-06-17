@@ -199,7 +199,7 @@ log-module           = # $1 $2
 #log-module           = $(eval $(call vtty,header2,$1,$2,$3))
 #ifneq ($(VERBOSE), )
 log-module           = $(info $(shell if test -n "$(VERBOSE)"; then \
-                         $(ll) header2 $1 $2 $3; fi))
+                         $(ll) header2 "$1" "$2" "$3"; fi))
 #endif
 #log-module          = $(info $(shell if test -n "$(VERBOSE)"; then \
 #						$(ll) header2 $1 $2; fi))
