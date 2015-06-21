@@ -44,27 +44,9 @@ Usage
 ::
 
   cd ~/myproject
-  /usr/share/mkdoc/invade
+  /usr/local/share/mkdoc/invade
   make
 
-Or as I usually do it::
-
-  cd ~/myproject
-  mv Makefile Rules.old.mk # to be copied manually to new Rules.mk
-  ln -s /usr/share/mkdoc/Mkdocs.full
-  cp /usr/share/mkdoc/Rules.mk Rules.mk 
-
-Then edit away.
-
-Once prepared a projects may look like this::
-
-  my-project/
-  ├── .Rules.mk
-  ├── Makefile -> /usr/share/mkdoc/Makefile
-  └── media
-      └── Rules.mk
-
-`make` may be run from the main directory.
 
 Depnding on use it may be convienient to run from subdirectories, just make an extra symlink there. 
 These directories are principal entry points and the path is referred to as the session path.

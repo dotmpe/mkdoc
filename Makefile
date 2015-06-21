@@ -67,15 +67,19 @@ INSTALL            :=
 
 
 # rules: return Rules files for each directory in $1
+RULE_PREFIX := ./ .
 rules = $(foreach D,$1,\
-	$(wildcard \
-		$DRules.mk $D.Rules.mk \
-		$DRules.*.shared.mk \
-		$DRules.$(PROJECT).mk $D.Rules.$(PROJECT).mk \
-		$DRules.$(HOST).mk $D.Rules.$(HOST).mk))
+	$(foreach P,$(RULE_PREFIX), \
+			$(wildcard \
+				$D$PRules.mk \
+				$D$PRules.shared.mk $D$PRules.*.shared.mk \
+				$D$PRules.$(PROJECT).mk \
+				$D$PRules.$(HOST).mk \
+	)))
 
 # Include all local rules files
 #
+$(info include $(call rules,$(DIR)/))
 include                $(call rules,$(DIR)/)
 
 # pseudo targets are not files, don't check with OS
