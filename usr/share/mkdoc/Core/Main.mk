@@ -186,11 +186,10 @@ zero_exit_test       = \
 ll                   = $(MK_SHARE)Core/log.sh
 # log-line:          1.LINETYPE  2.TARGETS  3.MESSAGE  4.SOURCES
 log                  = $(ll) "$1" "$2" "$3" "$4"
-log-module           = # $1 $2
-#log-module           = $(eval $(call vtty,header2,$1,$2,$3))
+log-module           = $(eval $(call vtty,header2,$1,$2,$3))
 #ifneq ($(VERBOSE), )
-log-module           = $(info $(shell if test -n "$(VERBOSE)"; then \
-                         $(ll) header2 $1 $2 $3; fi))
+#log-module           = $(info $(shell if test -n "$(VERBOSE)"; then \
+#                         $(ll) header2 $1 $2 $3; fi))
 #endif
 #log-module          = $(info $(shell if test -n "$(VERBOSE)"; then \
 #						$(ll) header2 $1 $2; fi))
