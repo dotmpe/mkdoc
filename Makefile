@@ -79,7 +79,6 @@ rules = $(foreach D,$1,\
 
 # Include all local rules files
 #
-$(info include $(call rules,$(DIR)/))
 include                $(call rules,$(DIR)/)
 
 # pseudo targets are not files, don't check with OS
