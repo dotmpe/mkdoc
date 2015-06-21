@@ -1,5 +1,0 @@
-#!/bin/sh
-DIR=`dirname $0`
-ln -s $DIR/Mkdocs.full Makefile
-hostname=`hostname -s`
-cp $DIR/Rules.mk Rules.$hostname.mk 
