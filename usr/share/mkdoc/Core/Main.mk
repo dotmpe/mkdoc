@@ -145,39 +145,30 @@ unsafe-paths         = $(shell D="$(call f-sed-escape,$1)";\
 # mkid: rewrite filename/path to Make/Bash safe variable ID
 mkid                 = $(shell echo $1|sed 's/[\/\.,;:_\+]/_/g')
 # rules: return Rules files for each directory in $1
+RULE_PREFIX := ./ .
 rules = $(foreach D,$1,\
-	$(wildcard $DRules.mk $D.Rules.mk $DRules.$(HOST).mk $D.Rules.$(HOST).mk))
-shared-rules = $(foreach D,$1,\
-	$(wildcard $DRules.shared.mk $D.Rules.shared.mk))
+	$(foreach P,$(RULE_PREFIX), \
+			$(wildcard \
+				$D$PRules.mk \
+				$D$PRules.shared.mk $D$PRules.*.shared.mk \
+				$D$PRules.$(PROJECT).mk \
+				$D$PRules.$(HOST).mk \
+	)))
 sub-rules            = $(foreach V,$1,$(call rules,$V/*))
 f_getpaths           = $(shell F="$1"; $(getpaths))
 
 #parents              = $()
 # rules: return Rules files for each directory in $1
-rules                = $(shell for D in $1; do \
-                         if test -f "$$(echo $$D/Rules.mk)"; then \
-                           echo $$D/Rules.mk; else \
-                         if test -f "$$(echo $$D/.Rules.mk)"; then \
-                           echo $$D/.Rules.mk; else \
-                         if test -f "$$(echo $$D/Rules.$(HOST).mk)"; then \
-                           echo $$D/Rules.$(HOST).mk; else \
-                         if test -f "$$(echo $$D/.Rules.$(HOST).mk)"; then \
-                           echo $$D/.Rules.$(HOST).mk; fi; fi; fi; fi; done )
-shared-rules         = $(shell for D in $1; do \
-                         if test -f "$$(echo $$D/Rules.shared.mk)"; then \
-                           echo $$D/Rules.shared.mk; else \
-                         if test -f "$$(echo $$D/.Rules.shared.mk)"; then \
-                           echo $$D/.Rules.shared.mk; fi; fi; done )
-def-rules            = $(shell for D in $1; do \
-                         if test -f "$$(echo $$D/Rules.mk)"; then \
-                           echo $$D/Rules.mk; else \
-                         if test -f "$$(echo $$D/.Rules.mk)"; then \
-                           echo $$D/.Rules.mk; else \
-                         if test -f "$$(echo $$D/Rules.$(HOST).mk)"; then \
-                           echo $$D/Rules.$(HOST).mk; else \
-                         if test -f "$$(echo $$D/.Rules.$(HOST).mk)"; then \
-                           echo $$D/.Rules.$(HOST).mk; else \
-                           echo $$D/Rules.mk; fi; fi; fi; fi; done )
+# XXX testing wildcard function
+#rules                = $(shell for D in $1; do \
+#                         if test -f "$$(echo $$D/Rules.mk)"; then \
+#                           echo $$D/Rules.mk; else \
+#                         if test -f "$$(echo $$D/.Rules.mk)"; then \
+#                           echo $$D/.Rules.mk; else \
+#                         if test -f "$$(echo $$D/Rules.$(HOST).mk)"; then \
+#                           echo $$D/Rules.$(HOST).mk; else \
+#                         if test -f "$$(echo $$D/.Rules.$(HOST).mk)"; then \
+#                           echo $$D/.Rules.$(HOST).mk; fi; fi; fi; fi; done )
 # sub-rules: return ./*/[.]Rules[.host].mk, ie. rules from subdirs
 sub-rules            = $(foreach V,$1,$(call rules,$V/*))
 zero_exit_test       = \
