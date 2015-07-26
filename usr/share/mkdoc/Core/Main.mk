@@ -81,9 +81,9 @@ endif
 sed-trim             = sed 's/^ *//g' | sed 's/ *$$//g'
 # really limited escape..
 sed-escape           = awk '{gsub("[~/:.]", "\\\\&");print}'
-filter-paths         = grep -v ^\# | grep -v ^\s*$$
+filter-file-lines    = grep -v ^\# | grep -v ^\s*$$
 trim-paths           = sed 's/\/\//\//g' | sed 's/\.\///g'
-getpaths             = cat "$$F" | $(filter-paths)
+getlines             = echo $$(cat "$$F" | $(filter-file-lines))
 
 
 
@@ -155,7 +155,7 @@ rules = $(foreach D,$1,\
 				$D$PRules.$(HOST).mk \
 	)))
 sub-rules            = $(foreach V,$1,$(call rules,$V/*))
-f_getpaths           = $(shell F="$1"; $(getpaths))
+f_getlines           = $(shell F="$1"; $(getlines))
 
 #parents              = $()
 # rules: return Rules files for each directory in $1
@@ -307,7 +307,7 @@ define ante-proc-tags
 	 KWDF="$(shell $(kwds-file))";\
 	 KWD=$$(cat $$KWDF);\
 	 XTR=$$($(ee) "dotmpe.project.mkdoc:filemdatetime\t$$FILEMDATETIME");\
-	 $(ee) "$$KWD\n$$XTR" | grep -v '^$$' | grep -v '^#'| \
+	 $(ee) "$$KWD\n$$XTR" | $(filter-file-lines) | \
 		while read l; do \
 			IFS="	";set -- $$l;\
 			[ -z "$$1" ] && echo Empty field 1 && exit 1;\
@@ -342,7 +342,7 @@ endef
 
 define build-dir-index
 	$(ll) file_target "$@" "Checking" "$<"
-	ls $(<D) | sort | $(filter-paths) > $@.tmp
+	ls $(<D) | sort | $(filter-file-lines) > $@.tmp
 	if test -f $@; then \
 	   if test -n "`diff $@ $@.tmp`"; then \
 	       mv $@.tmp $@; \
@@ -383,43 +383,6 @@ endef
 #$(info $(shell $(ll) "info" "HOST" "at '"$(HOST)"'"))
 #$(info $(shell $(ll) "info" "ROOT" "from '"$(ROOT)"'"))
 #endif
-
-
-
-
-test-python          =\
-	 if test -n "$(shell which python)"; then \
-		$(ll) info "$$TEST_PY" "Testing Python sources.."; \
-		\
-		if test -n "$(shell which python-coverage)"; \
-		then \
-			RUN="python-coverage -x test/py/main.py "; \
-		fi; \
-		if test -n "$(shell which coverage)"; \
-		then \
-			RUN="coverage run "; \
-			if test -n "$$TEST_LIB";\
-			then\
-				RUN=$$RUN" --source="$$TEST_LIB;\
-			fi;\
-		fi; \
-		if test -z "$$RUN"; then \
-			$(call chatty,1,warn,$@,Coverage for python not available); \
-			RUN=python;\
-		fi; \
-		$(call chatty,2,attention,$$,$$RUN,$$TEST_PY);\
-		$$RUN $$TEST_PY; \
-		$(call chatty,2,header,exit-status,$$?);\
-		$(call zero_exit_test,$$?,$@,Python tested,Python testing failed); \
-		\
-		if test -n "$(shell which coverage)"; \
-		then \
-			coverage html; \
-			$(call chatty,0,file_OK,htmlcov/,Generated test coverage report in HTML); \
-		fi; \
-	else \
-		$(ll) error "$@" "Tests require Python interpreter. "; \
-	fi
 
 
 log-special-target-because-from = \
