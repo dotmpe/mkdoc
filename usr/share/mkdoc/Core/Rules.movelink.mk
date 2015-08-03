@@ -35,7 +35,7 @@ $(RS_LS_$d):           $(RS_DIR_LS_$d) $(RS_SRC_LS_$d)
 	@$(log-file-target-because-from)
 	@TRGT_E=$$(echo $T | $(sed-escape));\
 		SRC_E=$$(echo $S | $(sed-escape));\
-		cat $L | sed "s/^$$TRGT_E/$$SRC_E/g" | $(filter-paths) | sort -u > $@
+		cat $L | sed "s/^$$TRGT_E/$$SRC_E/g" | $(filter-file-lines) | sort -u > $@
 	@$(ll) file_ok $@ Done
 $(RS_LS_$d):      T := $(RS_DIR_$d)
 $(RS_LS_$d):      S := $(RS_SRC_DIR_$d)
@@ -81,7 +81,7 @@ SRC_PATH            := /src/
 $(RS_MK_$d):           $(RS_LS_$d)
 	@$(log-file-target-because-from)
 	@$(reset-target)
-	@resources=$$(cat $< | $(filter-paths));\
+	@resources=$(call f_getlines,$<);\
 	SRCPATH="$(SRC_PATH)/";rl="$${#SRCPATH}";\
 	for res in $$resources;\
 	do \

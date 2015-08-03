@@ -75,7 +75,8 @@ include                \
                        $(MK_SHARE)tidy/Main.mk \
                        $(MK_SHARE)haxe/Main.mk \
                        $(MK_SHARE)plotutils/Main.mk \
-                       $(MK_SHARE)graphviz/Main.mk 
+                       $(MK_SHARE)graphviz/Main.mk \
+                       $(MK_SHARE)python/Main.mk
 
 $(call chat,debug,mkdoc,Done loading packages main file)
 $(call chat,debug,mkdoc)
@@ -93,6 +94,7 @@ include                \
                        $(MK_SHARE)docutils/Rules.default.mk \
                        $(MK_SHARE)haxe/Rules.default.mk \
                        $(MK_SHARE)plotutils/Rules.default.mk \
+                       $(MK_SHARE)python/Rules.default.mk
 #					   $(MK_SHARE)Core/Rules.archive.mk
 
 $(call chat,debug,mkdoc,Done loading packages rules files)
