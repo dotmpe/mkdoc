@@ -1,6 +1,6 @@
 $(eval $(call module-header,Core,$(MK_SHARE)Core/Rules.default.mk,Default rules))
 #
-#      ------------ -- 
+#      ------------ --
 
 
 default:              stat
@@ -15,7 +15,7 @@ STRGT 			   += $(STD)
 
 ### Standard Rule(s)
 help::
-	@$(ee) 
+	@$(ee)
 	@# See STRGT and DESCRIPTION vars, STD (STDTARGT or STDSTAT) without DESCRIPTION is not printed
 	@declare $(DESCRIPTION);\
 	$(ll) header $@     "$(PROJECT) Makefile";\
@@ -63,15 +63,15 @@ examples::
 	@$(ll) ok           "$@" "this is a message to be printed" "with another list of paths"
 	@$(ll) OK           "$@" "see that line-types are case-insensitive"
 	@$(ll) header       "$@" "This line type (header1) is not included on the line"
-	@$(ll) header2      "$@" "(header2) This is a message to be printed" 
-	@$(ll) header3      "$@" "(header3) This is a message to be printed" 
-	@$(ll) debug        "$@" "(debug) This is a message to be printed" 
-	@$(ll) info         "$@" "(info) This is a message to be printed" 
-	@$(ll) attention    "$@" "(attention) This is a message to be printed" 
-	@$(ll) warning      "$@" "(warning) This is a message to be printed" 
-	@$(ll) error        "$@" "(error) this is a message to be printed" 
+	@$(ll) header2      "$@" "(header2) This is a message to be printed"
+	@$(ll) header3      "$@" "(header3) This is a message to be printed"
+	@$(ll) debug        "$@" "(debug) This is a message to be printed"
+	@$(ll) info         "$@" "(info) This is a message to be printed"
+	@$(ll) attention    "$@" "(attention) This is a message to be printed"
+	@$(ll) warning      "$@" "(warning) This is a message to be printed"
+	@$(ll) error        "$@" "(error) this is a message to be printed"
 	@$(ll) fatal        "$@" "this script better halt now"
-	@$(ll) "* (type?)"  "$@" "All logs are printed, including those with unrecognized linetype" 
+	@$(ll) "* (type?)"  "$@" "All logs are printed, including those with unrecognized linetype"
 
 info::
 	@$(ll) header $@ "Package Info"
@@ -85,20 +85,70 @@ info::
 	@$(ll) header3 HOST "$(HOST)" "$(origin HOST)"
 	@$(ll) header3 OS "$(OS)" "$(origin OS)"
 	@$(ll) header3 VERBOSE "$(VERBOSE)" "$(origin VERBOSE)"
-	@$(ll) OK $@ 
+	@$(ll) OK $@
+
+list::
+	@$(ee)
+	@$(ll) header2 Sources                  "" "$(strip $(SRC))"
+	@#$(ll) header2 Sources  "$(shell echo $(SRC)|sort -u)"
+	@$(ll) header2 "Build Targets"          "" '$(strip $(TRGT))'
+	@$(ll) header2 "Special Targets"        "" '$(strip $(STRGT))'
 
 # TODO use similar scheme as DESCRIPTION
-DESC_SRC  = Paths to build targets from  
-DESC_TRGT = Paths to build from source 
-DESC_TEST =  
+DESC_SRC  = Paths to build targets from
+DESC_TRGT = Paths to build from source
+DESC_TEST =
 DESC_MK   = List of loaded Makefiles
 DESC_DMK  = List of (to be) generated Makefiles
-DESC_DEP  = Paths needed to build targets 
-DESC_CLN  = Paths that will be removed on next `make clean`  
-DESC_RES  =   
+DESC_DEP  = Paths needed to build targets
+DESC_CLN  = Paths that will be removed on next `make clean`
+DESC_RES  =
+
+lists::
+	@$(ll) header $@ "Printing all prerequisite lists."
+	@if test -n "$(strip $(SRC))"; then \
+	 $(ll) header2 SRC Sources                 '$(strip $(SRC))';\
+	 else\
+	 $(ll) header2 SRC "Sources (none)";\
+	 fi;
+	@if test -n "$(strip $(TRGT))"; then \
+	 $(ll) header2 TRGT 'Build Targets'        '$(strip $(TRGT))';\
+	 else\
+	 $(ll) header2 TRGT 'Build Targets (none)';\
+	 fi;
+	@if test -n "$(strip $(TEST))"; then \
+	 $(ll) header2 TEST 'Test Targets'         '$(strip $(TEST))';\
+	 fi;
+	@$(ll) header2 MK 'Makefiles'  	           '$(strip $(MK))'
+	@if test -n "$(strip $(DMK))"; then \
+	 $(ll) header2 DMK 'Generated Makefiles'   '$(strip $(DMK))';\
+	 else\
+	 $(ll) header2 DMK 'Generated Makefiles (none)' ;\
+	 fi;
+	@if test -n "$(strip $(DEP))"; then \
+	 $(ll) header2 DEP 'Other Dependencies'    '$(strip $(DEP))';\
+	 else\
+	 $(ll) header2 DEP 'Other Dependencies (none)';\
+	 fi
+	@if test -n "$(strip $(CLN))"; then \
+	 $(ll) header2 CLN 'Clean list'            '$(strip $(CLN))';\
+	 else\
+	 $(ll) header2 CLN 'Clean list (none)'   ;\
+	 fi
+	@if test -n "$(strip $(STRGT))"; then \
+	 $(ll) header2 STRGT 'Special Targets'     '$(strip $(STRGT))';\
+	 else\
+	 $(ll) header2 STRGT 'Special Targets (none)';\
+	 fi;
+	@if test -n "$(strip $(RES))"; then \
+	 $(ll) header2 RES 'Resources '            '$(strip $(RES))';\
+	 fi;
+	@if test -n "$(strip $(MISSING))"; then \
+	 $(ll) Error "Missing" "Paths not found " '$(strip $(MISSING))';\
+	 fi;
 
 
-#src:: $(SRC) 
+#src:: $(SRC)
 
 dep:: $(SRC) $(DEP)
 	@if test -n "$(strip $(DEP))"; then \
@@ -114,7 +164,7 @@ dmk:: dep $(DMK)
 		$(ll) OK $@ "nothing to do"; \
 	fi
 
-stat:: LIST := 
+stat:: LIST :=
 stat:: dmk
 	@if test -n "$(VERBOSE)"; then \
 		echo;\

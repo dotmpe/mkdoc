@@ -1,6 +1,6 @@
 MkDoc
 =====
-:version: 0.0.2-test
+:version: 0.0.2-test+20150804-0404
 :project:
 
   .. image:: https://secure.travis-ci.org/dotmpe/mkdoc.png
@@ -16,7 +16,7 @@ MkDoc
 
 install::
 
-  ./configure && sudo ./install.sh
+  ./configure /usr/local && sudo ./install.sh
 
 
 test::

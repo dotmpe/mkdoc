@@ -2,20 +2,26 @@
 
 source lib.sh
 
-[ -n "$PREFIX" ] || {
-	[ "$ENV" == "development" ] && {
-		PREFIX='$(CURDIR)/usr/'
-	} || {
-		PREFIX=/usr/local
-	}
+test -n "$PREFIX" || {
+  [ -n "$1" ] && {
+    PREFIX=$1
+  } || [ "$ENV" == "development" ] && {
+    PREFIX='$(CURDIR)/usr/'
+  } || {
+    PREFIX=/usr/local
+  }
 }
+echo PREFIX=$PREFIX
 
-function rewrite_prefix()
+
+function rewrite_mk_prefix()
 {
-	P=$(echo $PREFIX | sed 's/\//\\\//g')
+  local P
+  P=$(echo $PREFIX | sed 's/\//\\\//g')
   sed_rewrite_tag 's/^PREFIX\(.*[:?]\)=.*/PREFIX\1= '$P'/' $1
+  echo "Updated PREFIX in $1"
 }
 
-rewrite_prefix Mkdocs-full.mk
-rewrite_prefix Mkdocs-minimal.mk
+rewrite_mk_prefix Mkdocs-full.mk
+rewrite_mk_prefix Mkdocs-minimal.mk
 

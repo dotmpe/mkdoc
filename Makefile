@@ -1,5 +1,6 @@
 
-# Id: mkdoc/0.0.2-test Makefile
+# Id: mkdoc/0.0.2-test+20150804-0404 Makefile
+
 
 BUILD               := .build/
 # some variants on CURDIR:
@@ -11,7 +12,7 @@ ENV                 ?= $(shell [ -n "$$ENV" ] && echo $$ENV || echo development)
 
 #ID                  := mkdoc/0.0.1-master
 PROJECT             := mkdoc
-VERSION             := 0.0.2-test# mkdoc
+VERSION             := 0.0.2-test+20150804-0404# mkdoc
 
 
 # CURDIR and MAKEFILE_LIST are GNU Make internals

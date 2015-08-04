@@ -1,0 +1,8 @@
+
+The value of MK_BUILD is @MK_BUILD
+The value of TAG is @TAG
+The value of UNKNOWN is @UNKNOWN
+
+Abc @MK_BUILD def @TAG ghi
+
+

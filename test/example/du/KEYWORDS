@@ -1,0 +1,3 @@
+# kwd-file comment line
+TAG	tag-value-from-kwd-file
+MK_BUILD	.build

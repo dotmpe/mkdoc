@@ -1,4 +1,7 @@
-script: ./configure && sudo ./install.sh && CS=dark PREFIX=/usr/local make -f Makefile.mkdoc
+
+install: ./install-dependencies.sh
+
+script: ./configure && sudo ./install.sh && make -f Makefile.mkdoc test
 
 branches:
   only:
@@ -6,5 +9,6 @@ branches:
   - /^[0-9]+.[0-9]+.[0-9]+$
 
 env:
-- ENV=
+- ENV= CS=dark PREFIX=.
+- ENV=production CS=dark PREFIX=/usr/local
 

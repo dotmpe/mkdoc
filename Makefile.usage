@@ -1,0 +1,9 @@
+
+# Get all special targets in a row
+empty :=
+space := $(empty) $(empty)
+usage::
+	@echo 'usage:'
+	@echo '# make [$(subst $(space),|,$(STRGT))]'
+
+

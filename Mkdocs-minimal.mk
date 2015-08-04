@@ -1,6 +1,6 @@
 # Non-recursive makefile
 
-# Id: mkdoc/0.0.2-test Mkdocs-minimal.mk
+# Id: mkdoc/0.0.2-test+20150804-0404 Mkdocs-minimal.mk
 
 
 # CURDIR and MAKEFILE_LIST are GNU Make internals
@@ -19,12 +19,12 @@ endif
 PREFIX              ?= $(CURDIR)/usr/
 MK_SHARE            ?= $(PREFIX)/share/mkdoc/
 #MK_CONF             := /etc/mkdoc/ $(HOME)/.mkdoc/
-MK_BUILD            := /var/mkdoc/
+MK_BUILD            ?= /var/mkdoc/
 
 
 
 # fixme: rewrite to MK_BUILD
-BUILD               := .build/
+BUILD               ?= .build/
 
 # Start keeping present directory
 DIR                 := .
@@ -55,6 +55,8 @@ endif
 
 
 #      ------------ -- 
+
+$(call chat,debug,mkdoc,Reading package main include files)
 
 #include                \
                        $(MK_SHARE)<package_name>/Main.mk \

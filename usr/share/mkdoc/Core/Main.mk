@@ -84,8 +84,11 @@ sed-escape           = awk '{gsub("[~/:.]", "\\\\&");print}'
 filter-file-lines    = grep -v ^\# | grep -v ^\s*$$
 trim-paths           = sed 's/\/\//\//g' | sed 's/\.\///g'
 getlines             = echo $$(cat "$$F" | $(filter-file-lines))
-
-
+ifeq ("$(OS)","Darwin")
+sed-in-place-rewrite          = sed -i.sed-backup 
+else
+sed-in-place-rewrite          = sed 
+endif
 
 ### Functions
 
@@ -301,20 +304,21 @@ endif
 
 define ante-proc-tags
 	# Process all source files and expand tag references.
+	echo "Running ante-proc-tags"
 	if test ! -f "$<.src"; then cp $< $<.src; fi
 	mtime=$$($(CMD_STATC) %m "$<");\
-	FILEMDATETIME=$$(date -r "$$mtime" +"%Y-%m-%d %H:%M:%S %:z");\
+	FILEMDATETIME="$$(date -r "$$mtime" +"%Y-%m-%d %H:%M:%S %z")";\
 	 KWDF="$(shell $(kwds-file))";\
 	 KWD=$$(cat $$KWDF);\
-	 XTR=$$($(ee) "dotmpe.project.mkdoc:filemdatetime\t$$FILEMDATETIME");\
-	 $(ee) "$$KWD\n$$XTR" | $(filter-file-lines) | \
+	 XTR=$$(echo -e "\ndotmpe.project.mkdoc:filemdatetime\t$$FILEMDATETIME");\
+	echo "$$KWD$$XTR" | $(filter-file-lines) | \
 		while read l; do \
 			IFS="	";set -- $$l;\
 			[ -z "$$1" ] && echo Empty field 1 && exit 1;\
 			[ -z "$$2" ] && echo Empty field 2 $$1= && exit 1;\
 			tag=`echo "$$1" | awk '{gsub("[~/:.]", "\\\\\\\&");print}'`; \
 			value=`echo "$$2" | awk '{gsub("[~/:.]", "\\\\\\\&");print}'`; \
-			sed -e "s/@$$tag/$$value/g" $<.src > $<.tmp; \
+			sed 's/^\(.*\)@'$$tag'\(.*\)$$/\1'$$value'\2/g' $<.src > $<.tmp; \
 			mv $<.tmp $<.src; \
 		done;
 endef

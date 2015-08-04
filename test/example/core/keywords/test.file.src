@@ -1,0 +1,8 @@
+
+The value of MK_BUILD is .build/
+The value of TAG is abc-1234
+The value of UNKNOWN is @UNKNOWN
+
+Abc .build/ def abc-1234 ghi
+
+

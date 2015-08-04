@@ -1,6 +1,6 @@
 # Non-recursive makefile
 
-# Id: mkdoc/0.0.2-test Mkdocs-full.mk
+# Id: mkdoc/0.0.2-test+20150804-0404 Mkdocs-full.mk
 
 
 # CURDIR and MAKEFILE_LIST are GNU Make internals
@@ -47,6 +47,7 @@ include                $(MK_SHARE)Core/Main.mk
 ifeq ($(MAKECMDGOALS),info)
 $(info $(shell $(ll) info info "OK loaded $(MK_SHARE)Core/Main.mk"))
 endif
+
 $(call chat,header,mkdoc,Core script loaded)
 
 # Check wether this filename (target of the Makefile symlink) corresponds to MK_$d
