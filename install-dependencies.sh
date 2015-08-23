@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 
-SRC_PREFIX=/tmp/src
+test -n "$SRC_PREFIX" || {
+SRC_PREFIX=$HOME
+}
+
+test -n "$PREFIX" || {
 PREFIX=~/usr
+}
 
 test -n "$SRC_PREFIX" || {
   echo "Not sure where checkout"
@@ -16,9 +21,9 @@ test -n "$PREFIX" || {
 test -d $SRC_PREFIX || mkdir -vp $SRC_PREFIX
 test -d $PREFIX || mkdir -vp $PREFIX
 
-# Check for BATS shell test runner or install
-test -x "$(which bats)" || {
 
+install_bats()
+{
   echo "Installing bats"
   pushd $SRC_PREFIX
   git clone https://github.com/sstephenson/bats.git
@@ -27,8 +32,12 @@ test -x "$(which bats)" || {
   popd
 }
 
-export PATH=$PATH:$PREFIX/bin
+# Check for BATS shell test runner or install
+test -x "$(which bats)" || {
+  install_bats
+  export PATH=$PATH:$PREFIX/bin
+}
 
 bats --version
 
-# Id: git-versioning/0.0.27-test install-dependencies.sh
+# Id: mkdoc/0 install-dependencies.sh
