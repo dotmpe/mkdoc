@@ -2,17 +2,30 @@
 
 source lib.sh
 
+[ -n "$ENV" ] || ENV=development
+echo "ENV=$ENV"
+
 test -n "$PREFIX" || {
-  [ -n "$1" ] && {
+  test -n "$1" -a -n "$1" = "." && {
     PREFIX=$1
-  } || [ "$ENV" == "development" ] && {
+  } || test "$ENV" = "development" && {
     PREFIX='$(CURDIR)/usr/'
   } || {
+    # production?
     PREFIX=/usr/local
   }
 }
 echo PREFIX=$PREFIX
 
+test -n "$SRC_PREFIX" || {
+  case "$ENV" in
+    development )
+      SRC_PREFIX=/tmp ;;
+    production )
+      SRC_PREFIX=/src ;;
+  esac
+}
+echo SRC_PREFIX=$SRC_PREFIX
 
 function rewrite_mk_prefix()
 {
@@ -21,7 +34,26 @@ function rewrite_mk_prefix()
   sed_rewrite_tag 's/^PREFIX\(.*[:?]\)=.*/PREFIX\1= '$P'/' $1
   echo "Updated PREFIX in $1"
 }
+function rewrite_sh_prefix()
+{
+  local P
+  P=$(echo $PREFIX | sed 's/\//\\\//g')
+  sed_rewrite_tag 's/^PREFIX=.*/PREFIX='$P'/' $1
+  echo "Updated PREFIX in $1"
+}
+function rewrite_sh_src_prefix()
+{
+  local P
+  P=$(echo $SRC_PREFIX | sed 's/\//\\\//g')
+  sed_rewrite_tag 's/^SRC_PREFIX=.*/SRC_PREFIX='$P'/' $1
+  echo "Updated SRC_PREFIX in $1"
+}
 
 rewrite_mk_prefix Mkdocs-full.mk
 rewrite_mk_prefix Mkdocs-minimal.mk
+
+rewrite_sh_prefix install-dependencies.sh
+rewrite_sh_src_prefix install-dependencies.sh
+
+rewrite_sh_prefix install.sh
 

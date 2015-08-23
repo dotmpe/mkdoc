@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
 
-DIR=$1
+SRC_PREFIX=/tmp/src
+PREFIX=
 
-test -n "$DIR" || DIR=$HOME
+test -n "$SRC_PREFIX" || {
+  echo "Not sure where checkout"
+  exit 1
+}
 
-test -n "$DIR" || {
+test -n "$PREFIX" || {
   echo "Not sure where to install"
   exit 1
 }
@@ -14,10 +18,10 @@ test -x "$(which bats)" && {
   bats --version
 } || {
   echo "Installing bats"
-  pushd $DIR
+  pushd $SRC_PREFIX
   git clone https://github.com/sstephenson/bats.git
   cd bats
-  sudo ./install.sh /usr/local
+  sudo ./install.sh $PREFIX
   popd
   bats --version
 }

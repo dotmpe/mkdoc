@@ -1,6 +1,7 @@
 #!/bin/bash
 
-MK_SHARE=/usr/local/share/mkdoc
+PREFIX=./usr/
+MK_SHARE=$PREFIX/share/mkdoc
 
 function uninstall()
 {

@@ -1,7 +1,9 @@
 
-install: ./install-dependencies.sh
+install: ./install-dependencies.sh $PREFIX
 
-script: ./configure && sudo ./install.sh && make -f Makefile test
+script: ./configure && ./install.sh && make test
+
+sudo: false
 
 branches:
   only:
@@ -11,5 +13,6 @@ branches:
 
 env:
 - ENV= CS=dark PREFIX=.
-- ENV=production CS=dark PREFIX=/usr/local
+- ENV= CS=dark PREFIX=~/bin
+#- ENV=production CS=dark PREFIX=/usr/local
 
