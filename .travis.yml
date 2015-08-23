@@ -1,6 +1,9 @@
 
 install: ./install-dependencies.sh $PREFIX
 
+before_script:
+  - "export PATH=$PATH:~/usr/bin"
+
 script: ./configure && ./install.sh && make test
 
 sudo: false

@@ -13,8 +13,8 @@ test -n "$PREFIX" || {
   exit 1
 }
 
-test -d || mkdir -vp $SRC_PREFIX
-test -d || mkdir -vp $PREFIX
+test -d $SRC_PREFIX || mkdir -vp $SRC_PREFIX
+test -d $PREFIX || mkdir -vp $PREFIX
 
 # Check for BATS shell test runner or install
 test -x "$(which bats)" || {
