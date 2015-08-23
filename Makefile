@@ -67,6 +67,8 @@ TEST               :=
 INSTALL            :=
 
 
+ll                   = ./usr/share/mkdoc/Core/log.sh
+
 # rules: return Rules files for each directory in $1
 RULE_PREFIX := ./ .
 rules = $(foreach D,$1,\

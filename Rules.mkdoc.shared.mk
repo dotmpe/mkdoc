@@ -2,9 +2,9 @@
 
 test-mkdoc-specs: $(DIR) := $d
 test-mkdoc-specs:
-	@$(ll) $@ attention "Testing Core"
+	@$(ll) attention $@ "Testing Core"
 	@cd test/example/core/keywords;../../../mkdoc-core.bats
-	@$(ll) $@ attention "Testing Du"
+	@$(ll) attention $@ "Testing Du"
 	@cd test/example/du/;../../mkdoc-du.bats
 
 
