@@ -1,6 +1,6 @@
 #!/bin/sh
 DIR=`dirname $0`
-ln -s $DIR/Mkdocs.full Makefile
+ln -s $DIR/Mkdoc-full.mk Makefile
 hostname=`hostname -s`
 cp $DIR/Rules.mk Rules.$hostname.mk 
 project=`basename $(pwd)`

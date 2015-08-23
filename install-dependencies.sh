@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 SRC_PREFIX=/tmp/src
-PREFIX=
+PREFIX=~/usr
 
 test -n "$SRC_PREFIX" || {
   echo "Not sure where checkout"

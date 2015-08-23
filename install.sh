@@ -19,7 +19,7 @@ function install()
   test ! -e "$MK_SHARE"
   mkdir -p $(dirname $MK_SHARE)
   cp -vr usr/share/mkdoc/ $MK_SHARE
-  cp -vr Mkdocs-*.mk Makefile.*boilerplate $MK_SHARE
+  cp -vr Mkdoc-*.mk Makefile.*boilerplate $MK_SHARE
 }
 
 
