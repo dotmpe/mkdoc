@@ -1,6 +1,6 @@
 # Non-recursive makefile
 
-# Id: mkdoc/0.0.2-test+20150804-0404 Mkdocs-full.mk
+# Id: mkdoc/0.0.2-test+20150804-0404 Mkdoc-full.mk
 
 
 # CURDIR and MAKEFILE_LIST are GNU Make internals
@@ -34,7 +34,7 @@ DIR                 := .
 #      ------------ -- 
 
 d                   := $(DIR)
-MK_$d               := Mkdocs-full
+MK_$d               := Mkdoc-full
 
 #      ------------ -- 
 

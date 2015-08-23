@@ -1,1 +1,1 @@
-../../../Mkdocs-full.mk
+../../../Mkdoc-full.mk

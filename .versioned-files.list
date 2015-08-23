@@ -1,8 +1,8 @@
 README.rst
 Makefile
 Makefile.dirstack-boilerplate
-Mkdocs-full.mk
-Mkdocs-minimal.mk
+Mkdoc-full.mk
+Mkdoc-minimal.mk
 Rules.mkdoc.mk
 Rules.mkdoc.shared.mk
 test/mkdoc-core.bats
