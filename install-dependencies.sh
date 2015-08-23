@@ -13,6 +13,9 @@ test -n "$PREFIX" || {
   exit 1
 }
 
+test -d || mkdir -vp $SRC_PREFIX
+test -d || mkdir -vp $PREFIX
+
 # Check for BATS shell test runner or install
 test -x "$(which bats)" && {
   bats --version
@@ -21,7 +24,7 @@ test -x "$(which bats)" && {
   pushd $SRC_PREFIX
   git clone https://github.com/sstephenson/bats.git
   cd bats
-  sudo ./install.sh $PREFIX
+  ./install.sh $PREFIX
   popd
   bats --version
 }
