@@ -5,7 +5,7 @@ SRC_PREFIX=$HOME
 }
 
 test -n "$PREFIX" || {
-PREFIX=~/usr
+PREFIX=$HOME/usr
 }
 
 test -n "$SRC_PREFIX" || {
