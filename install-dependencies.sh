@@ -34,7 +34,7 @@ install_bats()
 
 # Check for BATS shell test runner or install
 test -x "$(which bats)" || {
-  install_bats
+  { install_bats; }
   export PATH=$PATH:$SRC_PREFIX/bats/bin
 }
 

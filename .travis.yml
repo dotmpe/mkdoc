@@ -2,7 +2,7 @@
 install: ./install-dependencies.sh $PREFIX
 
 before_script:
-  - "export PATH=$PATH:$PREFIX/bin"
+  - "export PATH=$PATH:$HOME/build/bats/bin"
 
 script: ./configure && ./install.sh && make test
 
