@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 test -n "$SRC_PREFIX" || {
-SRC_PREFIX=$HOME
+SRC_PREFIX=$HOME/build
 }
 
 test -n "$PREFIX" || {
