@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 PREFIX=./usr/
 MK_SHARE=$PREFIX/share/mkdoc
 
@@ -17,8 +19,9 @@ function install()
 {
   test -n "$MK_SHARE"
   test ! -e "$MK_SHARE"
+  #mkdir -p $MK_SHARE
   mkdir -p $(dirname $MK_SHARE)
-  cp -vr usr/share/mkdoc/ $MK_SHARE
+  cp -vr usr/share/mkdoc $MK_SHARE
   cp -vr Mkdoc-*.mk Makefile.*boilerplate $MK_SHARE
 }
 

@@ -5,10 +5,12 @@ source lib.sh
 [ -n "$ENV" ] || ENV=development
 echo "ENV=$ENV"
 
+test -n "$1" -a "$1" != "." && {
+  PREFIX="$1"
+} || noop
+
 test -n "$PREFIX" || {
-  test -n "$1" -a -n "$1" = "." && {
-    PREFIX=$1
-  } || test "$ENV" = "development" && {
+  test "$ENV" = "development" && {
     PREFIX='$(CURDIR)/usr/'
   } || {
     # production?
