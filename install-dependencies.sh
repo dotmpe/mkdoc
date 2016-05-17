@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 
-test -n "$SRC_PREFIX" || {
-SRC_PREFIX=$HOME/build
+set -e
+
+test -z "$Build_Debug" || set -x
+
+test -z "$Build_Deps_Default_Paths" || {
+  test -n "$SRC_PREFIX" || SRC_PREFIX=$HOME/build
+  test -n "$PREFIX" || PREFIX=$HOME/.local
 }
 
-test -n "$PREFIX" || {
-PREFIX=$HOME/usr
-}
+test -n "$sudo" || sudo=
 
 test -n "$SRC_PREFIX" || {
   echo "Not sure where checkout"
@@ -18,26 +21,46 @@ test -n "$PREFIX" || {
   exit 1
 }
 
-test -d $SRC_PREFIX || mkdir -vp $SRC_PREFIX
-test -d $PREFIX || mkdir -vp $PREFIX
+test -d $SRC_PREFIX || ${sudo} mkdir -vp $SRC_PREFIX
+test -d $PREFIX || ${sudo} mkdir -vp $PREFIX
 
 
 install_bats()
 {
   echo "Installing bats"
-  pushd $SRC_PREFIX
-  git clone https://github.com/sstephenson/bats.git
+  local pwd=$(pwd)
+  mkdir -vp $SRC_PREFIX
+  cd $SRC_PREFIX
+  git clone https://github.com/dotmpe/bats.git
   cd bats
-  ./install.sh $PREFIX
-  popd
+  ${sudo} ./install.sh $PREFIX
+  cd $pwd
 }
 
-# Check for BATS shell test runner or install
-test -x "$(which bats)" || {
-  { install_bats; }
-  export PATH=$PATH:$SRC_PREFIX/bats/bin
+
+
+main_entry()
+{
+  test -n "$1" || set -- '*'
+
+  case "$1" in '*'|project|git )
+      git --version >/dev/null || {
+        echo "Sorry, GIT is a pre-requisite"; exit 1; }
+    ;; esac
+
+  case "$1" in '*'|build|test|sh-test|bats )
+      test -x "$(which bats)" || { install_bats || return $?; }
+    ;; esac
+
+  echo "OK. All pre-requisites for '$1' checked"
 }
 
-bats --version
+test "$(basename $0)" = "install-dependencies.sh" && {
+  while test -n "$1"
+  do
+    main_entry $1 || exit $?
+    shift
+  done
+} || printf ""
 
 # Id: mkdoc/0 install-dependencies.sh
