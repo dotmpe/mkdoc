@@ -2,9 +2,6 @@
 
 source lib.sh
 
-[ -n "$ENV" ] || ENV=development
-echo "ENV=$ENV"
-
 test -n "$1" -a "$1" != "." && {
   PREFIX="$1"
 } || noop
@@ -18,6 +15,10 @@ test -n "$PREFIX" || {
   }
 }
 echo PREFIX=$PREFIX
+
+[ -z "$2" ] || ENV=$2
+[ -n "$ENV" ] || ENV=development
+echo "ENV=$ENV"
 
 test -n "$SRC_PREFIX" || {
   case "$ENV" in
