@@ -1,4 +1,6 @@
 
+language:
+
 install: ./install-dependencies.sh
 
 before_script:
