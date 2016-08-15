@@ -1,9 +1,19 @@
+
+language:
+
+# TODO: bats, see devel
+install:
+
+before_script:
+  - "export PATH=$PATH:$HOME/build/bats/bin"
+
 script: make install && CS=dark PREFIX=/usr/local make -f Makefile.mkdoc
 
 branches:
   only:
   - master
   - devel
+  - test
   - '/^[0-9]*\.[0-9]*\.[0-9]*/'
 
 env:
