@@ -1,5 +1,5 @@
 
-install: ./install-dependencies.sh $PREFIX
+install: ./install-dependencies.sh
 
 before_script:
   - "export PATH=$PATH:$HOME/build/bats/bin"
