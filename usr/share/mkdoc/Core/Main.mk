@@ -389,6 +389,12 @@ endef
 #endif
 
 
+log-special-target-because = \
+	$(ll) attention "$@" because "$?"
+
+log-file-target-because = \
+	$(ll) file_target "$@" because "$?"
+
 log-special-target-because-from = \
 	$(ll) attention "$@" because "$?";\
 	$(ll) attention "$@" from "$^"
