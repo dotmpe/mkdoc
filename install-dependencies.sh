@@ -50,6 +50,7 @@ main_entry()
 
   case "$1" in '*'|build|test|sh-test|bats )
       test -x "$(which bats)" || { install_bats || return $?; }
+      PATH=$PATH:$HOME/build/bats/bin bats --version
     ;; esac
 
   echo "OK. All pre-requisites for '$1' checked"

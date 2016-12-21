@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 
 # left align first columnt at:
 FIRSTTAB=32
@@ -21,7 +21,7 @@ then
 		c7="\x1b[0;7;37m"
 		# hard (bright black, ie. dark gray)
 		c9="\x1b[0;1;30m"
-	else	
+	else
 		# primary, pale white
 		c0="\x1b[0;0;0m"
 		# pale (normal white, ie. light gray)
@@ -73,7 +73,7 @@ __log ()
 		sources=$(printf "$mk_trgt_blue" "$sources")
 		msg="$msg $sources"
 	fi
-	case "$linetype" in 
+	case "$linetype" in
 		header | header1) # blue
 			#targets=$(printf "$mk_title_blue" "$targets")
 			targets=$(printf "$mk_p_trgt_blue" "$targets")
@@ -115,7 +115,7 @@ __log ()
 			;;
 	esac
 	case "$linetype" in
-		file_error|file_warning|file_target|file_ok|header|header1|header2|header3|debug|info|attention|error|verbose)
+		file_error|file_warn*|file_target|file_ok|header|header1|header2|header3|debug|info|attention|error|verbose)
 			;;
 		fatal|ok|'done'|* )
 			if [ -n "$msg" ]
@@ -154,7 +154,7 @@ then
 	do
 		__log "$lt" "$t" "$m" "$s";
 	done
-else 
+else
 	# quoted arguments:
 	__log "$1" "$2" "$3" "$4";
 fi
