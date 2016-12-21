@@ -174,6 +174,7 @@ f_getlines           = $(shell F="$1"; $(getlines))
 #                           echo $$D/.Rules.$(HOST).mk; fi; fi; fi; fi; done )
 # sub-rules: return ./*/[.]Rules[.host].mk, ie. rules from subdirs
 sub-rules            = $(foreach V,$1,$(call rules,$V/*))
+f_getpaths           = $(shell F="$1"; $(getpaths))
 zero_exit_test       = \
 	if test $1 != 0; \
 	then \
@@ -187,15 +188,14 @@ zero_exit_test       = \
 # Output, verbosity, ... log?
 
 ll                   = $(MK_SHARE)Core/log.sh
-# log-line:          1.LINETYPE  2.TARGETS  3.MESSAGE  4.SOURCES
+# ll/log             1.LINETYPE  2.TARGETS  3.MESSAGE  4.SOURCES
 log                  = $(ll) "$1" "$2" "$3" "$4"
-log-module           = $(eval $(call vtty,header2,$1,$2,$3))
-#ifneq ($(VERBOSE), )
-#log-module           = $(info $(shell if test -n "$(VERBOSE)"; then \
-#                         $(ll) header2 "$1" "$2" "$3"; fi))
-#endif
-#log-module          = $(info $(shell if test -n "$(VERBOSE)"; then \
-#						$(ll) header2 $1 $2; fi))
+log-module           = # $1 $2
+ifneq ($(VERBOSE), )
+log-module           = $(info $(shell if test -n "$(VERBOSE)"; then \
+                         $(ll) header2 $1 $2; fi))
+endif
+
 
 # "chatter on tty"
 chatty               =\
@@ -224,7 +224,7 @@ LOG_LEVELS = \
 define vtty
 $(call require-key,LOG_LEVELS,$1)
 $(eval $(if \
-	$(call echo-if-true,$(VERBOSE) -ge $(call key,LOG_LEVELS,$1)),\
+	$(call echo-if-true,$(VERBOSE) -ge "$(call key,LOG_LEVELS,$1)"),\
 	$(info $(shell $(ll) "$1" "$2" "$3" "$4"))))
 endef
 

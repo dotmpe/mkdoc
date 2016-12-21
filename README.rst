@@ -1,6 +1,7 @@
 MkDoc
 =====
 :version: 0.0.2-test+20150804-0404
+
 :project:
 
   .. image:: https://secure.travis-ci.org/dotmpe/mkdoc.png

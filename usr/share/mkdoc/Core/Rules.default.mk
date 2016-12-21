@@ -1,4 +1,4 @@
-$(eval $(call module-header,Core,$(MK_SHARE)Core/Rules.default.mk,Default rules))
+$(eval $(call module-header,Core,$(MK_SHARE)Core/Rules.default.mk,"Default rules"))
 #
 #      ------------ --
 
@@ -75,10 +75,10 @@ examples::
 
 info::
 	@$(ll) header $@ "Package Info"
-	@$(ll) header2 Root     "" $(ROOT)
-	@$(ll) header2 MkDoc    "" $(MK_SHARE)
-	@$(ll) header2 Project  "" "$(PROJECT)"
-	@$(ll) header2 Release  "" $(TAG)
+	@$(ll) header2 Root     "$(ROOT)" "$(origin ROOT)"
+	@$(ll) header2 MkDoc    "$(MK_ROOT)" "$(origin MK_ROOT)"
+	@$(ll) header2 Project  "$(PROJECT)" "$(origin PROJECT)"
+	@$(ll) header2 Release  "$(TAG)" "$(origin TAG)"
 	@$(ll) header3 CS "$(CS)" "$(origin CS)"
 	@$(ll) header3 VPATH "$(VPATH)" "$(origin VPATH)"
 	@$(ll) header3 SHELL "$(SHELL)" "$(origin SHELL)"
@@ -262,11 +262,11 @@ push::
 test:: $(TEST)
 	$(call mk_ok_s,"tested")
 
-clean:: F := f
+clean:: F := v
 clean::
 	@$(ll) warning $@ cleaning "$(CLN)"
 	@-rm -$(F) $(CLN);\
-	 if test $$? -gt 0; then echo ""; fi; # put xtra line if err-msgs
+	 if test $$? -gt 0; then $(echo) ""; fi; # put xtra line if err-msgs
 	@$(call log,Done,$@,$(call count,$(CLN)) targets)
 
 clean-dep:: cleandep
