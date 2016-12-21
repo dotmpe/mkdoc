@@ -4,7 +4,7 @@ language:
 install: ./install-dependencies.sh
 
 before_script:
-  - "export PATH=$PATH:$HOME/build/bats/bin"
+  - "export PATH=$PATH:$PREFIX/bin"
 
 script: make install && CS=dark PREFIX=/usr/local make -f Makefile.mkdoc
 
@@ -19,7 +19,7 @@ env:
   global:
     - Build_Deps_Default_Paths=1
   matrix:
-    - ENV= CS=dark PREFIX=.
-    - ENV= CS=dark PREFIX=~/bin
+    #- ENV= CS=dark PREFIX=.
+    - ENV= CS=dark PREFIX=$HOME/.local
     #- ENV=production CS=dark PREFIX=/usr/local
 
