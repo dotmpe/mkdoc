@@ -33,22 +33,19 @@ echo SRC_PREFIX=$SRC_PREFIX
 function rewrite_mk_prefix()
 {
   local P
-  P=$(echo $PREFIX | sed 's/\//\\\//g')
-  sed_rewrite_tag 's/^PREFIX\(.*[:?]\)=.*/PREFIX\1= '$P'/' $1
+  sed_rewrite_tag 's#^PREFIX\(.*[:?]\)=.*#PREFIX\1= '$PREFIX'#' $1
   echo "Updated PREFIX in $1"
 }
 function rewrite_sh_prefix()
 {
   local P
-  P=$(echo $PREFIX | sed 's/\//\\\//g')
-  sed_rewrite_tag 's/^PREFIX=.*/PREFIX='$P'/' $1
+  sed_rewrite_tag 's#^PREFIX=.*#PREFIX='$PREFIX'#' $1
   echo "Updated PREFIX in $1"
 }
 function rewrite_sh_src_prefix()
 {
   local P
-  P=$(echo $SRC_PREFIX | sed 's/\//\\\//g')
-  sed_rewrite_tag 's/^SRC_PREFIX=.*/SRC_PREFIX='$P'/' $1
+  sed_rewrite_tag 's#^SRC_PREFIX=.*#SRC_PREFIX='$SRC_PREFIX'#' $1
   echo "Updated SRC_PREFIX in $1"
 }
 
