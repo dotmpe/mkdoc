@@ -56,22 +56,6 @@ install_bats()
 }
 
 
-install_mkdoc()
-{
-  echo "Installing mkdoc"
-  pushd $SRC_PREFIX
-  git clone https://github.com/dotmpe/mkdoc.git
-  cd mkdoc
-  git checkout devel
-  PREFIX=~/usr/ ./configure && ./install.sh
-  popd
-  rm Makefile
-  ln -s ~/usr/share/mkdoc/Mkdoc-full.mk Makefile
-  #make
-}
-
-
-
 main_entry()
 {
   test -n "$1" || set -- 'all'
@@ -84,10 +68,6 @@ main_entry()
   case "$1" in all|build|test|sh-test|bats )
       test -x "$(which bats)" || { install_bats || return $?; }
       PATH=$PATH:$PREFIX/bin bats --version
-    ;; esac
-
-  case "$1" in -|mkdoc)
-      install_mkdoc || return $?
     ;; esac
 
   echo "OK. All pre-requisites for '$1' checked"
