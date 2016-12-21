@@ -58,3 +58,4 @@ rewrite_sh_src_prefix install-dependencies.sh
 
 rewrite_sh_prefix install.sh
 
+# Id: mkdoc/0.0.2-test+20150804-0404 configure

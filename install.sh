@@ -25,10 +25,13 @@ function install()
 }
 
 
-# XXX:
-#case "$PREFIX" = "./
-#test ! -e "$MK_SHARE" || uninstall
+test "$(basename $0)" = "install.sh" && {
+  test -n "$1" || set -- install
+  while test -n "$1"
+  do
+    $1 || exit $?
+    shift
+  done
+} || printf ""
 
-install
-
-
+# Id: mkdoc/0.0.2-test+20150804-0404 install.sh

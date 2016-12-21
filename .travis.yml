@@ -19,7 +19,7 @@ env:
   global:
     - Build_Deps_Default_Paths=1
   matrix:
-    #- ENV= CS=dark PREFIX=.
+    - ENV= CS=dark PREFIX=.
     - ENV= CS=dark PREFIX=$HOME/.local
     #- ENV=production CS=dark PREFIX=/usr/local
 

@@ -1,4 +1,7 @@
 README.rst
+configure
+install.sh
+install-dependencies.sh
 Makefile
 Makefile.dirstack-boilerplate
 Mkdoc-full.mk
