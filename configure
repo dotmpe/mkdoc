@@ -14,11 +14,9 @@ test -n "$PREFIX" || {
     PREFIX=/usr/local
   }
 }
-echo PREFIX=$PREFIX
 
 [ -z "$2" ] || ENV=$2
 [ -n "$ENV" ] || ENV=development
-echo "ENV=$ENV"
 
 test -n "$SRC_PREFIX" || {
   case "$ENV" in
@@ -28,6 +26,10 @@ test -n "$SRC_PREFIX" || {
       SRC_PREFIX=/src ;;
   esac
 }
+
+echo PREFIX=$PREFIX
+echo "ENV=$ENV"
+echo SRC_PREFIX=SRC_$PREFIX
 
 function rewrite_mk_prefix()
 {
