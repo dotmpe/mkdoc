@@ -1,4 +1,4 @@
-$(eval $(call module-header,docutils,$(MK_SHARE)docutils/Main.mk,'Docutils Python document publisher'))
+$(eval $(call module-header,docutils,$(MK_SHARE)docutils/Main.mk,Docutils Python document publisher))
 #
 #      ------------ -- 
 

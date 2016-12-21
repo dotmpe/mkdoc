@@ -1,4 +1,4 @@
-$(eval $(call module-header,plotutils,$(MK_SHARE)plotutils/Main.mk,'GNU/plotutils'))
+$(eval $(call module-header,plotutils,$(MK_SHARE)plotutils/Main.mk,GNU/plotutils))
 #
 #      ------------ -- 
 

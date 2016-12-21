@@ -1,4 +1,4 @@
-$(eval $(call module-header,graphviz,$(MK_SHARE)graphviz/Rules.default.mk,'Graphviz graph rendering'))
+$(eval $(call module-header,graphviz,$(MK_SHARE)graphviz/Rules.default.mk,Graphviz graph rendering))
 #
 #      ------------ -- 
 

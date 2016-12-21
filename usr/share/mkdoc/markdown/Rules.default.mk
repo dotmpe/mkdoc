@@ -1,4 +1,4 @@
-$(eval $(call module-header,markdown,$(MK_SHARE)markdown/Rules.default.mk,'Markdown default rules'))
+$(eval $(call module-header,markdown,$(MK_SHARE)markdown/Rules.default.mk,Markdown default rules))
 #
 #      ------------ -- 
 

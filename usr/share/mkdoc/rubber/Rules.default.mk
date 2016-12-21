@@ -1,4 +1,4 @@
-$(eval $(call module-header,rubber,$(MK_SHARE)rubber/Rules.default.mk,'Rubber (LaTeX to PDF) default rules'))
+$(eval $(call module-header,rubber,$(MK_SHARE)rubber/Rules.default.mk,Rubber (LaTeX to PDF) default rules))
 #
 #      ------------ -- 
 

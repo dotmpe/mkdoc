@@ -193,7 +193,7 @@ log                  = $(ll) "$1" "$2" "$3" "$4"
 log-module           = # $1 $2
 ifneq ($(VERBOSE), )
 log-module           = $(info $(shell if test -n "$(VERBOSE)"; then \
-                         $(ll) header2 $1 $2; fi))
+                         $(ll) header2 "$1" "$2"; fi))
 endif
 
 

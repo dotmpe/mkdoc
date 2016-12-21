@@ -1,4 +1,4 @@
-$(eval $(call module-header,docutils,$(MK_SHARE)docutils/Main.bin.mk,'GNU/docutils binaries'))
+$(eval $(call module-header,docutils,$(MK_SHARE)docutils/Main.bin.mk,GNU/docutils binaries))
 #
 #      ------------ -- 
 
