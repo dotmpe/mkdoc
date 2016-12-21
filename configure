@@ -47,7 +47,9 @@ function rewrite_sh_src_prefix()
 }
 
 rewrite_mk_prefix Mkdoc-full.mk
+grep PREFIX Mkdoc-full.mk
 rewrite_mk_prefix Mkdoc-minimal.mk
+grep PREFIX Mkdoc-minimal.mk
 
 rewrite_sh_prefix install-dependencies.sh
 rewrite_sh_src_prefix install-dependencies.sh
