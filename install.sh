@@ -26,7 +26,8 @@ function install()
 }
 
 
-[ ! -e "$MK_SHARE" ] || uninstall
+#case "$PREFIX" = "./
+#test ! -e "$MK_SHARE" || uninstall
 
 install
 

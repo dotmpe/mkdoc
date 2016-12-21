@@ -6,7 +6,7 @@ install: ./install-dependencies.sh
 before_script:
   - "export PATH=$PATH:$PREFIX/bin"
 
-script: make install && CS=dark PREFIX=/usr/local make -f Makefile.mkdoc
+script: ./install.sh && CS=dark PREFIX=/usr/local make -f Makefile.mkdoc
 
 branches:
   only:
