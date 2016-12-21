@@ -41,14 +41,14 @@ install_bats()
 
 main_entry()
 {
-  test -n "$1" || set -- '*'
+  test -n "$1" || set -- 'all'
 
-  case "$1" in '*'|project|git )
+  case "$1" in all|project|git )
       git --version >/dev/null || {
         echo "Sorry, GIT is a pre-requisite"; exit 1; }
     ;; esac
 
-  case "$1" in '*'|build|test|sh-test|bats )
+  case "$1" in all|build|test|sh-test|bats )
       test -x "$(which bats)" || { install_bats || return $?; }
       PATH=$PATH:$PREFIX/bin bats --version
     ;; esac
