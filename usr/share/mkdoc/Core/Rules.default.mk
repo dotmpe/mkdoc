@@ -1,4 +1,4 @@
-$(eval $(call module-header,Core,$(MK_SHARE)Core/Rules.default.mk,"Default rules"))
+$(eval $(call module-header,Core,$(MK_SHARE)Core/Rules.default.mk,'Default rules'))
 #
 #      ------------ --
 
