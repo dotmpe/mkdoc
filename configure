@@ -28,28 +28,28 @@ test -n "$SRC_PREFIX" || {
       SRC_PREFIX=/src ;;
   esac
 }
-echo SRC_PREFIX=$SRC_PREFIX
 
 function rewrite_mk_prefix()
 {
   sed_rewrite_tag 's#^PREFIX\(.*[:?]\)=.*#PREFIX\1= '$PREFIX'#' $1
-  echo "Updated PREFIX in $1 (to $PREFIX)"
+  echo "Updated PREFIX in $1 (to $PREFIX):"
+  grep PREFIX $1
 }
 function rewrite_sh_prefix()
 {
   sed_rewrite_tag 's#^PREFIX=.*#PREFIX='$PREFIX'#' $1
-  echo "Updated PREFIX in $1 (to $PREFIX)"
+  echo "Updated PREFIX in $1 (to $PREFIX):"
+  grep PREFIX $1
 }
 function rewrite_sh_src_prefix()
 {
   sed_rewrite_tag 's#^SRC_PREFIX=.*#SRC_PREFIX='$SRC_PREFIX'#' $1
-  echo "Updated SRC_PREFIX in $1 (to $SRC_PREFIX)"
+  echo "Updated SRC_PREFIX in $1 (to $SRC_PREFIX):"
+  grep SRC_PREFIX $1
 }
 
 rewrite_mk_prefix Mkdoc-full.mk
-grep PREFIX Mkdoc-full.mk
 rewrite_mk_prefix Mkdoc-minimal.mk
-grep PREFIX Mkdoc-minimal.mk
 
 rewrite_sh_prefix install-dependencies.sh
 rewrite_sh_src_prefix install-dependencies.sh
