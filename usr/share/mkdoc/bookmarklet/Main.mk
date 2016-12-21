@@ -1,4 +1,4 @@
-$(eval $(call module-header,bookmarklet,$(MK_SHARE)bookmarklet/Main.mk,Javascript bookmarklets))
+$(eval $(call module-header,bookmarklet,$(MK_SHARE)bookmarklet/Main.mk,'Javascript bookmarklets'))
 #
 #      ------------ -- 
 

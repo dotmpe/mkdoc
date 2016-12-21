@@ -45,7 +45,7 @@ help::
 		$(ll) header $@     "Other special targets";\
 		for strgt in $(call complement,$(STRGT),$(STD));\
 		do\
-			strgt_id=$$(echo $$strgt|sed 's/[\/\.,;:_\+-]/_/g');\
+			strgt_id="$$(echo $$strgt|sed 's/[\/\.,;:_\+-]/_/g')";\
 			$(ll) header2 $$strgt "$${!strgt_id}";\
 		done;\
 		$(ee);\

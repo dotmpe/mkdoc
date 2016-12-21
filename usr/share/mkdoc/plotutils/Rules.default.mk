@@ -1,4 +1,4 @@
-$(eval $(call module-header,plotutils,$(MK_SHARE)plotutils/Rules.default.mk,GNU/plotutils default rules))
+$(eval $(call module-header,plotutils,$(MK_SHARE)plotutils/Rules.default.mk,'GNU/plotutils default rules'))
 #
 #      ------------ -- 
 
