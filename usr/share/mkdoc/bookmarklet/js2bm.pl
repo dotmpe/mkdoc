@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 #
 # http://daringfireball.net/2007/03/javascript_bookmarklet_builder
 # http://faq.perl.org/perlfaq6.html#How_do_I_use_a_regul
