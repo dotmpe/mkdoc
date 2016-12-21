@@ -74,6 +74,7 @@ main_entry()
 }
 
 test "$(basename $0)" = "install-dependencies.sh" && {
+  test -n "$1" || set -- 'all'
   while test -n "$1"
   do
     main_entry "$1" || exit $?
