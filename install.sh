@@ -17,12 +17,11 @@ function uninstall()
 
 function install()
 {
-  test -n "$MK_SHARE"
-  test ! -e "$MK_SHARE"
-  #mkdir -p $MK_SHARE
-  mkdir -p $(dirname $MK_SHARE)
-  cp -vr usr/share/mkdoc $MK_SHARE
-  cp -vr Mkdoc-*.mk Makefile.*boilerplate $MK_SHARE
+  test -n "$MK_SHARE" || { echo "Expected dir setting MK_SHARE"; return 1; }
+  test ! -e "$MK_SHARE" || { echo "Dir exits: $MK_SHARE"; return 1; }
+  mkdir -p $(dirname $MK_SHARE) || { echo "Unable to make parent dir: $MK_SHARE"; return 1; }
+  cp -vr usr/share/mkdoc $MK_SHARE || { echo "Copy to $MK_SHARE failed"; return 1; }
+  cp -vr Mkdoc-*.mk Makefile.*boilerplate $MK_SHARE || { echo "Copy to $MK_SHARE failed"; return 2; }
 }
 
 
