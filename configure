@@ -29,7 +29,7 @@ test -n "$SRC_PREFIX" || {
 
 echo PREFIX=$PREFIX
 echo "ENV=$ENV"
-echo SRC_PREFIX=SRC_$PREFIX
+echo SRC_PREFIX=$SRC_PREFIX
 
 function rewrite_mk_prefix()
 {
