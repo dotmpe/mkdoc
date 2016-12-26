@@ -26,6 +26,17 @@ script:
   - test "$PREFIX" = "./usr" || ./install.sh 
   - make stat build test -f Makefile.mkdoc
 
+env:
+  global:
+    - CS=dark
+    - DEP_PREFIX=$HOME/.local
+    - PATH=$PATH:$DEP_PREFIX/bin:$PREFIX/bin
+    - Build_Deps_Default_Paths=1
+  matrix:
+    - ENV=development PREFIX=./usr
+    #- ENV=testing    PREFIX=$HOME/.local
+    #- ENV=production PREFIX=/usr/local
+
 branches:
   only:
   - master
@@ -33,13 +44,7 @@ branches:
   - test
   - '/^[0-9]*\.[0-9]*\.[0-9]*/'
 
-env:
-  global:
-    - DEP_PREFIX=$HOME/.local
-    - PATH=$PATH:$DEP_PREFIX/bin:$PREFIX/bin
-    - Build_Deps_Default_Paths=1
-  matrix:
-    - ENV=development CS=dark PREFIX=./usr
-    #- ENV=testing CS=dark PREFIX=$HOME/.local
-    #- ENV=production CS=dark PREFIX=/usr/local
+notifications:
+  email:
+    on_success: never
 
