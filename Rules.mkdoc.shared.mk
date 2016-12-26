@@ -5,8 +5,9 @@
 test-mkdoc-specs:: DIR := $(shell dirname $(location))
 test-mkdoc-specs::
 	@echo "DIR = $(DIR)"
-	@echo "PREFIX = $(PREFIX)"
-	@echo "location = $(location)"
+	@echo "PREFIX = $(PREFIX) $(origin PREFIX)"
+	@echo "location = $(location) $(origin location)"
+	@echo "MK_SHARE = $(MK_SHARE) $(origin MK_SHARE)"
 	@$(ll) attention $@ "Testing Core"
 	@cd $(DIR)/test/example/core/keywords;\
 		bats ../../../mkdoc-core.bats
