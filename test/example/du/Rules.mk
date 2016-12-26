@@ -11,11 +11,11 @@ KWDS_$d := $/KEYWORDS
 $(info KWDS=$(shell $(kwds-file)))
 
 test-du-result:
+	pwd -P
+	ls -la
 	md5sum -c check.md5 
 	
 update-du-result:
-	pwd -P
-	ls -la
 	md5sum main,du.pxml > check.md5 
 
 STRGT += test-du-result
