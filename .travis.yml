@@ -26,7 +26,7 @@ env:
     - PATH=$PATH:$DEP_PREFIX/bin:$PREFIX/bin
     - DEP_PREFIX=$HOME/.local
   matrix:
-    - ENV= CS=dark PREFIX=.
+    - ENV= CS=dark PREFIX=./usr
     #- ENV= CS=dark PREFIX=$HOME/.local
     #- ENV=production CS=dark PREFIX=/usr/local
 
