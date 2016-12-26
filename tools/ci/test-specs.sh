@@ -14,7 +14,7 @@ bats ../../../mkdoc-core.bats
 
 case "$(whoami)" in
 
-  jenkins )
+  travis )
       echo FIXME docutils testing at Travis
     ;;
 
