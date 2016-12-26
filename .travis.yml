@@ -29,7 +29,7 @@ env:
     - PATH=$PATH:$DEP_PREFIX/bin:$PREFIX/bin
     - Build_Deps_Default_Paths=1
   matrix:
-    - ENV= CS=dark PREFIX=./usr
-    #- ENV= CS=dark PREFIX=$HOME/.local
+    - ENV=development CS=dark PREFIX=./usr
+    #- ENV=testing CS=dark PREFIX=$HOME/.local
     #- ENV=production CS=dark PREFIX=/usr/local
 
