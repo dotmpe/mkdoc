@@ -26,10 +26,14 @@ $(MK_SHARE):
 	@./install.sh
 
 
+include $(MK_SHARE)bookmarklet/Rules.test.mk
+
+
 STRGT += uninstall reinstall
 uninstall::
 	P=$$(dirname $(MK_SHARE))/$$(basename $(MK_SHARE)); \
 	[ "$P" != "/" ] && sudo rm -rfv $$P
 
 reinstall:: uninstall install
+
 
