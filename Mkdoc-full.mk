@@ -17,9 +17,10 @@ VERBOSE             := $(V)
 endif
 
 DIR                 := $(CURDIR)
-PREFIX              := $(shell dirname $$(realpath $(location)))/usr
+MK_DIR              := $(shell dirname $$(realpath $(location)))
+PREFIX              ?= $(MK_DIR)/usr
 
-MK_SHARE            := $(PREFIX)/share/mkdoc/
+MK_SHARE            ?= $(PREFIX)/share/mkdoc/
 #MK_CONF             := /etc/mkdoc/ $(HOME)/.mkdoc/
 MK_BUILD            := /var/mkdoc/
 
