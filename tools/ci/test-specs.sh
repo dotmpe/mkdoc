@@ -35,12 +35,12 @@ case "$(whoami)" in
 
 esac
 
-#test "$ENV" = "development" && {
+test "$ENV" = "development" && {
 
   cd $MK_DIR/
   bats test/mkdoc-make.bats
 
-#}
+}
 
 
 $ll attention $1 "Testing BM"
