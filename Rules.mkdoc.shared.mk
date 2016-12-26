@@ -13,7 +13,8 @@ test-mkdoc-specs::
 		echo "MK_SHARE = $(MK_SHARE) $(origin MK_SHARE)";; \
 	esac
 	@\
-		export ll="$(DIR)/$(ll)" PREFIX=$(PREFIX) MK_DIR=${DIR} MK_SHARE=$(MK_SHARE); \
+		case "$(ll)" in /* ) ll="$(ll)" ;; * ) ll="$(DIR)/$(ll)" ;; esac; \
+		export ll="$$ll" PREFIX=$(PREFIX) MK_DIR=${DIR} MK_SHARE=$(MK_SHARE); \
 		./tools/ci/test-specs.sh "$@"
 	@$(ll) ok $@ "specs for Core, Du, Make and BM"
 
