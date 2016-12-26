@@ -1,0 +1,16 @@
+<document ids="title" names="title" source="main.rst" title="Title">
+    <title>
+        Title
+    <docinfo>
+        <field>
+            <field_name>
+                Build dir
+            <field_body>
+                <paragraph>
+                    @MK_BUILD
+        <field>
+            <field_name>
+                Tag
+            <field_body>
+                <paragraph>
+                    @TAG

@@ -17,7 +17,7 @@ SHELL               := /bin/bash
 .SUFFIXES:          .rst .js .xhtml .mk .tex .pdf .list
 
 PREFIX              ?= /usr/local
-MK_SHARE            ?= $(PREFIX)/share/mkdoc/
+MK_SHARE            := $(PREFIX)/share/mkdoc/
 
 HOST                := $(shell hostname -s | tr 'A-Z' 'a-z' | tr '.' '-')
 ifndef ROOT

@@ -27,7 +27,10 @@ version=0.0.2-test+20150804-0404 # mkdoc
 
 @test "testing results" {
   run make test-du-result
-  [ ${status} -eq 0 ]
+  test ${status} -eq 0 || {
+      diag "Lines (${#lines[@]}): ${lines[*]}"
+      fail "$BATS_TEST_DESCRIPTION (make test-du-result)"
+    }
 }
 
 

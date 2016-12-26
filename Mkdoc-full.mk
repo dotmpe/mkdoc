@@ -16,10 +16,12 @@ ifneq ($(V), )
 VERBOSE             := $(V)
 endif
 
-PREFIX              ?= ./usr
-MK_SHARE            ?= $(PREFIX)/share/mkdoc/
+DIR                 := $(CURDIR)
+PREFIX              := $(shell dirname $$(realpath $(location)))/usr
+
+MK_SHARE            := $(PREFIX)/share/mkdoc/
 #MK_CONF             := /etc/mkdoc/ $(HOME)/.mkdoc/
-MK_BUILD            ?= /var/mkdoc/
+MK_BUILD            := /var/mkdoc/
 
 PROJECT             := mkdoc
 DOMAIN              ?= mpe
@@ -46,7 +48,9 @@ ifeq ($(MAKECMDGOALS),info)
 $(info Heads up, running 'make info V=$(VERBOSE)', use lower values for less info. )
 endif
 
+
 include                $(MK_SHARE)Core/Main.mk
+
 
 ifeq ($(MAKECMDGOALS),info)
 $(info $(shell $(ll) info info "OK loaded $(MK_SHARE)Core/Main.mk"))

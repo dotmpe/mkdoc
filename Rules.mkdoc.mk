@@ -17,14 +17,12 @@ sync-file-ids:
 
 # Install mkdocs to MK_SHARE
 
-PREFIX              ?= ./usr
-MK_SHARE            ?= $(PREFIX)/share/mkdoc/
-
+PREFIX ?= ./usr
+MK_SHARE ?= $(PREFIX)/share/mkdoc/
 INSTALL             += $(MK_SHARE)
 
 $(MK_SHARE):
 	@./install.sh
-
 
 include $(MK_SHARE)bookmarklet/Rules.test.mk
 

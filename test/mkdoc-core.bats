@@ -4,30 +4,46 @@
 
 version=0.0.2-test+20150804-0404 # mkdoc
 
+base="make"
 
 @test "no arguments" {
-  run make
-  [ ${status} -eq 0 ]
+  run ${base}
+  test ${status} -eq 0 || {
+      diag "Lines (${#lines[@]}): ${lines[*]}"
+      fail "$BATS_TEST_DESCRIPTION (make)"
+    }
 }
 
 @test "clean" {
-  run make clean clean-dep
-  [ ${status} -eq 0 ]
+  run ${base} clean clean-dep
+  test ${status} -eq 0 || {
+      diag "Lines (${#lines[@]}): ${lines[*]}"
+      fail "$BATS_TEST_DESCRIPTION (make clean clean-dep)"
+    }
 }
 
 @test "build KEYWORDS tag file" {
-  run make clean
-  run make KEYWORDS
-  [ ${status} -eq 0 ]
+  run ${base} clean
+  run ${base} KEYWORDS
+  test ${status} -eq 0 || {
+      diag "Lines (${#lines[@]}): ${lines[*]}"
+      fail "$BATS_TEST_DESCRIPTION (make clean && make KEYWORDS)"
+    }
 }
 
 @test "run ant-proc-tags on test file" {
-  run make ./test.file.src
-  [ ${status} -eq 0 ]
+  run ${base} ./test.file.src
+  test ${status} -eq 0 || {
+      diag "Lines (${#lines[@]}): ${lines[*]}"
+      fail "$BATS_TEST_DESCRIPTION (make ./test.file.src)"
+    }
 }
 
 @test "check test file result" {
-  run make test-ante-proc-tags
-  [ ${status} -eq 0 ]
+  run ${base} test-ante-proc-tags
+  test ${status} -eq 0 || {
+      diag "Lines (${#lines[@]}): ${lines[*]}"
+      fail "$BATS_TEST_DESCRIPTION (make test-ante-proc-tags)"
+    }
 }
 
