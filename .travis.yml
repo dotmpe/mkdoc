@@ -34,14 +34,14 @@ env:
     - Build_Deps_Default_Paths=1
   matrix:
     - ENV=development PREFIX=./usr
-    #- ENV=testing    PREFIX=$HOME/.local
-    #- ENV=production PREFIX=/usr/local
+    - ENV=testing     PREFIX=$HOME/.local
+    #- ENV=production  PREFIX=/usr/local
 
 branches:
   only:
   - master
-  - devel
-  - test
+  - '/^dev.*/'
+  - '/^test.*/'
   - '/^[0-9]*\.[0-9]*\.[0-9]*/'
 
 notifications:
