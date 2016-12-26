@@ -24,24 +24,24 @@ base=make
 
 @test "build rSt" {
   run ${base} main,du.xml
+  diag "Lines (${#lines[@]}): ${lines[*]}"
   test ${status} -eq 0 || {
-      diag "Lines (${#lines[@]}): ${lines[*]}"
       fail "$BATS_TEST_DESCRIPTION ($base main,du.xml)"
     }
 }
 
 @test "build rSt to xHTML" {
   run ${base} ./.build/main.du.xhtml
+  diag "Lines (${#lines[@]}): ${lines[*]}"
   test ${status} -eq 0 || {
-      diag "Lines (${#lines[@]}): ${lines[*]}"
       fail "$BATS_TEST_DESCRIPTION ($base ./.build/main.du.xhtml)"
     }
 }
 
 @test "testing results" {
   run ${base} test-du-result
+  diag "Lines (${#lines[@]}): ${lines[*]}"
   test ${status} -eq 0 || {
-      diag "Lines (${#lines[@]}): ${lines[*]}"
       fail "$BATS_TEST_DESCRIPTION (${base} test-du-result)"
     }
 }
