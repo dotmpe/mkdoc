@@ -12,7 +12,7 @@ cd $MK_DIR/test/example/core/keywords
 bats ../../../mkdoc-core.bats
 
 
-# FIXME
+# FIXME Travis failure..
 #$ll attention $1 "Testing Du"
 #cd $MK_DIR/test/example/du/
 #bats ../../mkdoc-du.bats
