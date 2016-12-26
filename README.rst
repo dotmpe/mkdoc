@@ -41,9 +41,11 @@ Global vars and targets
   TEST (test)
     Test targets.
 
-See::
+For all lists::
 
   make lists
+
+See project status see Travis CI build, and setup in ``.travis.yml``.
 
 
 Install
@@ -60,7 +62,6 @@ Test
 test::
 
   CS=dark PREFIX=/usr/local make -f Makefile.mkdoc test
-
 
 
 
