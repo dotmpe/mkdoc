@@ -23,10 +23,11 @@ base=make
 }
 
 @test "build rSt" {
+  run ${base} main,du.pxml
   run ${base} main,du.xml
   diag "Lines (${#lines[@]}): ${lines[*]}"
   test ${status} -eq 0 || {
-      fail "$BATS_TEST_DESCRIPTION ($base main,du.xml)"
+      fail "$BATS_TEST_DESCRIPTION ($base main,du.{p,}xml)"
     }
 }
 
