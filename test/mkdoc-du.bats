@@ -4,32 +4,45 @@
 
 version=0.0.2-test+20150804-0404 # mkdoc
 
+base=make
 
 @test "no arguments" {
-  run make
-  [ ${status} -eq 0 ]
+  run ${base}
+  test ${status} -eq 0 || {
+      diag "Lines (${#lines[@]}): ${lines[*]}"
+      fail "$BATS_TEST_DESCRIPTION ($base)"
+    }
 }
 
 @test "clean" {
-  run make clean
-  [ ${status} -eq 0 ]
+  run ${base} $BATS_TEST_DESCRIPTION
+  test ${status} -eq 0 || {
+      diag "Lines (${#lines[@]}): ${lines[*]}"
+      fail "$BATS_TEST_DESCRIPTION ($base)"
+    }
 }
 
 @test "build rSt" {
-  run make main,du.xml
-  [ ${status} -eq 0 ]
+  run ${base} main,du.xml
+  test ${status} -eq 0 || {
+      diag "Lines (${#lines[@]}): ${lines[*]}"
+      fail "$BATS_TEST_DESCRIPTION ($base main,du.xml)"
+    }
 }
 
 @test "build rSt to xHTML" {
-  run make ./.build/main.du.xhtml
-  [ ${status} -eq 0 ]
+  run ${base} ./.build/main.du.xhtml
+  test ${status} -eq 0 || {
+      diag "Lines (${#lines[@]}): ${lines[*]}"
+      fail "$BATS_TEST_DESCRIPTION ($base ./.build/main.du.xhtml)"
+    }
 }
 
 @test "testing results" {
-  run make test-du-result
+  run ${base} test-du-result
   test ${status} -eq 0 || {
       diag "Lines (${#lines[@]}): ${lines[*]}"
-      fail "$BATS_TEST_DESCRIPTION (make test-du-result)"
+      fail "$BATS_TEST_DESCRIPTION (${base} test-du-result)"
     }
 }
 
