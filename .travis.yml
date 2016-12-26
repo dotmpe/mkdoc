@@ -5,6 +5,7 @@ perl:
   - "5.8"
 
 install:
+  - echo DEP_PREFIX=$DEP_PREFIX
   - PREFIX=$HOME/.local ./install-dependencies.sh
   - cpanm -h
   - cpanm --install URI::Escape
