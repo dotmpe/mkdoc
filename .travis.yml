@@ -1,7 +1,9 @@
 
 language:
 
-install: ./install-dependencies.sh
+install:
+  - ./install-dependencies.sh
+  - cpanm --install URI::Escape
 
 before_script:
   - "export PATH=$PATH:$PREFIX/bin"
