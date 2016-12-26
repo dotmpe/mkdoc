@@ -17,7 +17,7 @@ sync-file-ids:
 
 # Install mkdocs to MK_SHARE
 
-PREFIX              ?= /usr/local
+PREFIX              ?= ./usr
 MK_SHARE            ?= $(PREFIX)/share/mkdoc/
 
 INSTALL             += $(MK_SHARE)
