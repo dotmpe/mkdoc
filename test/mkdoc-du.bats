@@ -30,6 +30,7 @@ init
 
 @test "testing results" {
   run ${base} test-du-result
+  diag "$(cat main,du.pxml)"
   common_test_conclusion "test-du-result"
 }
 

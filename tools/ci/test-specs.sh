@@ -12,9 +12,10 @@ cd $MK_DIR/test/example/core/keywords
 bats ../../../mkdoc-core.bats
 
 
-$ll attention $1 "Testing Du"
-cd $MK_DIR/test/example/du/
-bats ../../mkdoc-du.bats
+# FIXME
+#$ll attention $1 "Testing Du"
+#cd $MK_DIR/test/example/du/
+#bats ../../mkdoc-du.bats
 
 
 $ll attention $1 "Testing Make"
