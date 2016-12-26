@@ -1,8 +1,12 @@
 
-language:
+language: perl
+
+perl:
+  - "5.8"
 
 install:
   - ./install-dependencies.sh
+  - cpanm -h
   - cpanm --install URI::Escape
 
 before_script:
