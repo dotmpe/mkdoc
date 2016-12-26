@@ -35,6 +35,7 @@ case "$(whoami)" in
 
 esac
 
+
 test "$ENV" = "development" && {
 
   cd $MK_DIR/
