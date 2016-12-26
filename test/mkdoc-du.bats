@@ -15,10 +15,10 @@ base=make
 }
 
 @test "clean" {
-  run ${base} $BATS_TEST_DESCRIPTION
+  run ${base} clean
   test ${status} -eq 0 || {
       diag "Lines (${#lines[@]}): ${lines[*]}"
-      fail "$BATS_TEST_DESCRIPTION ($base)"
+      fail "$BATS_TEST_DESCRIPTION ($base clean)"
     }
 }
 
