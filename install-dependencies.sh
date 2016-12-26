@@ -33,26 +33,24 @@ test -n "$PREFIX" || {
   exit 1
 }
 
-test -d $SRC_PREFIX || ${sudo} mkdir -vp $SRC_PREFIX
-test -d $PREFIX || ${sudo} mkdir -vp $PREFIX
+test -d $SRC_PREFIX || ${pref} mkdir -vp $SRC_PREFIX
+test -d $PREFIX || ${pref} mkdir -vp $PREFIX
 
 
 install_bats()
 {
   echo "Installing bats"
-  local pwd=$(pwd)
   test -n "$BATS_BRANCH" || BATS_BRANCH=master
-  mkdir -vp $SRC_PREFIX
-  cd $SRC_PREFIX
   test -n "$BATS_REPO" || BATS_REPO=https://github.com/dotmpe/bats.git
   test -n "$BATS_BRANCH" || BATS_BRANCH=master
-  test -d bats || {
-    git clone $BATS_REPO bats || return $?
+  test -d $SRC_PREFIX/bats || {
+    git clone $BATS_REPO $SRC_PREFIX/bats || return $?
   }
-  cd bats
-  git checkout $BATS_BRANCH
-  ${pref} ./install.sh $PREFIX
-  cd $pwd
+  (
+    cd $SRC_PREFIX/bats
+    git checkout $BATS_BRANCH
+    ${pref} ./install.sh $PREFIX
+  )
 }
 
 
@@ -67,7 +65,7 @@ main_entry()
 
   case "$1" in all|build|test|sh-test|bats )
       test -x "$(which bats)" || { install_bats || return $?; }
-      PATH=$PATH:$PREFIX/bin bats --version
+      bats --version
     ;; esac
 
   echo "OK. All pre-requisites for '$1' checked"

@@ -9,8 +9,7 @@ install:
   - cpanm -h
   - cpanm --install URI::Escape
 
-before_script:
-  - "export PATH=$PATH:$PREFIX/bin"
+before_script: []
 
 script: ./configure && ./install.sh && make stat build test -f Makefile.mkdoc
 
@@ -24,8 +23,9 @@ branches:
 env:
   global:
     - Build_Deps_Default_Paths=1
+    - PATH=$PATH:$PREFIX/bin
   matrix:
     - ENV= CS=dark PREFIX=.
-    - ENV= CS=dark PREFIX=$HOME/.local
+    #- ENV= CS=dark PREFIX=$HOME/.local
     #- ENV=production CS=dark PREFIX=/usr/local
 
