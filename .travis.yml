@@ -11,6 +11,7 @@ addons:
       - realpath
       - uuid-runtime
       - moreutils
+      - tidy
 
 install:
   - PREFIX=$DEP_PREFIX ./install-dependencies.sh all
