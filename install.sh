@@ -2,7 +2,7 @@
 
 set -e
 
-PREFIX=./usr/
+PREFIX=/Users/berend/project/mkdoc/usr
 MK_SHARE=$PREFIX/share/mkdoc
 
 function uninstall()

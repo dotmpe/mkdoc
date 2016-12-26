@@ -40,7 +40,7 @@ VPATH              := . /
 SHELL              := /bin/bash
 
 # reset file extensions
-# xxx for imlicit rules?
+# XXX: for imlicit rules?
 .SUFFIXES:
 #.SUFFIXES:         .rst .js .xhtml .mk .tex .pdf .list
 .SUFFIXES: .rst .mk

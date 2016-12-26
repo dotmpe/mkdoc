@@ -51,23 +51,36 @@ define mk-rst-include-deps
 	# Rule-source is rSt file, rule-target the generated-makefile
 	if test -n "$(VERBOSE)"; then \
 		echo $(call rst-dep,$<.src,-); fi;
-	DIR=$(call f-sed-escape,$(DIR)/); \
+	DIR=$(call f-sed-escape,$(DIR)); \
 	BUILD=$(call f-sed-escape,$(BUILD));\
 	RULEF=./$<;\
 	RULET=$${RULEF/%.rst/.xhtml};RULET=$${RULET/#$$DIR/$$BUILD};\
-	echo "#        $* ">> $@; \
-	echo "#   DIR: $$DIR ">> $@; \
-	echo "# BUILD: $$BUILD  ">> $@; \
+	echo "# ">> $@;\
+	echo "#       Id: $(PROJECT)/$(VERSION) ">> $@;\
+	echo "#           mkdoc/$(MKDOC_VERSION) ">> $@;\
+	echo "# ">> $@;\
+	echo "# $*: ">> $@; \
+	echo "#    mk-rst-include-deps $< > $@ ">> $@;\
+	echo "# ">> $@;\
+	echo "#      DIR: $$DIR ">> $@; \
+	echo "#    BUILD: $$BUILD  ">> $@; \
+	echo "# ">> $@;\
+	echo "# (mkdoc: docutils; $(MK_SHARE)docutils/Main.mk)">> $@;\
+	echo "# ">> $@;\
 	echo >> $@;\
-	echo $(call rst-dep,$<.src,-) ;\
+	echo "# Rebuild DMK ($@)" >> $@;\
+	echo "$@: ./$< $(call rules,$(DIR))">> $@; \
+	echo >> $@;\
+	echo "# Rebuild related target (from its source $<)" >> $@;\
+	echo "$$RULET: $@">> $@;\
+	echo >> $@;\
+	echo "# Add rst-dep prereq to build target ($$RULET)" >> $@;\
 	$(call rst-dep,$<.src,-) | while read f; do \
 		DEPF=./$${f}; \
 		DEPT=$${DEPF/%.rst/.xhtml}; \
 		echo "$$RULET: $$DEPF ">> $@; \
 	done; \
-	echo >> $@;\
-	echo "$$RULET: $@">> $@;\
-	echo "$@: ./$< $(call rules,$(DIR))">> $@; 
+	echo >> $@;
 endef
 #		echo "$$DEPT: DIR := $$DIR ">> $@; \
 #		echo "$$DEPT: $$DEPF ">> $@; \
