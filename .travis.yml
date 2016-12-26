@@ -23,7 +23,7 @@ branches:
 env:
   global:
     - Build_Deps_Default_Paths=1
-    - PATH=$PATH:$PREFIX/bin
+    - PATH=$PATH:$DEP_PREFIX/bin:$PREFIX/bin
     - DEP_PREFIX=$HOME/.local
   matrix:
     - ENV= CS=dark PREFIX=.
