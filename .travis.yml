@@ -12,7 +12,10 @@ install:
 
 before_script: []
 
-script: ./configure && ./install.sh && make stat build test -f Makefile.mkdoc
+script:
+  - ./configure
+  - test "$PREFIX" = "./usr" || ./install.sh 
+  - make stat build test -f Makefile.mkdoc
 
 branches:
   only:
