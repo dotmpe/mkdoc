@@ -5,7 +5,7 @@ perl:
   - "5.8"
 
 install:
-  - ./install-dependencies.sh
+  - PREFIX=$DEP_REPFIX ./install-dependencies.sh
   - cpanm -h
   - cpanm --install URI::Escape
 
@@ -24,6 +24,7 @@ env:
   global:
     - Build_Deps_Default_Paths=1
     - PATH=$PATH:$PREFIX/bin
+    - DEP_PREFIX=$HOME/.local
   matrix:
     - ENV= CS=dark PREFIX=.
     #- ENV= CS=dark PREFIX=$HOME/.local
