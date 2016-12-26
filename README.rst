@@ -15,14 +15,51 @@ MkDoc
     :alt: GIT
 
 
+Quickstart
+----------
+::
+
+  make -f Mkdocs-full.mk help
+
+Link ``Makefile`` to `Mkdoc-full.mk` or `Mkdoc-minimal.mk`.
+Development setups can link into ``mkdoc`` checkout.
+
+- Write `Rules.*.mk` or `.Rules.*.mk`.
+- Add targets to predefined vars (to use with ``make stat build test``)
+- Use canned routines
+- Or depend on predefined file patterns
+
+Global vars and targets
+  DMK (stat)
+    Targets included as dynamic make definition files.
+  DEP (stat)
+    Other targets pre-requisite to stat.
+  SRC (stat)
+    Track all source files if wanted.
+  TRGT (build)
+    Build targets.
+  TEST (test)
+    Test targets.
+
+See::
+
+  make lists
+
+
+Install
+-------
+
 install::
 
   ./configure /usr/local && sudo ./install.sh
 
 
+Test
+-------
+
 test::
 
-  CS=dark PREFIX=/usr/local make -f Makefile.mkdoc
+  CS=dark PREFIX=/usr/local make -f Makefile.mkdoc test
 
 
 

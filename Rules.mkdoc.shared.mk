@@ -4,7 +4,7 @@
 
 test-mkdoc-specs:: DIR := $(shell dirname $(location))
 test-mkdoc-specs:: PREFIX := $(DIR)/usr
-test-mkdoc-specs:: MK_SHARE := $(DIR)
+test-mkdoc-specs:: MK_SHARE := $(DIR)/
 test-mkdoc-specs::
 	@echo "DIR = $(DIR)"
 	@echo "PREFIX = $(PREFIX) $(origin PREFIX)"
