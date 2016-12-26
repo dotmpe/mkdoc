@@ -4,46 +4,33 @@
 
 version=0.0.2-test+20150804-0404 # mkdoc
 
-base="make"
+load helper
+init
+
 
 @test "no arguments" {
   run ${base}
-  test ${status} -eq 0 || {
-      diag "Lines (${#lines[@]}): ${lines[*]}"
-      fail "$BATS_TEST_DESCRIPTION (make)"
-    }
+  common_test_conclusion ""
 }
 
 @test "clean" {
   run ${base} clean clean-dep
-  test ${status} -eq 0 || {
-      diag "Lines (${#lines[@]}): ${lines[*]}"
-      fail "$BATS_TEST_DESCRIPTION (make clean clean-dep)"
-    }
+  common_test_conclusion "clean clean-dep"
 }
 
 @test "build KEYWORDS tag file" {
   run ${base} clean
   run ${base} KEYWORDS
-  test ${status} -eq 0 || {
-      diag "Lines (${#lines[@]}): ${lines[*]}"
-      fail "$BATS_TEST_DESCRIPTION (make clean && make KEYWORDS)"
-    }
+  common_test_conclusion "KEYWORDS"
 }
 
 @test "run ant-proc-tags on test file" {
   run ${base} ./test.file.src
-  test ${status} -eq 0 || {
-      diag "Lines (${#lines[@]}): ${lines[*]}"
-      fail "$BATS_TEST_DESCRIPTION (make ./test.file.src)"
-    }
+  common_test_conclusion "./test.file.src"
 }
 
 @test "check test file result" {
   run ${base} test-ante-proc-tags
-  test ${status} -eq 0 || {
-      diag "Lines (${#lines[@]}): ${lines[*]}"
-      fail "$BATS_TEST_DESCRIPTION (make test-ante-proc-tags)"
-    }
+  common_test_conclusion "test-ante-proc-tags"
 }
 

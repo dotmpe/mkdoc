@@ -4,47 +4,33 @@
 
 version=0.0.2-test+20150804-0404 # mkdoc
 
-base=make
+load helper
+init
 
 @test "no arguments" {
   run ${base}
-  test ${status} -eq 0 || {
-      diag "Lines (${#lines[@]}): ${lines[*]}"
-      fail "$BATS_TEST_DESCRIPTION ($base)"
-    }
+  common_test_conclusion ""
 }
 
 @test "clean" {
   run ${base} clean
-  test ${status} -eq 0 || {
-      diag "Lines (${#lines[@]}): ${lines[*]}"
-      fail "$BATS_TEST_DESCRIPTION ($base clean)"
-    }
+  common_test_conclusion "clean"
 }
 
 @test "build rSt" {
   run ${base} main,du.pxml
   run ${base} main,du.xml
-  diag "Lines (${#lines[@]}): ${lines[*]}"
-  test ${status} -eq 0 || {
-      fail "$BATS_TEST_DESCRIPTION ($base main,du.{p,}xml)"
-    }
+  common_test_conclusion "main,du.{p,}xml"
 }
 
 @test "build rSt to xHTML" {
   run ${base} ./.build/main.du.xhtml
-  diag "Lines (${#lines[@]}): ${lines[*]}"
-  test ${status} -eq 0 || {
-      fail "$BATS_TEST_DESCRIPTION ($base ./.build/main.du.xhtml)"
-    }
+  common_test_conclusion "./.build/main.du.xhtml"
 }
 
 @test "testing results" {
   run ${base} test-du-result
-  diag "Lines (${#lines[@]}): ${lines[*]}"
-  test ${status} -eq 0 || {
-      fail "$BATS_TEST_DESCRIPTION (${base} test-du-result)"
-    }
+  common_test_conclusion "test-du-result"
 }
 
 

@@ -2,7 +2,6 @@
 
 # Id: mkdoc/0.0.2-test+20150804-0404 test/mkdoc-minimal-core.bats
 
-make_f="make -f Mkdoc-minimal.mk"
 
 @test "$make_f" "no arguments" {
   run $BATS_TEST_DESCRIPTION
@@ -24,7 +23,12 @@ make_f="make -f Mkdoc-minimal.mk"
   [ ${status} -eq 0 ]
 }
 
-@test "$make_f check" {
+@test "$make_f list " {
+  run $BATS_TEST_DESCRIPTION
+  [ ${status} -eq 0 ]
+}
+
+@test "$make_f lists " {
   run $BATS_TEST_DESCRIPTION
   [ ${status} -eq 0 ]
 }
@@ -34,9 +38,9 @@ make_f="make -f Mkdoc-minimal.mk"
   [ ${status} -eq 0 ]
 }
 
-#@test "$make_f test" {
-#  run $BATS_TEST_DESCRIPTION
-#  [ ${status} -eq 0 ]
-#}
+@test "$make_f test" {
+  run $BATS_TEST_DESCRIPTION
+  [ ${status} -eq 0 ]
+}
 
 
