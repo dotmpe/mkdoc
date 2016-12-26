@@ -48,6 +48,10 @@ common_test_conclusion()
   }
   common_test || {
     trueish "$DEBUG" || diag "Lines (${#lines[@]}): ${lines[*]}"
+    diag "PREFIX = ${PREFIX}"
+    diag "MK_SHARE = ${MK_SHARE}"
+    diag "MK_DIR = ${MK_DIR}"
+    diag "ENV = ${ENV}"
     fail "$BATS_TEST_DESCRIPTION ($base $1)"
   }
 }
