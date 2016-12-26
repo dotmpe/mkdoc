@@ -9,16 +9,20 @@ test-mkdoc-specs::
 	@echo "location = $(location) $(origin location)"
 	@echo "MK_SHARE = $(MK_SHARE) $(origin MK_SHARE)"
 	@$(ll) attention $@ "Testing Core"
-	@cd $(DIR)/test/example/core/keywords;\
+	@cd $(DIR)/test/example/core/keywords; \
+		export MK_SHARE=$(DIR)/$(PREFIX); \
 		bats ../../../mkdoc-core.bats
 	@$(ll) attention $@ "Testing Du"
 	@cd $(DIR)/test/example/du/;\
+		export MK_SHARE=$(DIR)/$(PREFIX); \
 		bats ../../mkdoc-du.bats
 	@$(ll) attention $@ "Testing Make"
 	@cd $(DIR)/test/example/du/;\
+		export MK_SHARE=$(DIR)/$(PREFIX); \
 		bats ../../mkdoc-make.bats
 	@$(ll) attention $@ "Testing BM"
 	@export MK_DIR=$(DIR); cd $(DIR)/test/example/du/;\
+		export MK_SHARE=$(DIR)/$(PREFIX); \
 		bats ../../mkdoc-bm.bats
 	@$(ll) ok $@ "specs for Core, Du, Make and BM"
 
