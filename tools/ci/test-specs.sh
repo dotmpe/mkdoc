@@ -12,17 +12,24 @@ cd $MK_DIR/test/example/core/keywords
 bats ../../../mkdoc-core.bats
 
 
+test "$ENV" = "testing" && {
 # FIXME Travis failure..
-#$ll attention $1 "Testing Du"
-#cd $MK_DIR/test/example/du/
-#bats ../../mkdoc-du.bats
+  $ll attention $1 "Testing Du"
+  cd $MK_DIR/test/example/du/
+  bats ../../mkdoc-du.bats
+}
 
 
 $ll attention $1 "Testing Make"
 cd $MK_DIR/test/example/du/
 bats ../../mkdoc-make.bats
-cd $MK_DIR/
-bats test/mkdoc-make.bats
+
+test "$ENV" = "development" && {
+
+  cd $MK_DIR/
+  bats test/mkdoc-make.bats
+
+}
 
 
 $ll attention $1 "Testing BM"
