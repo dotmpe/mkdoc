@@ -1,12 +1,14 @@
 
 init()
 {
-  case "$ENV" in
-    dev* ) 
-      base="make -f ${MK_DIR}/Mkdoc-full.mk" ;;
-    * )
-      base=make ;;
-  esac
+  test -n "$base" || {
+    case "$ENV" in
+      dev* ) 
+        base="make -f ${MK_DIR}/Mkdoc-full.mk" ;;
+      * )
+        base=make ;;
+    esac
+  }
   export base
 }
 
