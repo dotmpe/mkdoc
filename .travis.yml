@@ -6,7 +6,7 @@ install: ./install-dependencies.sh
 before_script:
   - "export PATH=$PATH:$PREFIX/bin"
 
-script: ./configure && ./install.sh && make stat build -f Makefile.mkdoc
+script: ./configure && ./install.sh && make stat build test -f Makefile.mkdoc
 
 branches:
   only:
