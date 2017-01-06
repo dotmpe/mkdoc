@@ -1,6 +1,8 @@
 
 init()
 {
+  test -n "$MK_DIR" || MK_DIR=.
+
   test -n "$base" || {
     case "$ENV" in
       dev* ) 
@@ -41,17 +43,35 @@ common_test()
   test ${status} -eq 0
 }
 
+common_fail_diag_env()
+{
+  diag "PREFIX = ${PREFIX}"
+  diag "MK_SHARE = ${MK_SHARE}"
+  diag "MK_DIR = ${MK_DIR}"
+  diag "ENV = ${ENV}"
+}
+
+common_fail_diag()
+{
+  trueish "$DEBUG" || 
+    diag "Lines (${#lines[@]}): ${lines[*]}"
+  common_fail_diag_env
+  common_fail_extra
+}
+
+common_fail_extra()
+{
+  noop
+}
+
 common_test_conclusion()
 {
   trueish "$DEBUG" && {
     diag "Lines (${#lines[@]}): ${lines[*]}"
   }
   common_test || {
-    trueish "$DEBUG" || diag "Lines (${#lines[@]}): ${lines[*]}"
-    diag "PREFIX = ${PREFIX}"
-    diag "MK_SHARE = ${MK_SHARE}"
-    diag "MK_DIR = ${MK_DIR}"
-    diag "ENV = ${ENV}"
-    fail "$BATS_TEST_DESCRIPTION ($base $1)"
+    common_fail_diag
+    fail "$status: $BATS_TEST_DESCRIPTION ($base $1)"
   }
 }
+

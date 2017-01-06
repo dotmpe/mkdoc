@@ -43,4 +43,53 @@ init
 }
 
 
+@test "mkdoc picks up rules" {
+
+  pwd=$(pwd -P)
+  test -n "$TMPDIR" || export TMPDIR=/tmp
+  test -n "$MK_SHARE" || {
+    export MK_SHARE=$pwd/usr/share/mkdoc
+  }
+  
+  tmpd=$TMPDIR/mkdoc-test
+  mkdir -vp $tmpd
+  { cat <<EOF
+HOST = myHost
+PROJECT := myProject
+include $MK_SHARE/Core/Main.mk
+\$(info \$(call rules,./))
+EOF
+  } > $tmpd/Makefile
+  touch $tmpd/.Rules.mk
+  touch $tmpd/.Rules.myProject.mk
+  touch $tmpd/.Rules.myHost.mk
+  touch $tmpd/Rules.mk
+  touch $tmpd/Rules.mkdoc.mk
+  touch $tmpd/Rules.myProject.mk
+  touch $tmpd/Rules.myHost.mk
+  touch $tmpd/Rules.third-party.mk
+  touch $tmpd/.Rules.third-party.shared.mk
+  touch $tmpd/Rules.third-party.shared.mk
+
+  cd $tmpd
+  run make
+  cd $pwd
+  rm -rf $tpmd
+  common_test() {
+    test ${status} -eq 0 &&
+      fnmatch "* ./.Rules.mk *" "${lines[*]}" &&
+      fnmatch "* ././Rules.mk *" "${lines[*]}" &&
+      fnmatch "* ./.Rules.myProject.mk *" "${lines[*]}" &&
+      fnmatch "* ././Rules.myProject.mk *" "${lines[*]}" &&
+      fnmatch "* ./.Rules.third-party.shared.mk *" "${lines[*]}" &&
+      fnmatch "* ././Rules.third-party.shared.mk *" "${lines[*]}"
+  }
+# FIXME: match on HOST not working:
+#      fnmatch "* ././Rules.myHost.mk *" "${lines[*]}"
+  common_fail_extra() {
+    diag "Temp dir = $tmpd"
+    diag "Host = $myHost"
+  }
+  common_test_conclusion "mkdoc rules"
+}
 
