@@ -278,7 +278,7 @@ cleandep::
 	@$(ll) OK $@ "$(call count,$(DEP) $(DMK)) dependencies removed"
 
 install: $(INSTALL)
-	@$(echo) -e " $(mk_ok)  $(c2)nothing to install.$(c0)"
+	@$(ll) OK "$@" "Done"
 
 all:: build test install
 	@$(ll) Done $@ 'built, tested and installed'
