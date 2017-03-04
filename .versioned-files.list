@@ -10,3 +10,4 @@ Rules.mkdoc.mk
 Rules.mkdoc.shared.mk
 test/mkdoc-core.bats
 test/mkdoc-du.bats
+package.yaml

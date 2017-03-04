@@ -1,0 +1,10 @@
+
+- type: application/vnd.dotmpe.project
+  main: mkdoc
+  id: mkdoc
+  version: 0.0.2-test+20150804-0404 # mkdoc
+  scripts:
+    install:
+    - PREFIX=/usr/local ./configure
+    - ./install.sh
+
