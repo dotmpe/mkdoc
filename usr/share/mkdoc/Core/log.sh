@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # left align first columnt at:
-FIRSTTAB=32
+test -n "$FIRSTTAB" || FIRSTTAB=32
 
 if [ -z "$CS" ]
 then
@@ -137,6 +137,7 @@ __log ()
 			;;
 	esac
 	if [ $len -lt 0 ]; then len=0; fi
+	# FIXME: should use printf
 	padd=" ";
 	padding=''
 	while [ ${#padding} -lt $len ]; do
