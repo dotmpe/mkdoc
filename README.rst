@@ -57,6 +57,10 @@ install::
 
   ./configure /usr/local && sudo ./install.sh
 
+uninstall::
+
+  sudo ./install.sh uninstall
+
 
 Test
 -------
