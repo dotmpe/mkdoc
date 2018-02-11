@@ -11,10 +11,10 @@ set -e
 # define <var> [:+?]=t
 
 
-ARG="${MK}"
+ARG="$MK"
 test -n "$ARG" || ARG="${MK_SHARE-.}"
 
-grep -srIn "^$1\s*[:\?\+]\?=" $ARG || nosrc1=$?
+grep -SrIn "^$1\s*[:\?\+]\?=" $ARG || nosrc1=$?
 grep -srIn "^define $1\s*\([:\?\+]=\)\?$" $ARG || nosrc2=$?
 
 test -z "$nosrc1" -o -z "$nosrc2"

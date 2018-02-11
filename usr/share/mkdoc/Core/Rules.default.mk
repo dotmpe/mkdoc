@@ -19,19 +19,6 @@ STRGT 			       += $(STD)
 version::
 	@$(ee) "Mkdocs non-recursive GNU/Make framework version $(MKDOC_VERSION)"
 
-define declare-help
-	declare $(DESCRIPTION) ;  \
-	eval declare $(foreach VAR,$(VARS),$(VAR)=\"$($(VAR))\")
-endef
-
-define help-vars
-	@echo ; FIRSTTAB=12 $(ll) header "$@" \
-		"Listing value and declarations of (VARS)" "$(VARS)"
-	@$(declare-help) ; echo ; \
-		export MK="$(MK)"; \
-		$(call describe-vars,$(VARS))
-endef
-
 help-stdvars:: VARS := $(STD)
 help-stdvars::
 	$(help-vars)

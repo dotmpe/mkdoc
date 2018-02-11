@@ -1,5 +1,8 @@
 # Id: mkdoc/0.0.2-test+20150804-0404 Rules.mkdoc.shared.mk
 
+$(eval $(call module-header,mkdoc.shared,$/Rules.mkdoc.shared.mk,Shared Mkdocs))
+
+
 .PHONY: test-mkdoc-specs
 
 test-mkdoc-specs:: DIR := $(shell dirname $(location))

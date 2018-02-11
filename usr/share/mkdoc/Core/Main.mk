@@ -29,7 +29,7 @@ OS                  := $(shell uname)
 # global path/file lists
 SRC                 :=
 DMK                 :=
-#already setMK                 :=
+MK                  += $(MK_SHARE)Core/Main.mk
 DEP                 :=
 TRGT                :=
 STRGT               :=
@@ -242,6 +242,17 @@ describe-vars = for V in $$(echo "$(1)" | tr -sc 'A-Za-z0-9_ '); do\
 			echo ;\
 		done
 
+define declare-help
+	@declare $(DESCRIPTION) ;  \
+		eval declare $(foreach VAR,$(VARS),$(VAR)=\"$($(VAR))\")
+endef
+
+define help-vars
+	@echo ; FIRSTTAB=12 $(ll) header "$@" \
+		"Listing value and declarations of (VARS)" "$(VARS)"
+	$(declare-help) ; echo ; export MK="$(MK)"; $(call describe-vars,$(VARS))
+endef
+
 
 # Output, verbosity, ... log?
 
@@ -398,8 +409,6 @@ define post-proc-tags
 			mv $@ $@.tmp; \
 		done; \
 		mv $@.tmp $@;
-#			#line=$($(ee) $$l | tr '\t' '\n');
-#
 endef
 
 define build-dir-index
