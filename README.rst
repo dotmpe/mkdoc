@@ -6,27 +6,41 @@ MkDoc
 
 :project:
 
-  .. image:: https://secure.travis-ci.org/dotmpe/mkdoc.png
-    :target: https://travis-ci.org/dotmpe/mkdoc
+  .. image:: https://secure.travis-ci.org/bvberkum/mkdoc.png
+    :target: https://travis-ci.org/bvberkum/mkdoc
     :alt: Build
 
 :repository:
 
-  .. image:: https://badge.fury.io/gh/dotmpe%2Fmkdoc.png
-    :target: http://badge.fury.io/gh/dotmpe%2Fmkdoc
+  .. image:: https://badge.fury.io/gh/bvberkum%2Fmkdoc.png
+    :target: http://badge.fury.io/gh/bvberkum%2Fmkdoc
     :alt: GIT
+
+
+For project status see `Travis CI build`__, or setup in ``.travis.yml``.
+
+.. __: https://travis-ci.org/bvberkum/mkdoc
 
 
 Quickstart
 ----------
-::
+See::
 
   make -f Mkdocs-full.mk help
 
-Link ``Makefile`` to `Mkdoc-full.mk` or `Mkdoc-minimal.mk`.
-Development setups can link into ``mkdoc`` checkout.
+or::
 
-- Write `Rules.*.mk` or `.Rules.*.mk`.
+  cd <my-project>
+  ln -s /usr/local/share/mkdoc/Mkdoc-full.mk Makefile
+
+  # Put local targets and recipes in Rules.mk:
+  touch .Rules.mk
+  #touch .Rules.<hostname>.mk
+  #touch Rules.mk
+
+- Use `Mkdoc-full.mk` to get all targets and libs, or FIXME: `Mkdoc-minimal.mk`
+  to get minimal libs and targets, XXX: or define your own build/test/install/...?
+- Write either `Rules.*.mk` or `.Rules.*.mk`.
 - Add targets to predefined vars (to use with ``make stat build test``)
 - Use canned routines
 - Or depend on predefined file patterns
@@ -47,15 +61,13 @@ For all lists::
 
   make lists
 
-See project status see Travis CI build, and setup in ``.travis.yml``.
-
 
 Install
 -------
-
-install::
+install (or upgrade)::
 
   ./configure /usr/local && sudo ./install.sh
+  ./configure /usr/local && sudo ./install.sh uninstall install
 
 
 Test

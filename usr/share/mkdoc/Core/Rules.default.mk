@@ -9,48 +9,62 @@ default:              stat
 -include              $(DMK)
 
 ## Add default MkDoc targets and set special targets
-STD                := $(STDTRGT) $(STDSTAT)
-STRGT 			   += $(STD)
-.PHONY: 		      $(STRGT)
+STAT               += $(STDSTAT)
+STRGT 			       += $(STD)
+.PHONY: 		       $(STRGT)
+
 
 ### Standard Rule(s)
-help::
-	@$(ee)
-	@# See STRGT and DESCRIPTION vars, STD (STDTARGT or STDSTAT) without DESCRIPTION is not printed
-	@declare $(DESCRIPTION);\
-	$(ll) header $@     "$(PROJECT) Makefile";\
-	$(ee) "" ;\
-	for strgt in $(STDTRGT);\
-	do\
-		V=$$strgt;\
-		if test -n "$${!V}";\
-		then\
-			$(ll) header2 $$strgt "$${!V}";\
-		fi;\
-	done;\
-	echo;\
-	$(ll) header $@     "No-ops and summary targets";\
-	for strgt in $(STDSTAT);\
-	do\
-		V=$$strgt;\
-		if test -n "$${!V}";\
-		then\
-			$(ll) header2 $$strgt "$${!V}";\
-		fi;\
-	done;\
+
+version::
+	@$(ee) "Mkdocs non-recursive GNU/Make framework version $(MKDOC_VERSION)"
+
+define declare-help
+	declare $(DESCRIPTION) ;  \
+	eval declare $(foreach VAR,$(VARS),$(VAR)=\"$($(VAR))\")
+endef
+
+define help-vars
+	@echo ; FIRSTTAB=12 $(ll) header "$@" \
+		"Listing value and declarations of (VARS)" "$(VARS)"
+	@$(declare-help) ; echo ; \
+		export MK="$(MK)"; \
+		$(call describe-vars,$(VARS))
+endef
+
+help-stdvars:: VARS := $(STD)
+help-stdvars::
+	$(help-vars)
+
+help-allvars:: VARS := $(ALLVARS)
+help-allvars::
+	$(help-vars)
+
+help-vars:: VARS ?= SRC TRGT STRGT STDTRGT STDSTAT
+help-vars::
+	$(help-vars)
+
+
+help-targets::
+	@echo ; $(ee) "Mkdocs non-recursive GNU/Make framework version $(MKDOC_VERSION)"
+	@# Get (special) target descriptions from DESCRIPTION
+	@declare $(DESCRIPTION); echo ; \
+	\
+	$(ll) header $@     "$(PROJECT) Makefile std STRGT list";\
+	$(call describe-targets,$(STDTRGT)); echo;\
+	\
+	$(ll) header $@     "No-ops and summary targets:";\
+	$(call describe-targets,$(STDSTAT));\
 	OTHER="$(call complement,$(STRGT),$(STD))";\
 	if test -n "$$OTHER";\
 	then\
-		echo;\
+		$(ee) "" ;\
 		$(ll) header $@     "Other special targets";\
-		for strgt in $(call complement,$(STRGT),$(STD));\
-		do\
-			strgt_id="$$(echo $$strgt|sed 's/[\/\.,;:_\+-]/_/g')";\
-			$(ll) header2 $$strgt "$${!strgt_id}";\
-		done;\
-		$(ee);\
-	fi;
+		$(call describe-targets,$$OTHER);\
+	fi; echo ;
 	@$(ee);$(ll) info $@ End
+
+help:: help-targets
 
 examples::
 	@$(ee)
@@ -87,68 +101,6 @@ info::
 	@$(ll) header3 VERBOSE "$(VERBOSE)" "$(origin VERBOSE)"
 	@$(ll) OK $@
 
-list::
-	@$(ee)
-	@$(ll) header2 Sources                  "" "$(strip $(SRC))"
-	@#$(ll) header2 Sources  "$(shell echo $(SRC)|sort -u)"
-	@$(ll) header2 "Build Targets"          "" '$(strip $(TRGT))'
-	@$(ll) header2 "Special Targets"        "" '$(strip $(STRGT))'
-
-# TODO use similar scheme as DESCRIPTION
-DESC_SRC  = Paths to build targets from
-DESC_TRGT = Paths to build from source
-DESC_TEST =
-DESC_MK   = List of loaded Makefiles
-DESC_DMK  = List of (to be) generated Makefiles
-DESC_DEP  = Paths needed to build targets
-DESC_CLN  = Paths that will be removed on next `make clean`
-DESC_RES  =
-
-lists::
-	@$(ll) header $@ "Printing all prerequisite lists."
-	@if test -n "$(strip $(SRC))"; then \
-	 $(ll) header2 SRC Sources                 '$(strip $(SRC))';\
-	 else\
-	 $(ll) header2 SRC "Sources (none)";\
-	 fi;
-	@if test -n "$(strip $(TRGT))"; then \
-	 $(ll) header2 TRGT 'Build Targets'        '$(strip $(TRGT))';\
-	 else\
-	 $(ll) header2 TRGT 'Build Targets (none)';\
-	 fi;
-	@if test -n "$(strip $(TEST))"; then \
-	 $(ll) header2 TEST 'Test Targets'         '$(strip $(TEST))';\
-	 fi;
-	@$(ll) header2 MK 'Makefiles'  	           '$(strip $(MK))'
-	@if test -n "$(strip $(DMK))"; then \
-	 $(ll) header2 DMK 'Generated Makefiles'   '$(strip $(DMK))';\
-	 else\
-	 $(ll) header2 DMK 'Generated Makefiles (none)' ;\
-	 fi;
-	@if test -n "$(strip $(DEP))"; then \
-	 $(ll) header2 DEP 'Other Dependencies'    '$(strip $(DEP))';\
-	 else\
-	 $(ll) header2 DEP 'Other Dependencies (none)';\
-	 fi
-	@if test -n "$(strip $(CLN))"; then \
-	 $(ll) header2 CLN 'Clean list'            '$(strip $(CLN))';\
-	 else\
-	 $(ll) header2 CLN 'Clean list (none)'   ;\
-	 fi
-	@if test -n "$(strip $(STRGT))"; then \
-	 $(ll) header2 STRGT 'Special Targets'     '$(strip $(STRGT))';\
-	 else\
-	 $(ll) header2 STRGT 'Special Targets (none)';\
-	 fi;
-	@if test -n "$(strip $(RES))"; then \
-	 $(ll) header2 RES 'Resources '            '$(strip $(RES))';\
-	 fi;
-	@if test -n "$(strip $(MISSING))"; then \
-	 $(ll) Error "Missing" "Paths not found " '$(strip $(MISSING))';\
-	 fi;
-
-
-#src:: $(SRC)
 
 dep:: $(SRC) $(DEP)
 	@if test -n "$(strip $(DEP))"; then \
@@ -263,7 +215,7 @@ test:: $(TEST)
 	$(call mk_ok_s,"tested")
 
 clean:: F := v
-clean::
+clean:: $(CLEAN)
 	@$(ll) warning $@ cleaning "$(CLN)"
 	@-rm -$(F) $(CLN);\
 	 if test $$? -gt 0; then $(echo) ""; fi; # put xtra line if err-msgs
@@ -282,5 +234,3 @@ cleandep::
 
 all:: build test install
 	@$(ll) Done $@ 'built, tested and installed'
-
-

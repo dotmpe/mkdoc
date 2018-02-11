@@ -1,4 +1,4 @@
-$(eval $(call module-header,docutils,$(MK_SHARE)docutils/Main.bin.mk,GNU/docutils binaries))
+#$(eval $(call module-header,docutils,$(MK_SHARE)docutils/Main.bin.mk,GNU/docutils binaries))
 #
 #      ------------ -- 
 
@@ -36,8 +36,8 @@ rst-xetex         = rst2xetex.py     $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_XETEX)
 rst-xml           = rst2xml.py       $(DU_RST) $(DU_GEN) $(DU_READ) $(DU_XML)
 endif
 endif
-# FIXME: fail if any of the above do not exist..
 
+# fail if any of the above do not exist
 ifeq ($(shell which $(rst-html)),)
 $(call chat,warn,docutils,Missing Docutils)
 endif
@@ -53,6 +53,3 @@ rst-dep           = $(rst-xml) --record-dependencies=$2 $1 /dev/null 2> /dev/nul
 path2rstlist      = $(MK_SHARE)/docutils/path2rstlist.py
 rst-pre-proc-include = $(MK_SHARE)/docutils/rst-includes.py
 rst-pdf-figure-to-png = $(MK_SHARE)/docutils/rst-pdf-figure-to-png.py
-
-
-

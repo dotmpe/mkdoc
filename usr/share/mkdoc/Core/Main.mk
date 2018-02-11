@@ -34,25 +34,37 @@ DEP                 :=
 TRGT                :=
 STRGT               :=
 CLN                 :=
+CLEAN               :=
 TEST                :=
 INSTALL             :=
 
 PENDING             :=
 MISSING             :=
 OFFLINE             :=
-
 RES                 :=
+
+STAT                :=
 
 #      ------------ --
 
 
 ### standard targets
 # (append to STRGT) see Rules.default.mk
-STDTRGT             := \
-					  all dep dmk test build install clean cleandep
-STDSTAT             := \
-					  help stat list lists info
-# descriptions of special targets for build
+STDTRGT             := all dep dmk test build install clean clean-dep cleandep
+STDSTAT             := stat list version \
+											 help help-stdvars help-allvars help-vars help-targets \
+											 examples info \
+											 pub push
+STD                := $(STDTRGT) $(STDSTAT)
+
+ALLVARS             := SRC DMK DEP TRGT STRGT CLN CLEAN TEST INSTALL \
+	PENDING MISSING OFFLINE RES \
+	STDTRGT STDSTAT STAT STD
+
+
+# Descriptions for default special-targets
+
+DESCRIPTION         += stat='default target; assert sources, dynamic makefiles and other dependencies exists'
 DESCRIPTION         := all='build, test and install'
 DESCRIPTION         += dep='generate dependencies'
 DESCRIPTION         += dmk='generate dynamic makefiles'
@@ -63,11 +75,37 @@ DESCRIPTION         += clean='delete all targets'
 DESCRIPTION         += cleandep='delete all dynamic makefiles and dependencies'
 
 DESCRIPTION         += help='print this help'
-DESCRIPTION         += stat='assert sources, dynamic makefiles and other dependencies'
-DESCRIPTION         += list='print SRC and TRGT lists'
-DESCRIPTION         += lists='print all other lists'
+DESCRIPTION         += helptargets='print info about special-targets [STDTRGT,STDSTAT,STRGT]'
+DESCRIPTION         += helpvars='print info about vars [VARS]'
 DESCRIPTION         += info='print other metadata'
 
+
+DESCRIPTION         += describe_SRC='Source-paths, usually static, version controlled project files'
+DESCRIPTION         += describe_TRGT='Prerequisites before `make build`, usually paths build from source'
+DESCRIPTION         += describe_TEST='Prerequisites before `make test`'
+DESCRIPTION         += describe_MK='List of loaded Makefiles'
+DESCRIPTION         += describe_DMK='List of (to be) generated Makefiles, maybe pending'
+DESCRIPTION         += describe_DEP='Prerequisites for `dep` or `dmk`, that are not source or makefiles'
+DESCRIPTION         += describe_CLN='Paths to remove on `clean`'
+DESCRIPTION         += describe_CLEAN='Prerequisites before `clean`'
+DESCRIPTION         += describe_RES='Resources ?'
+DESCRIPTION         += describe_PENDING='At any time, targets in PENDING indicate a partial build, and at least one a re-run is required'
+DESCRIPTION         += describe_STRGT='Non-file or -path (ie. PHONY) special-targets'
+DESCRIPTION         += describe_STDTRGT='Internal Mkdoc STRGT targets'
+DESCRIPTION         += describe_STAT='No-op checks, statistics and summary targets'
+DESCRIPTION         += describe_STDSTAT='Internal Mkdoc STAT targets'
+DESCRIPTION         += describe_STD='Built-in Mkdoc targets'
+DESCRIPTION         += describe_ALLVARS='Global described vars'
+
+
+# NOTE: unsure if GNU/Make can give info about target prerequisites. 
+# Instead, document with vars.
+#
+# DESCRIPTION += <STRGT>='Description for special-target'
+# DESCRIPTION += describe_<VAR>='Description for variable name'
+#
+# Note: varnames are char restricted, though GNU/Make only disallows ':#='.
+# XXX: Maybe can describe other path or file targets?
 
 
 
@@ -94,6 +132,7 @@ endif
 
 echo-if-true         = $(shell [ $1 ] && echo true)
 key                  = $(shell declare $($1); echo "$$$2")
+get-value           := $($1)
 get-bin              = $(call key,BIN,$1)
 #key                  = $(shell declare $($1); [ -z "$$$2" ] && ( echo missing $2; exit 1) || (echo $$$2))
 define require-key
@@ -183,6 +222,25 @@ zero_exit_test       = \
 		$(ll) OK "$2" "$3"; \
 	fi
 
+
+# Given that $(DESCRIPTION) is declared, print descriptions on (special) targets
+describe-targets = for T in $(1); do \
+		if test -n "$${!T}"; \
+		then $(ll) header2 $$T "$${!T}"; \
+		else $(ll) header2 $$T "(no description)"; \
+	fi; done
+
+
+#htd-prefix = $$(htd prefixes names $1 | tr '\n' ' ')
+htd-prefix := echo $1
+
+# Given that $(DESCRIPTION) is declared, print descriptions on variables
+describe-vars = for V in $$(echo "$(1)" | tr -sc 'A-Za-z0-9_ '); do\
+			var_descr=describe_$${V}; \
+			$(ll) header3 "$$V" "$${!var_descr}" "$${!V}";\
+			sh $(MK_SHARE)Core/find-mk-def.sh $$V || continue; \
+			echo ;\
+		done
 
 
 # Output, verbosity, ... log?

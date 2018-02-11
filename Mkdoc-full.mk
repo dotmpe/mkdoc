@@ -3,12 +3,11 @@
 # Id: mkdoc/0.0.2-test+20150804-0404 Mkdoc-full.mk
 
 
-# CURDIR and MAKEFILE_LIST are GNU Make internals
+# Expand to root Makefile. CURDIR and MAKEFILE_LIST are GNU Make internals
 location             = $(CURDIR)/$(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))
 
 # Global list of all makefiles
 MK                  := $(location)
-#MK                  += $(DIR)/Makefile
 
 # Set level to warning and above
 VERBOSE             ?= 4
@@ -20,19 +19,18 @@ DIR                 := $(CURDIR)
 MK_DIR              := $(shell dirname $$(realpath $(location)))
 PREFIX              ?= $(MK_DIR)/usr
 
-MK_SHARE            ?= $(PREFIX)/share/mkdoc/
+export MK_SHARE     ?= $(PREFIX)/share/mkdoc/
 #MK_CONF             := /etc/mkdoc/ $(HOME)/.mkdoc/
-MK_BUILD            := /var/mkdoc/
+export MK_BUILD     := /var/mkdoc/
 
-PROJECT             := mkdoc
-DOMAIN              ?= mpe
-VERSION             := 0.0.2-test+20150804-0404# mkdoc
+export PROJECT      := mkdoc
+export DOMAIN       ?= mpe
+export VERSION      := 0.0.2-test+20150804-0404# mkdoc
 
-MKDOC_VERSION       := 0.0.2-test+20150804-0404# mkdoc
-
+export MKDOC_VERSION := 0.0.2-test+20150804-0404# mkdoc
 
 # FIXME: rewrite to MK_BUILD
-BUILD               ?= .build/
+export BUILD        ?= .build/
 
 # Start keeping present directory
 DIR                 := .
