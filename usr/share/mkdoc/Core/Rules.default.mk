@@ -216,8 +216,8 @@ cleandep::
 	 if test $$? -gt 0; then echo; fi; # put extra line if err-msg
 	@$(ll) OK $@ "$(call count,$(DEP) $(DMK)) dependencies removed"
 
-#install: test
-#	@$(echo) -e " $(mk_ok)  $(c2)nothing to install.$(c0)"
+install: $(INSTALL)
+	@$(ll) OK "$@" "Done"
 
 all:: build test install
 	@$(ll) Done $@ 'built, tested and installed'

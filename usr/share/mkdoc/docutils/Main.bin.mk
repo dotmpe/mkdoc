@@ -38,7 +38,7 @@ endif
 endif
 
 # fail if any of the above do not exist
-ifeq ($(shell which $(rst-html)),)
+ifeq ($(shell which "$(rst-html)"),)
 $(call chat,warn,docutils,Missing Docutils)
 endif
 

@@ -137,6 +137,7 @@ __log ()
 			;;
 	esac
 	if [ $len -lt 0 ]; then len=0; fi
+	# FIXME: should use printf
 	padd=" ";
 	padding=''
 	while [ ${#padding} -lt $len ]; do

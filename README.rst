@@ -69,6 +69,10 @@ install (or upgrade)::
   ./configure /usr/local && sudo ./install.sh
   ./configure /usr/local && sudo ./install.sh uninstall install
 
+uninstall::
+
+  sudo ./install.sh uninstall
+
 
 Test
 -------
