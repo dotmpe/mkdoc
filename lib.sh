@@ -19,8 +19,3 @@ function sed_post()
   }
 }
 
-noop()
-{
-  printf ""
-}
-
