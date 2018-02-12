@@ -27,7 +27,7 @@ help-allvars:: VARS := $(ALLVARS)
 help-allvars::
 	$(help-vars)
 
-help-vars:: VARS ?= SRC TRGT STRGT STDTRGT STDSTAT
+help-vars:: VARS ?= SRC TRGT STRGT TEST STDTRGT STDSTAT
 help-vars::
 	$(help-vars)
 

@@ -81,8 +81,8 @@ DESCRIPTION         += info='print other metadata'
 
 
 DESCRIPTION         += describe_SRC='Source-paths, usually static, version controlled project files'
-DESCRIPTION         += describe_TRGT='Prerequisites before `make build`, usually paths build from source'
-DESCRIPTION         += describe_TEST='Prerequisites before `make test`'
+DESCRIPTION         += describe_TRGT='Test Targets: prerequisites before `make build`, usually paths build from source'
+DESCRIPTION         += describe_TEST='Build Targets: prerequisites before `make test`'
 DESCRIPTION         += describe_MK='List of loaded Makefiles'
 DESCRIPTION         += describe_DMK='List of (to be) generated Makefiles, maybe pending'
 DESCRIPTION         += describe_DEP='Prerequisites for `dep` or `dmk`, that are not source or makefiles'

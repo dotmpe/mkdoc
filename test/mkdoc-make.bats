@@ -23,14 +23,16 @@ setup()
 }
 
 
-@test "lists targets per group" {
-  run $base list
+@test "help-vars lists targets per group" {
+  run $base help-vars
   common_test()
   {
     test ${status} -eq 0 && \
-      fnmatch "*TRGT*:*Build Targets*" "${lines[*]}"
+      fnmatch "*SRC*:*" "${lines[*]}" &&
+      fnmatch "*TRGT*:*Build Targets*" "${lines[*]}" &&
+      fnmatch "*TEST*:*Test Targets*" "${lines[*]}"
   }
-  common_test_conclusion "lists"
+  common_test_conclusion "help-targets"
 }
 
 
