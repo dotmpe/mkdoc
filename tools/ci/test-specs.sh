@@ -20,7 +20,7 @@ case "$(whoami)" in
 
   * )
 
-      test "$ENV" = "testing" && {
+      test "$ENV_NAME" = "testing" && {
       # FIXME Travis failure..
         $ll attention $1 "Testing Du"
         cd $MK_DIR/test/example/du/
@@ -36,7 +36,7 @@ case "$(whoami)" in
 esac
 
 
-test "$ENV" = "development" && {
+test "$ENV_NAME" = "development" && {
 
   cd $MK_DIR/
   bats test/mkdoc-make.bats

@@ -8,7 +8,7 @@ DIR                 := .
 BASE                := $(shell cd $(DIR);pwd)
 
 HOST                := $(shell hostname -s | tr 'A-Z' 'a-z' | tr '.' '-')
-ENV                 ?= $(shell [ -n "$$ENV" ] && echo $$ENV || echo development)
+ENV_NAME                 ?= $(shell [ -n "$$ENV_NAME" ] && echo $$ENV_NAME || echo development)
 
 #ID                  := mkdoc/0.0.1-master
 PROJECT             := mkdoc
@@ -97,7 +97,7 @@ default:: $(DMK) $(DEP)
 default:: $(DEFAULT)
 
 usage::
-	@echo 'set ENV to [development|testing|production] for other default behaviour'
+	@echo 'set ENV_NAME to [development|testing|production] for other default behaviour'
 
 stat:: $(SRC)
 

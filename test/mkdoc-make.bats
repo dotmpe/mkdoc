@@ -1,7 +1,14 @@
 #!/usr/bin/env bats
 
 load helper
-init
+base=
+
+setup()
+{
+  test -n "$ENV_NAME" || export ENV_NAME=dev
+  init
+  diag "base: $base"
+}
 
 
 @test "no arguments" {
@@ -17,7 +24,7 @@ init
 
 
 @test "lists targets per group" {
-  run $base lists
+  run $base list
   common_test()
   {
     test ${status} -eq 0 && \

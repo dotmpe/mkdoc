@@ -91,7 +91,7 @@ init()
   test -n "$MK_DIR" || MK_DIR=.
 
   test -n "$base" || {
-    case "$ENV" in
+    case "$ENV_NAME" in
       dev* ) 
         base="make -f ${MK_DIR}/Mkdoc-full.mk" ;;
       * )
@@ -131,6 +131,7 @@ common_fail_diag_env()
   diag "MK_SHARE = ${MK_SHARE}"
   diag "MK_DIR = ${MK_DIR}"
   diag "ENV = ${ENV}"
+  diag "ENV_NAME = ${ENV_NAME}"
 }
 
 common_fail_diag()

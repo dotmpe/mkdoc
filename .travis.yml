@@ -33,9 +33,9 @@ env:
     - PATH=$PATH:$DEP_PREFIX/bin:$PREFIX/bin
     - Build_Deps_Default_Paths=1
   matrix:
-    - ENV=development PREFIX=./usr
-    - ENV=testing     PREFIX=$HOME/.local
-    #- ENV=production  PREFIX=/usr/local
+    - ENV_NAME=development PREFIX=./usr
+    - ENV_NAME=testing     PREFIX=$HOME/.local
+    #- ENV_NAME=production  PREFIX=/usr/local
 
 branches:
   only:
