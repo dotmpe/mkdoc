@@ -213,11 +213,12 @@ define build-dir-index-rst
 	# FIXME: would be nice if this could exclude current target.
 	# XXX: this is dep'ed on everything in the dir and gets regenerated every time..
 	$(reset-target)
-	$(ee) ".. container:: directory\n" > $<.tmp-index
-	$(ee) "   .. class:: flat-index\n" >> $<.tmp-index
+	printf ".. container:: directory\n\n" > $<.tmp-index
+	printf "   .. class:: flat-index\n\n" >> $<.tmp-index
 	ls "$(<D)" | sed -e 's/\(\.xhtml\|\.rst\|\.png\|\.dot\|\.tab\|\.list\|\.csv\|\.txt\|\.html\|\.xml\|\.js\|\.jpg\)$$//g' | sort -u |\
   	 while read f; \
 	   do echo "      - \`$$f <./$$f>\`_" >> $<.tmp-index; done;
+	echo >> $<.tmp-index
 	mv $<.tmp-index $@
 endef
 

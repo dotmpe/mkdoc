@@ -1,4 +1,34 @@
-#!/bin/bash
+#!/bin/sh
+
+# Logger: arg-to-colored ansi
+# Usage:
+#   log.sh [Line-Type] [Header] [Msg] [Ctx] [Exit]
+
+
+DEBUG=${DEBUG:-}
+test -z "$verbosity" && {
+    test -n "$DEBUG" && verbosity=7 || verbosity=6
+}
+
+logger_stderr_num() # Level-Name
+{
+  case "$1" in
+      emerg ) echo 1 ;;
+      crit  ) echo 2 ;;
+      error ) echo 3 ;;
+      warn  ) echo 4 ;;
+      note  ) echo 5 ;;
+      info  ) echo 6 ;;
+      debug ) echo 7 ;;
+      * ) return 1 ;;
+  esac
+}
+
+lvl=$(logger_stderr_num "$1")
+
+test $verbosity -ge $lvl || exit 0
+
+
 
 # left align first columnt at:
 test -n "$FIRSTTAB" || FIRSTTAB=32
@@ -60,7 +90,7 @@ mk_p_trgt_red="$c1[$c7%s$c1]$c0"
 mk_updtd="$c4<$c7%s$c4>$c0"
 
 
-__log ()
+__log()
 {
 	linetype=$(echo $1|tr 'A-Z' 'a-z')
 	targets=$(echo "$2")
@@ -159,7 +189,3 @@ else
 	# quoted arguments:
 	__log "$1" "$2" "$3" "$4";
 fi
-
-
-
-
