@@ -35,9 +35,8 @@ test -z "$lvl" || {
 }
 
 
-
 # left align first columnt at:
-FIRSTTAB=${FIRSTTAB-24}
+test -n "$FIRSTTAB" || FIRSTTAB=24
 
 if [ -z "$CS" ]
 then
