@@ -1,13 +1,15 @@
+#!/bin/bash
+
 
 sed_rewrite="sed "
 [ "$(uname -s)" = "Darwin" ] && sed_rewrite="sed -i.applyBack "
 
-function sed_rewrite_tag()
+sed_rewrite_tag()
 {
   $sed_rewrite "$1" $2 > $2.out
   sed_post $2
 }
-function sed_post()
+sed_post()
 {
   test -e $1.applyBack && {
     # Darwin BSD sed
@@ -18,4 +20,3 @@ function sed_post()
     rm $1.out
   }
 }
-
