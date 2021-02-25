@@ -4,6 +4,7 @@
 
 
 # Expand to root Makefile. CURDIR and MAKEFILE_LIST are GNU Make internals
+# The incomprehensible expression is to retrieve the last value of MAKEFILE_LIST.
 location             = $(CURDIR)/$(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))
 
 # Global list of all makefiles
@@ -19,11 +20,14 @@ DIR                 := $(CURDIR)
 MK_DIR              := $(shell dirname $$(realpath $(location)))
 PREFIX              ?= $(MK_DIR)/usr
 
+-include                \
+                       $(CURDIR)/.make.env
+
 export MK_SHARE     ?= $(PREFIX)/share/mkdoc/
 #MK_CONF             := /etc/mkdoc/ $(HOME)/.mkdoc/
 export MK_BUILD     := /var/mkdoc/
 
-export PROJECT      := mkdoc
+export PROJECT      ?= mkdoc
 export DOMAIN       ?= mpe
 export VERSION      := 0.0.2-test+20150804-0404# mkdoc
 
@@ -113,6 +117,11 @@ $(call chat,debug,mkdoc)
 $(call chat,header,mkdoc,Reading local rules)
 
 # Include specific rules and set SRC, DEP, TRGT and CLN variables.
+# Looks at
+# - Rules.mk
+# - Rules.shared.mk
+# - Rules.<PROJECT>.mk
+# - Rules.<HOST>.mk
 #
 include                $(call rules,$(DIR)/) 
 
